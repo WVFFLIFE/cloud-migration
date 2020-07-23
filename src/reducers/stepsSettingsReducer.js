@@ -20,7 +20,7 @@ function stepsSettingsReducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 loading: false,
-                currentStep: 'summary'//action.payload
+                currentStep: action.payload
             }
         case SET_CURRENT_STEP:
             return {
