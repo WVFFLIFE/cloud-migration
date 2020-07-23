@@ -6,6 +6,9 @@ import {
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
 const useStyles = makeStyles(() => ({
+  root: {
+    flexGrow: 1
+  },
   calendarIcon: {
     fontSize: '1.2rem',
     color: '#605E5C'
@@ -37,6 +40,7 @@ const TimePicker = ({
 
   return (
     <KeyboardTimePicker
+      className={classes.root}
       keyboardIcon={
         <ScheduleIcon 
           className={classes.calendarIcon}
@@ -61,7 +65,7 @@ const TimePicker = ({
       ampm={false}
       value={selectedTime}
       onChange={handleChangeTime}
-      minutesStep={5}
+      minutesStep={1}
       label="Time"
     />
   )

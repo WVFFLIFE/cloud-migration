@@ -18,7 +18,8 @@ const useStyles = makeStyles(() => ({
     width: '50%'
   },
   controlsTop: {
-    marginBottom: 15
+    display: 'flex',
+    marginBottom: 20
   }
 }))
 

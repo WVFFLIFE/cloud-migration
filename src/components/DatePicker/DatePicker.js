@@ -8,6 +8,7 @@ import DateRangeIcon from '@material-ui/icons/DateRange';
 const useStyles = makeStyles({
   root: {
     marginRight: 20,
+    flexGrow: 1
   },
   calendarIcon: {
     fontSize: '1.2rem',
