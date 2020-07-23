@@ -1,0 +1,11 @@
+import React from 'react';
+
+const CompleteList = () => {
+  return (
+    <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fillRule="evenodd" clipRule="evenodd" d="M1.75 2.98H1.04L0 1.93L0.71 1.23L1.4 1.91L2.81 0.5L3.52 1.21L1.75 2.98ZM4.98999 1.5H12.99V2.5H4.98999V1.5ZM4.98999 4.5H12.99V5.5H4.98999V4.5ZM12.99 7.5H4.98999V8.5H12.99V7.5ZM4.98999 10.5H12.99V11.5H4.98999V10.5ZM1.04 5.97997H1.75L3.52 4.20997L2.81 3.50997L1.4 4.91997L0.71 4.22997L0 4.93997L1.04 5.97997ZM1.75 8.98997H1.04L0 7.94997L0.71 7.23997L1.4 7.92997L2.81 6.50997L3.52 7.21997L1.75 8.98997ZM1.04 12H1.75L3.52 10.23L2.81 9.52002L1.4 10.94L0.71 10.25L0 10.95L1.04 12Z" fill="white" />
+    </svg>
+  )
+}
+
+export default CompleteList
