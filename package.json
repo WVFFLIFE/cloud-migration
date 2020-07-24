@@ -26,8 +26,8 @@
     "timezone-support": "^2.0.2"
   },
   "scripts": {
-    "start": "set \"PUBLIC_URL=/\" && set \"REACT_APP_REDIRECT_URI=http://localhost:44310/\" && set PORT=6420 && react-scripts start",
-    "build": "set \"REACT_APP_REDIRECT_URI=http://localhost:44310\" && set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
+    "start": "set \"PUBLIC_URL=/\" && set PORT=6420 && react-scripts start",
+    "build": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
