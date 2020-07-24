@@ -55,6 +55,8 @@ const Buttons = () => {
     dispatch(setNextStep(id, currentStep));
   }
 
+  console.log('buttons')
+
   return (
     <div className={classes.root}>
       {

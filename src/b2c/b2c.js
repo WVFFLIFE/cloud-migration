@@ -59,7 +59,6 @@ const authentication = {
     msalApp.handleRedirectCallback(error => {
       if (error) {
         const errorMessage = error.errorMessage ? error.errorMessage : "Unable to acquire access token."
-        console.log(errorMessage)
       }
     })
     acquireToken()

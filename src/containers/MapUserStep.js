@@ -33,7 +33,6 @@ const MapUserStep = () => {
   }
 
   const handleAutomap = () => {
-    console.log('automap')
     dispatch(runAutomap());
   }
 

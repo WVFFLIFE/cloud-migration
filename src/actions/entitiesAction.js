@@ -111,7 +111,6 @@ export const validateEntities = (id, SelectedEntities, flag) => {
     MigrationService
       .post(`/migration-job/${id}/entities/validate-entities${query}`, body)
       .then(({validationResult, reports}) => {
-        console.log(reports)
         const newEntities = modifyEntities(currentEntities, reports);
 
         batch(() => {

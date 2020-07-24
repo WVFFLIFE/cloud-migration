@@ -15,8 +15,6 @@ import PublicIcon from '@material-ui/icons/Public';
 const timeZones = listTimeZones();
 const LISTBOX_PADDING = 8;
 
-console.log(timeZones);
-
 function renderRow(props) {
   const { data, index, style } = props;
   return React.cloneElement(data[index], {

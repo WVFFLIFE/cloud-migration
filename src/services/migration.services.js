@@ -15,7 +15,7 @@ async function request(uri, method = 'GET', body = null) {
 }
 
 class MigrationService {
-  BASE_URL = `${window.location.origin}/api`
+  BASE_URL = `${process.env.REACT_APP_REDIRECT_URI}/api`
 
   constructor() {
     this.get = this.get.bind(this);
