@@ -17,22 +17,13 @@ async function request(uri, method = 'GET', body = null) {
 class MigrationService {
   BASE_URL = `${window.location.origin}/api`
 
-  constructor() {
-    this.get = this.get.bind(this);
-  }
-
   get = async path => {
     const uri = `${this.BASE_URL}${path}`;
 
     const res = await request(uri);
 
     if (!res.ok) {
-      if (res.status === 401) {
-        const data = await authentication.refreshToken(() => this.get(path));
-        return data;
-      } else {
-        throw new Error(`Couldn't fetch ${uri}`)
-      }
+      throw new Error(`Couldn't fetch ${uri}`)
     }
 
     return await res.json();

@@ -57,6 +57,7 @@ const useStyles = makeStyles(() => ({
 const EntityStepView = ({
   loading,
   data,
+  reports,
   validationData,
   handleValidate,
   itemsPerPage,
