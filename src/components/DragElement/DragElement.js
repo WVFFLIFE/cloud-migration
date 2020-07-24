@@ -60,6 +60,9 @@ const useStyles = makeStyles({
   warning: {
     fontSize: '1rem',
     color: '#D83B01'
+  },
+  dragging: {
+    opacity: 0.8
   }
 });
 
@@ -70,6 +73,7 @@ const DragElement = React.forwardRef(({
   sub = false,
   withDragIcon = false,
   type,
+  dragging = false,
   ...rest
 }, ref) => {
   const classes = useStyles();
@@ -86,7 +90,8 @@ const DragElement = React.forwardRef(({
     <div
       className={clsx(classes.item, {
         [classes.subItem]: sub,
-        [classes.error]: isError
+        [classes.error]: isError,
+        [classes.dragging]: dragging
       })}
       ref={ref}
       {...rest}

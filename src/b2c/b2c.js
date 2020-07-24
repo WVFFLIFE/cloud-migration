@@ -23,7 +23,8 @@ const state = {
 let msalApp;
 
 function acquireToken(successCallback) {
-  const account = msalApp.getAccount()
+  const account = msalApp.getAccount();
+  console.log(account);
   if (!account) {
     msalApp.loginRedirect(B2C_SCOPES.API_ACCESS)
   } else {

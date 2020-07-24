@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import Button from '../Button'
@@ -132,7 +132,7 @@ const MapUserView = (props) => {
         sourceItem.target,
         destination.index
       )
-      
+
       props.handleDragToTarget(
         result.draggableId,
         items
@@ -242,7 +242,7 @@ const MapUserView = (props) => {
               [classes.loading]: props.loading
             })}>
               {props.loading ? null : (
-                <Search 
+                <Search
                   text={text}
                   handleTextChange={handleTextChange}
                 />
@@ -260,23 +260,33 @@ const MapUserView = (props) => {
                     ) : targetList
                       .filter(item => item[filterField].toLowerCase().includes(text))
                       .map((item, index) => (
-                      <Draggable
-                        key={item.guid}
-                        draggableId={item.guid}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <DragElement
-                            data={item}
-                            withDragIcon={true}
-                            ref={provided.innerRef}
-                            type={type}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          />
-                        )}
-                      </Draggable>
-                    ))}
+                        <Draggable
+                          key={item.guid}
+                          draggableId={item.guid}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <>
+                              <DragElement
+                                data={item}
+                                withDragIcon={true}
+                                ref={provided.innerRef}
+                                type={type}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              />
+                              {snapshot.isDragging && (
+                                <DragElement
+                                  data={item}
+                                  withDragIcon={true}
+                                  type={type}
+                                  dragging
+                                />
+                              )}
+                            </>
+                          )}
+                        </Draggable>
+                      ))}
                     {provided.placeholder}
                   </div>
                 )}

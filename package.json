@@ -23,7 +23,8 @@
     "react-window": "^1.8.5",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "timezone-support": "^2.0.2"
+    "timezone-support": "^2.0.2",
+    "uuid": "^8.2.0"
   },
   "scripts": {
     "start": "set \"PUBLIC_URL=/\" && set PORT=6420 && react-scripts start",

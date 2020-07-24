@@ -14,7 +14,7 @@ const EntitiesStep = () => {
   const {
     loading, data, itemsPerPage,
     order, orderBy, currentPage,
-    totalItems, reports
+    totalItems
   } = useSelector(state => state.entities);
   const { entities: validationData } = useSelector(state => state.validation);
 
@@ -48,7 +48,6 @@ const EntitiesStep = () => {
     <EntitiesStepView
       loading={loading}
       data={data}
-      reports={reports}
       handleValidate={handleValidate}
       validationData={validationData}
       order={order}

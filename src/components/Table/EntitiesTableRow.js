@@ -45,13 +45,17 @@ const useStyles = makeStyles({
       },
     }
   },
+  disabled: {
+    background: '#EBF6FF'
+  }
 })
 
 const EntitiesTableRow = ({
   data,
   selected,
   handleCheckboxChange,
-  cellsList
+  cellsList,
+  disabled
 }) => {
   const classes = useStyles();
   const [errorView, setErrorView] = useState(false);
@@ -77,7 +81,9 @@ const EntitiesTableRow = ({
       ) : null}
       <MuiTableRow
         classes={{
-          root: classes.selected
+          root: clsx(classes.selected, {
+            [classes.disabled]: disabled
+          })
         }}
         tabIndex={-1}
         selected={selected}
@@ -89,6 +95,7 @@ const EntitiesTableRow = ({
           }}
         >
           <MuiCheckbox 
+            disabled={disabled}
             onChange={event => handleCheckboxChange(event, data.logicalName)}
             checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon)}><CheckIcon className={classes.checkIcon} /></span>}
             icon={<span className={classes.icon}></span>}

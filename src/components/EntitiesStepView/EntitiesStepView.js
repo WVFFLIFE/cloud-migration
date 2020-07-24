@@ -57,7 +57,6 @@ const useStyles = makeStyles(() => ({
 const EntityStepView = ({
   loading,
   data,
-  reports,
   validationData,
   handleValidate,
   itemsPerPage,
@@ -92,13 +91,15 @@ const EntityStepView = ({
 
   const renderRows = () => {
     return data.map(item => {
-      const isSelected = selectedEntities.includes(item.logicalName);
+      const isSelected = selectedEntities.includes(item.logicalName)
+      const isReported = item.validationSettings.status === 'error';
 
       return (
         <EntitiesTableRow
           key={item.logicalName} 
           data={item}
-          selected={isSelectedAll ? !isSelected : isSelected}
+          selected={isSelectedAll ? !isSelected || isReported : isSelected || isReported}
+          disabled={isReported}
           handleCheckboxChange={handleSelectItem}
           cellsList={cellsList}
         />
