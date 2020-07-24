@@ -119,7 +119,7 @@ const useStyles = makeStyles({
 });
 
 const TimeZonePicker = ({
-
+  value
 }) => {
   const classes = useStyles();
 
@@ -128,6 +128,7 @@ const TimeZonePicker = ({
       classes={{
         inputRoot: classes.inputRoot 
       }}
+      value={value}
       popupIcon={<PublicIcon className={classes.icon}/>}
       style={{ width: '100%' }}
       disableListWrap

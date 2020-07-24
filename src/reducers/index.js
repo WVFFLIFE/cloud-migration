@@ -9,8 +9,10 @@ import entitiesReducer from './entitiesReducer';
 import mapUsersReducer from './mapUsersReducer';
 import mapBusinessUnitsReducer from './mapBusinessUnitsReducer';
 import mapTeamsReducer from './mapTeamsReducer';
+import summaryReducer from './summaryReducer';
 
 export default combineReducers({
+    summary: summaryReducer,
     teams: mapTeamsReducer,
     businessunits: mapBusinessUnitsReducer,
     users: mapUsersReducer,

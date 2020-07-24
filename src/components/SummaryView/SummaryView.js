@@ -23,7 +23,14 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const SummaryView = (props) => {
+const SummaryView = ({
+  date,
+  time,
+  timezone,
+  handleDate,
+  handleTime,
+  handleTimezone
+}) => {
   const classes = useStyles();
 
   return (
@@ -32,16 +39,18 @@ const SummaryView = (props) => {
       <div className={classes.controls}>
         <div className={classes.controlsTop}>
           <DatePicker 
-            selectedDate={new Date()}
-            handleChangeDate={() => {}}
+            selectedDate={date}
+            handleChangeDate={handleDate}
           />
           <TimePicker 
-            selectedTime={new Date()}
-            handleChangeTime={() => {}}
+            selectedTime={time}
+            handleChangeTime={handleTime}
           />
         </div>
         <div className={classes.controlsBottom}>
-          <TimeZonePicker />
+          <TimeZonePicker 
+            value={timezone}
+          />
         </div>
       </div>
     </div>

@@ -51,8 +51,18 @@ import {
   runTeamsAutomap,
   fetchTeams
 } from './teamsAction';
+import {
+  setCurrentDate,
+  setCurrentTime,
+  setTimeZone,
+  finishMigration
+} from './summaryAction';
 
 export {
+  setCurrentDate,
+  setCurrentTime,
+  setTimeZone,
+  finishMigration,
   setToTeamsTarget,
   removeTeamsTarget,
   setToTeamsSource,
