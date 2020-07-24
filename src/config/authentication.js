@@ -15,6 +15,6 @@ authentication.initialize({
   // the scopes you want included in the access token
   scopes: ['https://udscustomersdirectory.onmicrosoft.com/webapi/user_impersonation'],
   // optional, the redirect URI - if not specified MSAL will pick up the location from window.href
-  redirectUri: 'http://localhost:6420/',
-  postLogoutRedirectUri: 'http://localhost:6420/'
+  redirectUri: 'http://localhost:44310/',
+  // postLogoutRedirectUri: 'http://localhost:6420/'
 });
