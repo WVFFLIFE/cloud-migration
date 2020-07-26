@@ -6,7 +6,8 @@ import {
 import {
   initStepSettings,
   setCurrentStep,
-  setNextStep
+  setNextStep,
+  setStepControlStatus
 } from './stepsSettingsAction';
 import {
   validateStep,
@@ -28,7 +29,9 @@ import {
   validateEntities,
   setCurrentPage,
   setOrder,
-  setOrderBy
+  setOrderBy,
+  setSelectedEntities,
+  setInitSelectedEntities
 } from './entitiesAction';
 import {
   fetchUsers,
@@ -55,10 +58,29 @@ import {
   setCurrentDate,
   setCurrentTime,
   setTimeZone,
-  finishMigration
+  finishMigration,
+  fetchSummaryData
 } from './summaryAction';
+import {
+  setAllEnvironmentsInit,
+  setEntitiesInit,
+  setUsersInit,
+  setBusinessUnitsInit,
+  setTeamsInit,
+  setAllInit,
+} from './initAction';
 
 export {
+  setStepControlStatus,
+  fetchSummaryData,
+  setAllInit,
+  setEntitiesInit,
+  setUsersInit,
+  setBusinessUnitsInit,
+  setTeamsInit,
+  setAllEnvironmentsInit,
+  setInitSelectedEntities,
+  setSelectedEntities,
   setCurrentDate,
   setCurrentTime,
   setTimeZone,

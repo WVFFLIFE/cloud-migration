@@ -4,7 +4,9 @@ import { useDispatch, useSelector, batch } from 'react-redux';
 import {
   fetchEntities, validateEntities,
   setOrderBy, setOrder,
-  setCurrentPage, setValidationInit
+  setCurrentPage, setValidationInit,
+  setSelectedEntities,
+  setInitSelectedEntities
 } from '../actions';
 import EntitiesStepView from '../components/EntitiesStepView';
 
@@ -14,7 +16,8 @@ const EntitiesStep = () => {
   const {
     loading, data, itemsPerPage,
     order, orderBy, currentPage,
-    totalItems
+    totalItems, selectedEntities,
+    notReportedList
   } = useSelector(state => state.entities);
   const { entities: validationData } = useSelector(state => state.validation);
 
@@ -44,10 +47,20 @@ const EntitiesStep = () => {
     dispatch(setValidationInit('entities'))
   }
 
+  const handleChangeSelectedEntities = (entity) => {
+    dispatch(setSelectedEntities(entity))
+  }
+
+  const handleInitSelectedEntities = () => {
+    dispatch(setInitSelectedEntities())
+  }
+
   return (
     <EntitiesStepView
+      notReportedList={notReportedList}
       loading={loading}
       data={data}
+      selectedEntities={selectedEntities}
       handleValidate={handleValidate}
       validationData={validationData}
       order={order}
@@ -58,6 +71,8 @@ const EntitiesStep = () => {
       setPage={setPage}
       totalItems={totalItems}
       setInitialStepValidation={setInitialStepValidation}
+      handleChangeSelectedEntities={handleChangeSelectedEntities}
+      handleInitSelectedEntities={handleInitSelectedEntities}
     />
   )
 }

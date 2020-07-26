@@ -2,11 +2,16 @@ import {
   SET_CURRENT_STEP,
   SETTINGS_INIT_STARTED,
   SETTINGS_INIT_SUCCESS,
+  SET_EDIT_ABILITY,
+  SET_STEP_CONTROL_STATUS
 } from '../constants'
 
 const INITIAL_STATE = {
   loading: true,
-  currentStep: null
+  currentStep: null,
+  currentStatus: null,
+  canEdit: true,
+  stepControlStatus: 'hidden'
 }
 
 function stepsSettingsReducer(state = INITIAL_STATE, action) {
@@ -20,12 +25,23 @@ function stepsSettingsReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: false,
-        currentStep: 'entities'//action.payload
+        currentStep: action.payload.step,
+        currentStatus: action.payload.status
       }
     case SET_CURRENT_STEP:
       return {
         ...state,
         currentStep: action.payload
+      }
+    case SET_EDIT_ABILITY:
+      return {
+        ...state,
+        canEdit: action.payload
+      }
+    case SET_STEP_CONTROL_STATUS:
+      return {
+        ...state,
+        stepControlStatus: action.payload
       }
     default:
       return state

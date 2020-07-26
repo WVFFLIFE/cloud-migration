@@ -13,12 +13,10 @@ const useStyles = makeStyles(theme => ({
     background: '#F3F2F1',
     borderRadius: 2,
     transition: '.2s linear',
-    '&:hover': {
-      background: 'rgba(0, 90, 158, .8)'
-    },
     '&.Mui-disabled': {
       color: '#A19F9D',
-      background: '#F3F2F1'
+      background: '#F3F2F1',
+      borderColor: '#f3f2f1'
     }
   },
   text: {
@@ -31,7 +29,35 @@ const useStyles = makeStyles(theme => ({
   },
   validation: {
     background: '#005A9E',
-    color: '#fff'
+    color: '#fff',
+    '&:hover': {
+      background: '#005A9E',
+      color: '#fff',
+      opacity: .6
+    },
+  },
+  back: {
+    paddingLeft: 30,
+    paddingRight: 30,
+    background: '#302846',
+    color: '#fff',
+    '&:hover': {
+      background: '#302846',
+      color: '#fff',
+      opacity: .6
+    },
+  },
+  next: {
+    paddingLeft: 30,
+    paddingRight: 30,
+    background: '#fff',
+    border: '1px solid #8A8886',
+    color: '#201F1E',
+    '&:hover': {
+      background: '#fff',
+      color: '#201F1E',
+      opacity: .6
+    },
   },
   label: {
     display: 'inline-flex',

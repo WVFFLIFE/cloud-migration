@@ -30,12 +30,16 @@ const useStyles = makeStyles({
     '&.MuiInputLabel-shrink': {
       transform: 'translate(14px, -6px) scale(0.8)'
     }
+  },
+  disabled: {
+    color: 'rgba(0, 0, 0, 0.38)'
   }
 })
 
 const DatePicker = ({
   selectedDate,
   handleChangeDate,
+  disabled
 }) => {
   const classes = useStyles();
 
@@ -49,7 +53,8 @@ const DatePicker = ({
       }}
       InputProps={{
         classes: {
-          input: classes.input
+          input: classes.input,
+          disabled: classes.disabled
         }
       }}
       inputVariant="outlined"
@@ -66,6 +71,7 @@ const DatePicker = ({
       label="Date"
       value={selectedDate}
       onChange={handleChangeDate}
+      disabled={disabled}
     />
   )
 }

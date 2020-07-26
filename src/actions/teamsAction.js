@@ -9,6 +9,7 @@ import {
 import { setValidationSuccess, setValidationInit } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
+import { v4 as uuid } from "uuid";
 
 const fetchUsersStarted = () => ({
   type: FETCH_TEAMS_STARTED
@@ -22,11 +23,10 @@ const fetchUsersSuccess = (data) => ({
 const checkAction = (action) => (...args) => {
   return (dispatch, getState) => {
     dispatch(action(...args));
-    const { targetTeams, sourceTeams, mapedTeams } = getState().teams.data;
+    const { sourceTeams } = getState().teams.data;
 
     if (
-      targetTeams.length === 0 ||
-      isSourceMaped(sourceTeams, mapedTeams)
+      isSourceMaped(sourceTeams)
     ) {
       dispatch(setValidationSuccess('mapteams'))
     } else {
@@ -56,8 +56,9 @@ const removeTargeAction = id => ({
   payload: id
 })
 
-const runAutomapAction = () => ({
-  type: USE_TEAMS_AUTOMAP
+const runAutomapAction = (data) => ({
+  type: USE_TEAMS_AUTOMAP,
+  payload: data
 })
 
 export const setToTeamsTarget = (...args) => checkAction(setToTargetAction)(...args);
@@ -66,7 +67,30 @@ export const removeTeamsTarget = (...args) => checkAction(removeTargeAction)(...
 
 export const setToTeamsSource = (...args) => checkAction(setToSourceAction)(...args)
 
-export const runTeamsAutomap = (...args) => checkAction(runAutomapAction)(...args);
+export const runTeamsAutomap = () => {
+  return (dispatch, getState) => {
+    const { sourceTeams, targetTeams, mapedTeams } = getState().teams.data;
+
+    const newSourceTeams = sourceTeams.map(item => {
+      const itemInMap = mapedTeams.find(mapedTeam => mapedTeam.source === item.source.guid);
+
+      if (itemInMap) {
+        const target = targetTeams.find(targetTeam => targetTeam.guid === itemInMap.target);
+        return {
+          source: item.source,
+          target: {
+            ...target,
+            guid: uuid()
+          }
+        }
+      }
+
+      return item;
+    })
+
+    dispatch(runAutomapAction(newSourceTeams));
+  }
+}
 
 export const fetchTeams = (id) => {
   return dispatch => {

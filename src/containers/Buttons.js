@@ -1,26 +1,40 @@
 import React from 'react';
-import { useDispatch, useSelector, batch } from 'react-redux';
-import {userParams, useParams} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
-  setCurrentStep,
-  setNextStep
+  setNextStep,
+  finishMigration,
+  setAllEnvironmentsInit,
+  setEntitiesInit,
+  setUsersInit,
+  setBusinessUnitsInit,
+  setTeamsInit
 } from '../actions'
 import {makeStyles} from '@material-ui/core';
-import clsx from 'clsx';
+import LoaderProgress  from '../components/LoaderProgress';
+import Button from '../components/Button';
 
 const useStyles = makeStyles(() => ({
   root: {
     marginTop: 20,
+    '& button': {
+      marginRight: 20,
+      '&:last-child': {
+        marginRight: 0
+      }
+    }
   },
   btn: {
     display: 'inline-flex',
     alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 20,
     padding: '6px 30px',
     fontSize: 14,
     fontWeight: 600,
     fontFamily: 'Segoe UI',
     border: '1px solid transparent',
+    borderRadius: 2,
     cursor: 'pointer',
     '&:disabled': {
       background: '#F3F2F1',
@@ -44,48 +58,98 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
+function getBackStepFunction(step) {
+  switch(step) {
+    case 'entities':
+      return setAllEnvironmentsInit
+    case 'mapusers':
+      return setEntitiesInit
+    case 'mapbusinessunits':
+      return setUsersInit
+    case 'mapteams':
+      return setBusinessUnitsInit
+    case 'summary':
+      return setTeamsInit
+    default:
+      return () => {}
+  }
+}
+
+function checkIsValid(validationList, step) {
+  if (!step) return false;
+
+  return [
+    'sourceenvironment',
+    'targetenvironment',
+    'environments'
+  ].includes(step) ? validationList['environments'].status === 'success' 
+  : validationList[step].status === 'success';
+}
+
 const Buttons = () => {
   const {id} = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { currentStep } = useSelector(state => state.stepsSettings);
+  const { currentStep, currentStatus, stepControlStatus } = useSelector(state => state.stepsSettings);
   const validList = useSelector(state => state.validation);
+  const backFn = getBackStepFunction(currentStep);
 
   const handleNextStep = () => {
     dispatch(setNextStep(id, currentStep));
   }
 
+  const handleFinish = () => {
+    dispatch(finishMigration(id))
+  }
+
+  const handleStepBack = () => {
+    dispatch(backFn());
+  }
+
+  const isBackButtonVisible = currentStatus === 'Draft';
+  const isStepValid = checkIsValid(validList, currentStep);
+
   return (
     <div className={classes.root}>
       {
-        !['targetenvironment', 'sourceenvironment', 'environments'].includes(currentStep) ? (
-          <button
+        !['targetenvironment', 'sourceenvironment', 'environments'].includes(currentStep) && isBackButtonVisible ? (
+          <Button
             type="button"
-            className={clsx(classes.btn, classes.backBtn)}
-            onClick={() => {}}
+            entity="back"
+            handleClick={handleStepBack}
+            disabled={currentStep ? validList[currentStep].status === 'loading' : false}
           >
             Back
-          </button>
+          </Button>
         ) : null
       }
       {
         currentStep !== 'summary' ? (
-          <button
-            type="button"
-            className={clsx(classes.btn, classes.activeNextButton)}
-            onClick={handleNextStep}
-            disabled={validList[currentStep].status !== 'success'}
+          <Button
+            handleClick={handleNextStep}
+            disabled={!isStepValid}
+            entity="next"
           >
             Next
-          </button>
+            {stepControlStatus !== 'hidden' ? (
+              <LoaderProgress
+                status={stepControlStatus}
+              />
+            ) : null}
+          </Button>
         ) : (
-          <button
-            type="button"
-            className={clsx(classes.btn, classes.activeNextButton)}
-            onClick={() => {}}
+          <Button
+            handleClick={handleFinish}
+            entity="next"
+            disabled={currentStep ? validList[currentStep].status === 'loading' : false}
           >
             Finish
-          </button>
+            {stepControlStatus !== 'hidden' ? (
+              <LoaderProgress
+                status={stepControlStatus}
+              />
+            ) : null}
+          </Button>
         )
       }
     </div>

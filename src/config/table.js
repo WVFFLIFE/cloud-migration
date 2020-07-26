@@ -287,7 +287,7 @@ export const entitiesTableConfig = {
       renderItem: (handleAction) => (data) => {
         if (!data) return <ValidateTableCell></ValidateTableCell>
 
-        const {status, message} = data;
+        const {status} = data;
         const emptyCell = (<ValidateTableCell></ValidateTableCell>);
         const successCell = (
           <SuccessEntityTableCell>

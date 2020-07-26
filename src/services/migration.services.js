@@ -1,5 +1,3 @@
-/** @format */
-
 import authentication from '../b2c';
 
 async function request(uri, method = 'GET', body = null) {

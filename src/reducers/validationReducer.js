@@ -2,7 +2,8 @@ import {
   SET_VALIDATION_INIT,
   SET_VALIDATION_START,
   SET_VALIDATION_SUCCESS,
-  SET_VALIDATION_ERROR
+  SET_VALIDATION_ERROR,
+  SET_ALL_VALIDATION_INIT
 } from '../constants'
 
 function createInitialState(list) {
@@ -53,6 +54,15 @@ export default function (state = INITIAL_STATE, action) {
           message: ''
         }
       }
+    case SET_ALL_VALIDATION_INIT: {
+      return [
+        'environments', 'sourceenvironment', 'targetenvironment', 'entities',
+        'map', 'mapusers', 'mapbusinessunits', 'mapteams', 'summary'
+      ].reduce((acc, next) => {
+        acc[next] = { status: 'hidden', message: '' };
+        return acc;
+      }, {});
+    }
     default:
       return state
   }

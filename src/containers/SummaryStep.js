@@ -1,47 +1,26 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {format} from 'date-fns';
-import { parseFromTimeZone } from 'date-fns-timezone';
 import {
   setCurrentDate,
   setCurrentTime,
   setTimeZone,
+  fetchSummaryData
 } from '../actions'
 import SummaryView from '../components/SummaryView';
-
-function getScheduledDate(date, time, timezone) {
-  const dd = date.getDate();
-  const mm = date.getMonth();
-  const yyyy = date.getFullYear();
-  
-  const h = time.getHours();
-  const m = time.getMinutes();
-
-  const scheduledDate = new Date();
-  
-  scheduledDate.setDate(dd);
-  scheduledDate.setMonth(mm);
-  scheduledDate.setFullYear(yyyy);
-
-  const textDate = format(
-    scheduledDate,
-    'yyyy/MM/dd'
-  );
-
-  const utcDate = parseFromTimeZone(`${textDate} ${h}:${m}:0.000`, timezone);
-
-  return format(
-    utcDate,
-    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-  )
-}
+import Dialog from '../components/Dialog';
 
 const SummaryStep = () => {
-  const { id } = useParams();
+  const {id} = useParams();
   const dispatch = useDispatch();
-  const { date, time, timezone, loading } = useSelector(state => state.summary);
-  const scheduledDate = getScheduledDate(date, time, timezone)
+  const { date, time, timezone, getLoading, postLoading } = useSelector(state => state.summary);
+  const { currentStatus, canEdit, stepControlStatus } = useSelector(state => state.stepsSettings);
+
+  useEffect(() => {
+    dispatch(fetchSummaryData(id))
+
+    /* eslint-disable-next-line */
+  }, [])
 
   const handleDate = (date) => {
     dispatch(setCurrentDate(date))
@@ -56,15 +35,23 @@ const SummaryStep = () => {
   }
 
   return (
-    <SummaryView 
-      date={date}
-      time={time}
-      timezone={timezone}
-      loading={loading}
-      handleDate={handleDate}
-      handleTime={handleTime}
-      handleTimezone={handleTimezone}
-    />
+    <>
+      <SummaryView
+        currentStatus={currentStatus}
+        canEdit={canEdit}
+        date={date}
+        time={time}
+        timezone={timezone}
+        getLoading={getLoading}
+        postLoading={postLoading}
+        handleDate={handleDate}
+        handleTime={handleTime}
+        handleTimezone={handleTimezone}
+      />
+      <Dialog 
+        status={stepControlStatus}
+      />
+    </>
   )
 }
 

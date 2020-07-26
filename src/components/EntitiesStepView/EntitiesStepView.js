@@ -66,33 +66,34 @@ const EntityStepView = ({
   setPage,
   handleRequestSort,
   totalItems,
-  setInitialStepValidation
+  setInitialStepValidation,
+  handleChangeSelectedEntities,
+  selectedEntities,
+  handleInitSelectedEntities,
+  notReportedList
 }) => {
   const classes = useStyles();
-  const [selectedEntities, setSelectedEntities] = useState([]);
   const [isSelectedAll, setIsSelectedAll] = useState(false);
   const { cellsList } = entitiesTableConfig;
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       setIsSelectedAll(true);
-      setSelectedEntities([])
+      handleInitSelectedEntities([])
     } else {
       setIsSelectedAll(false);
-      setSelectedEntities([])
+      handleInitSelectedEntities([])
     }
   }
 
   const handleSelectItem = (event, entity) => {
-    setSelectedEntities(state => {
-      return state.includes(entity) ? state.filter(item => item !== entity) : [...state, entity]
-    })
+    handleChangeSelectedEntities(entity)
   }
 
   const renderRows = () => {
     return data.map(item => {
       const isSelected = selectedEntities.includes(item.logicalName)
-      const isReported = item.validationSettings.status === 'error';
+      const isReported = notReportedList.includes(item.logicalName);
 
       return (
         <EntitiesTableRow

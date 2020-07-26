@@ -47,6 +47,10 @@ const useStyles = makeStyles({
   },
   disabled: {
     background: '#EBF6FF'
+  },
+  disabledIcon: {
+    borderColor: '#ccc',
+    background: '#ccc'
   }
 })
 
@@ -97,7 +101,9 @@ const EntitiesTableRow = ({
           <MuiCheckbox 
             disabled={disabled}
             onChange={event => handleCheckboxChange(event, data.logicalName)}
-            checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon)}><CheckIcon className={classes.checkIcon} /></span>}
+            checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon, {
+              [classes.disabledIcon]: disabled
+            })}><CheckIcon className={classes.checkIcon} /></span>}
             icon={<span className={classes.icon}></span>}
             checked={selected}
             color="default"

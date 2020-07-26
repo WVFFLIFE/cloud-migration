@@ -29,17 +29,22 @@ const useStyles = makeStyles(() => ({
     '&.MuiInputLabel-shrink': {
       transform: 'translate(14px, -6px) scale(0.8)'
     }
+  },
+  disabled: {
+    color: 'rgba(0, 0, 0, 0.38)'
   }
 }));
 
 const TimePicker = ({
   selectedTime,
-  handleChangeTime
+  handleChangeTime,
+  disabled
 }) => {
   const classes = useStyles();
 
   return (
     <KeyboardTimePicker
+      disabled={disabled}
       className={classes.root}
       keyboardIcon={
         <ScheduleIcon 
@@ -53,7 +58,8 @@ const TimePicker = ({
       }}
       InputProps={{
         classes: {
-          input: classes.input
+          input: classes.input,
+          disabled: classes.disabled
         }
       }}
       inputVariant="outlined"

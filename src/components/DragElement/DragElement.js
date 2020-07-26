@@ -62,7 +62,13 @@ const useStyles = makeStyles({
     color: '#D83B01'
   },
   dragging: {
-    opacity: 0.8
+    opacity: 0.8,
+    '& ~ [data-rbd-placeholder-context-id]': {
+      display: 'none !important'
+    },
+    '& ~ div': {
+      transform: 'none !important'
+    }
   }
 });
 

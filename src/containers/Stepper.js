@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { stepsConfig } from '../config'
-import { initStepSettings } from '../actions'
+import { initStepSettings, setAllInit } from '../actions'
 import {
   Grid,
   makeStyles
@@ -137,6 +137,9 @@ const Stepper = () => {
   useEffect(() => {
     dispatch(initStepSettings(id))
 
+    return () => {
+      dispatch(setAllInit());
+    }
     /* eslint-disable-next-line */
   }, [id]);
 

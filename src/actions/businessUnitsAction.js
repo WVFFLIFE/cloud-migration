@@ -9,6 +9,7 @@ import {
 import { setValidationSuccess, setValidationInit } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
+import { v4 as uuid } from "uuid";
 
 const fetchUsersStarted = () => ({
   type: FETCH_BUSINESS_UNITS_STARTED
@@ -22,11 +23,10 @@ const fetchUsersSuccess = (data) => ({
 const checkAction = (action) => (...args) => {
   return (dispatch, getState) => {
     dispatch(action(...args));
-    const { targetBusinessUnits, sourceBusinessUnits, mapedBusinessUnits } = getState().businessunits.data;
+    const { sourceBusinessUnits } = getState().businessunits.data;
 
     if (
-      targetBusinessUnits.length === 0 ||
-      isSourceMaped(sourceBusinessUnits, mapedBusinessUnits)
+      isSourceMaped(sourceBusinessUnits)
     ) {
       dispatch(setValidationSuccess('mapbusinessunits'))
     } else {
@@ -56,8 +56,9 @@ const removeTargeAction = id => ({
   payload: id
 })
 
-const runAutomapAction = () => ({
-  type: USE_BUSINESS_AUTOMAP
+const runAutomapAction = (data) => ({
+  type: USE_BUSINESS_AUTOMAP,
+  payload: data
 })
 
 export const setToBusinessUnitsTarget = (...args) => checkAction(setToTargetAction)(...args);
@@ -66,7 +67,30 @@ export const removeBusinessUnitsTarget = (...args) => checkAction(removeTargeAct
 
 export const setToBusinessUnitsSource = (...args) => checkAction(setToSourceAction)(...args)
 
-export const runBusinessUnitsAutomap = (...args) => checkAction(runAutomapAction)(...args);
+export const runBusinessUnitsAutomap = () => {
+  return (dispatch, getState) => {
+    const { sourceBusinessUnits, targetBusinessUnits, mapedBusinessUnits } = getState().businessunits.data;
+
+    const newSourceBusinessUnits = sourceBusinessUnits.map(item => {
+      const itemInMap = mapedBusinessUnits.find(mapedUser => mapedUser.source === item.source.guid);
+
+      if (itemInMap) {
+        const target = targetBusinessUnits.find(targetUser => targetUser.guid === itemInMap.target);
+        return {
+          source: item.source,
+          target: {
+            ...target,
+            guid: uuid()
+          }
+        }
+      }
+
+      return item;
+    })
+
+    dispatch(runAutomapAction(newSourceBusinessUnits))
+  }
+}
 
 export const fetchBusinessUnits = (id) => {
   return dispatch => {
