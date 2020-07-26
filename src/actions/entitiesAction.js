@@ -151,10 +151,6 @@ export const validateEntities = (id, SelectedEntities, flag) => {
     MigrationService
       .post(`/migration-job/${id}/entities/validate-entities${query}`, body)
       .then(({validationResult, reports}) => {
-        console.log(
-          reports
-          .filter(report => !SelectedEntities.includes(report.logicalName))
-        )
         const notReportedList = reports
           .filter(report => !SelectedEntities.includes(report.logicalName))
           .map(item => item.logicalName);

@@ -117,7 +117,7 @@ const Buttons = () => {
             type="button"
             entity="back"
             handleClick={handleStepBack}
-            disabled={currentStep ? validList[currentStep].status === 'loading' : false}
+            disabled={(stepControlStatus !== 'hidden') || (currentStep ? validList[currentStep].status === 'loading' : false)}
           >
             Back
           </Button>

@@ -56,7 +56,7 @@ export const fetchSummaryData = (id) => {
       .then(({scheduledDate, timeZone}) => {
         dispatch(
           fetchSummarySuccess({
-            date: new Date(scheduledDate ? scheduledDate : new Date()),
+            date: scheduledDate ? new Date(scheduledDate) : new Date(),
             timezone: timeZone || 'Etc/GMT-0'
           })
         )
