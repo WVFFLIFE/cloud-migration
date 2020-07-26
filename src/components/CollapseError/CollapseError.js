@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-  TableCell,
-  TableRow,
-  Collapse,
-  makeStyles,
-  Button
-} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Collapse from '@material-ui/core/Collapse';
+import Button from '@material-ui/core/Button';
+import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';

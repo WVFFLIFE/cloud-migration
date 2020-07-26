@@ -1,11 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  makeStyles,
-  styled,
-  Breadcrumbs as MuiBreadcrumbs,
-  Typography
-} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import MuiBreadcrumbs from '@material-ui/core/Breadcrumbs';
+import {makeStyles, styled} from '@material-ui/core/styles';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { routeConfig } from '../../config';
 

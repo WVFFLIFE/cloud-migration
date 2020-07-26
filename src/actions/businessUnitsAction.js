@@ -61,13 +61,7 @@ const runAutomapAction = (data) => ({
   payload: data
 })
 
-export const setToBusinessUnitsTarget = (...args) => checkAction(setToTargetAction)(...args);
-
-export const removeBusinessUnitsTarget = (...args) => checkAction(removeTargeAction)(...args);
-
-export const setToBusinessUnitsSource = (...args) => checkAction(setToSourceAction)(...args)
-
-export const runBusinessUnitsAutomap = () => {
+const runAutomap = () => {
   return (dispatch, getState) => {
     const { sourceBusinessUnits, targetBusinessUnits, mapedBusinessUnits } = getState().businessunits.data;
 
@@ -91,6 +85,14 @@ export const runBusinessUnitsAutomap = () => {
     dispatch(runAutomapAction(newSourceBusinessUnits))
   }
 }
+
+export const setToBusinessUnitsTarget = (...args) => checkAction(setToTargetAction)(...args);
+
+export const removeBusinessUnitsTarget = (...args) => checkAction(removeTargeAction)(...args);
+
+export const setToBusinessUnitsSource = (...args) => checkAction(setToSourceAction)(...args);
+
+export const runBusinessUnitsAutomap = (...args) => checkAction(runAutomap)(...args); 
 
 export const fetchBusinessUnits = (id) => {
   return dispatch => {

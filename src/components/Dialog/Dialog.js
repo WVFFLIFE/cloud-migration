@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import {
-  makeStyles,
-  Dialog as MuiDialog,
-  DialogContent as MuiDialogContent,
-  DialogTitle as MuiDialogTitle,
-  DialogContentText as MuiDialogContentText,
-  DialogActions as MuiDialogActions,
-  Button
-} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
+import MuiDialog from '@material-ui/core/Dialog';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContentText from '@material-ui/core/DialogContentText';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({

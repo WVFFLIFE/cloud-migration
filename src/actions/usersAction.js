@@ -61,13 +61,7 @@ const runAutomapAction = (data) => ({
   payload: data
 })
 
-export const setToTarget = (...args) => checkAction(setToTargetAction)(...args);
-
-export const removeTarget = (...args) => checkAction(removeTargeAction)(...args);
-
-export const setToSource = (...args) => checkAction(setToSourceAction)(...args)
-
-export const runAutomap = () => {
+const rnAuto = () => {
   return (dispatch, getState) => {
     const { sourceUsers, targetUsers, mapedUsers } = getState().users.data;
 
@@ -91,6 +85,14 @@ export const runAutomap = () => {
     dispatch(runAutomapAction(newSourceUsers))
   }
 }
+
+export const setToTarget = (...args) => checkAction(setToTargetAction)(...args);
+
+export const removeTarget = (...args) => checkAction(removeTargeAction)(...args);
+
+export const setToSource = (...args) => checkAction(setToSourceAction)(...args)
+
+export const runAutomap = (...args) => checkAction(rnAuto)(...args); 
 
 export const fetchUsers = (id) => {
   return dispatch => {

@@ -61,13 +61,7 @@ const runAutomapAction = (data) => ({
   payload: data
 })
 
-export const setToTeamsTarget = (...args) => checkAction(setToTargetAction)(...args);
-
-export const removeTeamsTarget = (...args) => checkAction(removeTargeAction)(...args);
-
-export const setToTeamsSource = (...args) => checkAction(setToSourceAction)(...args)
-
-export const runTeamsAutomap = () => {
+const runAutomap = () => {
   return (dispatch, getState) => {
     const { sourceTeams, targetTeams, mapedTeams } = getState().teams.data;
 
@@ -91,6 +85,14 @@ export const runTeamsAutomap = () => {
     dispatch(runAutomapAction(newSourceTeams));
   }
 }
+
+export const setToTeamsTarget = (...args) => checkAction(setToTargetAction)(...args);
+
+export const removeTeamsTarget = (...args) => checkAction(removeTargeAction)(...args);
+
+export const setToTeamsSource = (...args) => checkAction(setToSourceAction)(...args)
+
+export const runTeamsAutomap = (...args) => checkAction(runAutomap)(...args); 
 
 export const fetchTeams = (id) => {
   return dispatch => {

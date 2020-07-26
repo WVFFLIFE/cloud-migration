@@ -1,8 +1,6 @@
 import React from 'react';
-import {
-  makeStyles,
-  Checkbox as MuiCheckbox
-} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
+import MuiCheckbox from '@material-ui/core/Checkbox';
 import CheckIcon from '@material-ui/icons/Check';
 import clsx from 'clsx';
 
