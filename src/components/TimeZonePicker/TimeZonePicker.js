@@ -117,12 +117,15 @@ const useStyles = makeStyles({
 });
 
 const TimeZonePicker = ({
-  value
+  disabled,
+  value,
+  handleChangeValue
 }) => {
   const classes = useStyles();
 
   return (
     <Autocomplete
+      disabled={disabled}
       classes={{
         inputRoot: classes.inputRoot 
       }}
@@ -133,6 +136,7 @@ const TimeZonePicker = ({
       ListboxComponent={ListboxComponent}
       renderGroup={renderGroup}
       options={timeZones}
+      onChange={(event, newValue) => handleChangeValue(newValue)}
       renderInput={(params) => (
         <TextField 
           {...params}

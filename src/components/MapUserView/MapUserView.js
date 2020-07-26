@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import Button from '../Button'
@@ -6,7 +6,7 @@ import DragElement from '../DragElement';
 import Loader from '../Loader';
 import Search from '../Search';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { reorder, reorderNewList } from '../../helpers';
+import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -109,47 +109,20 @@ const MapUserView = (props) => {
       return;
     }
 
-    if (source.droppableId === destination.droppableId) {
-      const items = reorder(
-        targetList,
-        source.index,
-        destination.index
-      )
-
-      props.handleDragToTarget(result.draggableId, items)
-    } else if (source.droppableId === 'target' && source.droppableId !== destination.droppableId) {
+    if (source.droppableId === 'target') {
       let target = targetList.find(item => item.guid === result.draggableId);
 
       props.handleSetToSource(
         destination.droppableId,
-        target
+        {...target, guid: uuid()}
       )
-    } else if (destination.droppableId === 'target' && source.droppableId !== destination.droppableId) {
-      let sourceItem = sourceList.find(item => item.target ? item.target.guid === result.draggableId : null);
+    } else {
+      let item = sourceList.find(item => item.target ? item.target.guid === result.draggableId : null);
 
-      const items = reorderNewList(
-        targetList,
-        sourceItem.target,
-        destination.index
+      props.handleSetToSource(
+        destination.droppableId,
+        item.target
       )
-      
-      props.handleDragToTarget(
-        result.draggableId,
-        items
-      )
-    } else if (source.droppableId !== 'target' && source.droppableId !== destination.droppableId) {
-      let droppableSource = sourceList.find(item => item.source.guid === destination.droppableId);
-
-      if (droppableSource.target) {
-        return
-      } else {
-        let item = sourceList.find(item => item.target ? item.target.guid === result.draggableId : null);
-
-        props.handleSetToSource(
-          destination.droppableId,
-          item.target
-        )
-      }
     }
   }
 
@@ -242,12 +215,15 @@ const MapUserView = (props) => {
               [classes.loading]: props.loading
             })}>
               {props.loading ? null : (
-                <Search 
+                <Search
                   text={text}
                   handleTextChange={handleTextChange}
                 />
               )}
-              <Droppable droppableId="target">
+              <Droppable 
+                droppableId="target"
+                isDropDisabled
+              >
                 {(provided, snapshot) => (
                   <div
                     className={clsx(classes.wrapper, {
@@ -260,23 +236,34 @@ const MapUserView = (props) => {
                     ) : targetList
                       .filter(item => item[filterField].toLowerCase().includes(text))
                       .map((item, index) => (
-                      <Draggable
-                        key={item.guid}
-                        draggableId={item.guid}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <DragElement
-                            data={item}
-                            withDragIcon={true}
-                            ref={provided.innerRef}
-                            type={type}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          />
-                        )}
-                      </Draggable>
-                    ))}
+                        <Draggable
+                          key={item.guid}
+                          draggableId={item.guid}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <>
+                              <DragElement
+                                data={item}
+                                withDragIcon={true}
+                                ref={provided.innerRef}
+                                type={type}
+                                style={provided.draggableProps.style}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              />
+                              {snapshot.isDragging && (
+                                <DragElement
+                                  data={item}
+                                  withDragIcon={true}
+                                  type={type}
+                                  dragging
+                                />
+                              )}
+                            </>
+                          )}
+                        </Draggable>
+                      ))}
                     {provided.placeholder}
                   </div>
                 )}

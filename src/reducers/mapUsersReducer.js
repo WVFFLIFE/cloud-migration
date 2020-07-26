@@ -3,8 +3,7 @@ import {
   FETCH_USERS_SUCCESS,
   SET_TARGET_USER,
   REMOVE_TARGET_FROM_SOURCE,
-  USE_AUTOMAP,
-  SET_TO_TARGET
+  USE_AUTOMAP
 } from '../constants';
 
 const INITIAL_STATE = {
@@ -28,25 +27,6 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
         ...state,
         data: {
           ...action.payload,
-          mapedSourceUsers: action.payload.sourceUsers.map(sourceUserItem => {
-            const mapedSource = action.payload.mapedUsers.find(mapedItem => mapedItem.source === sourceUserItem.source.guid);
-
-            if (mapedSource) {
-              const target = action.payload.targetUsers.find(targetItem => targetItem.guid === mapedSource.target);
-              return {
-                source: sourceUserItem.source,
-                target
-              }
-            }
-
-            return {
-              source: sourceUserItem.source,
-              target: null
-            }
-          }),
-          mapedTargetUsers: action.payload.targetUsers.filter(item => {
-            return !action.payload.mapedUsers.some(mapedItem => mapedItem.target === item.guid)
-          })
         },
         loading: false
       }
@@ -55,7 +35,6 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
         ...state,
         data: {
           ...state.data,
-          targetUsers: state.data.targetUsers.filter(item => item.guid !== action.payload.target.guid),
           sourceUsers: state.data.sourceUsers
             .map(item => {
               if (item.target && item.target.guid === action.payload.target.guid) {
@@ -77,7 +56,6 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
         ...state,
         data: {
           ...state.data,
-          targetUsers: state.data.targetUsers.concat(action.payload),
           sourceUsers: state.data.sourceUsers.map(item => {
             if (item.target && item.target.guid === action.payload.guid) {
               return {
@@ -93,34 +71,12 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
           })
         }
       }
-    case SET_TO_TARGET:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          sourceUsers: state.data.sourceUsers.map(item => {
-            if (item.target && item.target.guid === action.payload.guid) {
-              return {
-                source: item.source,
-                target: null
-              }
-            }
-
-            return {
-              source: item.source,
-              target: item.target
-            }
-          }),
-          targetUsers: action.payload.items
-        }
-      }
     case USE_AUTOMAP:
       return {
         ...state,
         data: {
           ...state.data,
-          sourceUsers: state.data.mapedSourceUsers,
-          targetUsers: state.data.mapedTargetUsers
+          sourceUsers: action.payload
         }
       }
 

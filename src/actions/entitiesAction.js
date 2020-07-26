@@ -5,12 +5,17 @@ import {
   SET_ORDER,
   SET_ORDER_BY,
   SET_TOTAL_ITEMS,
-  SET_REPORTS
+  SET_REPORTS,
+  SET_SELECTED_ENTITIES,
+  SET_INIT_SELECTED_ENTITIES,
+  SET_NOT_REPORTED_LIST,
+  SET_INIT_ENTITIES_DATA
 } from '../constants';
 import {
   setValidationStart,
   setValidationSuccess,
-  setValidationError
+  setValidationError,
+  setValidationInit
 } from '../actions'
 import {batch} from 'react-redux';
 import MigrationService from '../services/migration.services';
@@ -57,6 +62,33 @@ const setReports = (reports) => ({
   payload: reports
 })
 
+const initEntitiesData = () => ({
+  type: SET_INIT_ENTITIES_DATA
+})
+
+export const setInitSelectedEntities = () => ({
+  type: SET_INIT_SELECTED_ENTITIES
+})
+
+export const selectEntity = (entity) => ({
+  type: SET_SELECTED_ENTITIES,
+  payload: entity
+})
+
+export const setSelectedEntities = entity => {
+  return (dispatch, getState) => {
+    const {entities} = getState().validation;
+
+    batch(() => {
+      if (entities.status === 'success') {
+        dispatch(setValidationInit('entities'));
+      }
+
+      dispatch(selectEntity(entity));
+    })
+  }
+}
+
 export const setCurrentPage = (page) => ({
   type: SET_CURRENT_PAGE,
   payload: page
@@ -70,6 +102,11 @@ export const setOrder = (order) => ({
 export const setOrderBy = (orderBy) => ({
   type: SET_ORDER_BY,
   payload: orderBy
+})
+
+export const setNotReportedList = (list) => ({
+  type: SET_NOT_REPORTED_LIST,
+  payload: list
 })
 
 export const fetchEntities = (id) => {
@@ -106,13 +143,23 @@ export const validateEntities = (id, SelectedEntities, flag) => {
     const {data: currentEntities} = getState().entities;
     const query = flag ? `?all=${flag}` : '';
 
-    dispatch(setValidationStart('entities'));
+    batch(() => {
+      dispatch(initEntitiesData());
+      dispatch(setValidationStart('entities'));
+    })
 
     MigrationService
       .post(`/migration-job/${id}/entities/validate-entities${query}`, body)
       .then(({validationResult, reports}) => {
+        console.log(
+          reports
+          .filter(report => !SelectedEntities.includes(report.logicalName))
+        )
+        const notReportedList = reports
+          .filter(report => !SelectedEntities.includes(report.logicalName))
+          .map(item => item.logicalName);
         const newEntities = modifyEntities(currentEntities, reports);
-
+        
         batch(() => {
           if (validationResult) {
             dispatch(setValidationSuccess('entities', 'Validation successful. No compatibility issues detected. Press “Next” to go further.'));
@@ -120,7 +167,8 @@ export const validateEntities = (id, SelectedEntities, flag) => {
             dispatch(setValidationError('entities', 'Detected compatibility issues with target environment'));
           }
           dispatch(fetchEntitiesSuccess(newEntities))
-          dispatch(setReports(reports))
+          dispatch(setReports(reports));
+          dispatch(setNotReportedList(notReportedList))
         })
       })
   }

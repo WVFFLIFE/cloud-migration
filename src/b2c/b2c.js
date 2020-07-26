@@ -6,7 +6,7 @@ import React from 'react'
 import { initializeConfig, msalAppConfig, B2C_SCOPES } from "./auth-utils"
 
 const LOCAL_STORAGE = 'localStorage'
-const SESSION_STORAGE = 'sessionStorage'
+// const SESSION_STORAGE = 'sessionStorage'
 const AUTHORIZATION_KEY = 'Authorization'
 
 const state = {
@@ -23,7 +23,7 @@ const state = {
 let msalApp;
 
 function acquireToken(successCallback) {
-  const account = msalApp.getAccount()
+  const account = msalApp.getAccount();
   if (!account) {
     msalApp.loginRedirect(B2C_SCOPES.API_ACCESS)
   } else {
@@ -58,7 +58,7 @@ const authentication = {
     state.launchApp = launchApp
     msalApp.handleRedirectCallback(error => {
       if (error) {
-        const errorMessage = error.errorMessage ? error.errorMessage : "Unable to acquire access token."
+        // const errorMessage = error.errorMessage ? error.errorMessage : "Unable to acquire access token."
       }
     })
     acquireToken()

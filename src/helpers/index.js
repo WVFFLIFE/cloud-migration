@@ -1,4 +1,5 @@
-/* table sort helpers */
+import {format} from 'date-fns';
+import {parseFromTimeZone} from 'date-fns-timezone';
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -75,7 +76,7 @@ function getOrderList(current, max, diff, step) {
   }
 
   let res = [];
-  
+
   for (let n = current - diff; n <= current + diff && n <= max; n++) {
     if (n < 1) continue;
 
@@ -106,19 +107,39 @@ function getNextStep(step) {
   }
 }
 
-function isSourceMaped(sourceUsers, mapedUsers) {
-  return sourceUsers
-      .filter(sourceUsersItem => {
-          return mapedUsers.some(mapedUsersItem => mapedUsersItem.source === sourceUsersItem.source.guid);
-      })
-      .every(sourceUsersItem => {
-          const mapedUser = mapedUsers.find(mapedUsersItem => mapedUsersItem.source === sourceUsersItem.source.guid);
-          return sourceUsersItem.target ? sourceUsersItem.target.guid === mapedUser.target : false;
-      })
+function isSourceMaped(sourceUsers) {
+  return sourceUsers.every(item => item.target);
+}
 
+function getScheduledDate(date, time, timezone) {
+  const dd = date.getDate();
+  const mm = date.getMonth();
+  const yyyy = date.getFullYear();
+  
+  const h = time.getHours();
+  const m = time.getMinutes();
+
+  const scheduledDate = new Date();
+  
+  scheduledDate.setDate(dd);
+  scheduledDate.setMonth(mm);
+  scheduledDate.setFullYear(yyyy);
+
+  const textDate = format(
+    scheduledDate,
+    'yyyy/MM/dd'
+  );
+
+  const utcDate = parseFromTimeZone(`${textDate} ${h}:${m}:0.000`, {timeZone: timezone});
+
+  return format(
+    utcDate,
+    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+  )
 }
 
 export {
+  getScheduledDate,
   isSourceMaped,
   getNextStep,
   reorderNewList,

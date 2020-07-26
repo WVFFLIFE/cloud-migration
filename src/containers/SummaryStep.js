@@ -1,18 +1,26 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setCurrentDate,
   setCurrentTime,
   setTimeZone,
-  finishMigration
+  fetchSummaryData
 } from '../actions'
 import SummaryView from '../components/SummaryView';
+import Dialog from '../components/Dialog';
 
 const SummaryStep = () => {
-  const { id } = useParams();
+  const {id} = useParams();
   const dispatch = useDispatch();
-  const { date, time, timezone, loading } = useSelector(state => state.summary);
+  const { date, time, timezone, getLoading, postLoading } = useSelector(state => state.summary);
+  const { currentStatus, canEdit, stepControlStatus } = useSelector(state => state.stepsSettings);
+
+  useEffect(() => {
+    dispatch(fetchSummaryData(id))
+
+    /* eslint-disable-next-line */
+  }, [])
 
   const handleDate = (date) => {
     dispatch(setCurrentDate(date))
@@ -26,22 +34,24 @@ const SummaryStep = () => {
     dispatch(setTimeZone(timezone));
   }
 
-  // const handleFinishMigration = () => {
-  //   dispatch(
-  //     finishMigration(id, )
-  //   )
-  // }
-
   return (
-    <SummaryView 
-      date={date}
-      time={time}
-      timezone={timezone}
-      loading={loading}
-      handleDate={handleDate}
-      handleTime={handleTime}
-      handleTimezone={handleTimezone}
-    />
+    <>
+      <SummaryView
+        currentStatus={currentStatus}
+        canEdit={canEdit}
+        date={date}
+        time={time}
+        timezone={timezone}
+        getLoading={getLoading}
+        postLoading={postLoading}
+        handleDate={handleDate}
+        handleTime={handleTime}
+        handleTimezone={handleTimezone}
+      />
+      <Dialog 
+        status={stepControlStatus}
+      />
+    </>
   )
 }
 
