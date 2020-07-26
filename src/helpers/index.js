@@ -1,5 +1,5 @@
 import {format} from 'date-fns';
-import {parseFromTimeZone} from 'date-fns-timezone';
+// import {parseFromTimeZone} from 'date-fns-timezone';
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -124,16 +124,13 @@ function getScheduledDate(date, time, timezone) {
   scheduledDate.setDate(dd);
   scheduledDate.setMonth(mm);
   scheduledDate.setFullYear(yyyy);
-
-  const textDate = format(
-    scheduledDate,
-    'yyyy/MM/dd'
-  );
-
-  const utcDate = parseFromTimeZone(`${textDate} ${h}:${m}:0.000`, {timeZone: timezone});
+  scheduledDate.setHours(h);
+  scheduledDate.setMinutes(m);
+  scheduledDate.setSeconds(0);
+  scheduledDate.setMilliseconds(0);
 
   return format(
-    utcDate,
+    scheduledDate,
     "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
   )
 }
