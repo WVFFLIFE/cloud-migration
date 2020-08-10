@@ -2,7 +2,8 @@ import {
   FETCH_SOURCEENVIRONMENT_DATA_STARTED,
   FETCH_SOURCEENVIRONMENT_DATA_SUCCESS,
   SET_SOURCEENVIRONMENT_DATA,
-  SET_INIT_SOURCEENVIRONMENT
+  SET_INIT_SOURCEENVIRONMENT,
+  SET_SOURCEENVIRONMENT_PASSWORD_INIT
 } from '../constants';
 
 const INITIAL_STATE = {
@@ -27,7 +28,8 @@ export default function (state = INITIAL_STATE, action) {
         loading: false,
         data: {
           ...state.data,
-          ...action.payload
+          ...action.payload,
+          Password: ''
         }
       }
     case SET_SOURCEENVIRONMENT_DATA:

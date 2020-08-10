@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import DatePicker from '../DatePicker';
 import TimePicker from '../TimePicker';
-import TimeZonePicker from '../TimeZonePicker';
+import VirtualList from '../VirtualList';
 import Loader from '../Loader';
 
 const useStyles = makeStyles(() => ({
@@ -65,7 +65,7 @@ const SummaryView = ({
               />
             </div>
             <div className={classes.controlsBottom}>
-              <TimeZonePicker
+              <VirtualList
                 disabled={!(['Draft', 'Scheduled'].includes(currentStatus) && canEdit)}
                 value={timezone}
                 handleChangeValue={handleTimezone}

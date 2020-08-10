@@ -1,6 +1,5 @@
 export {default as JobsList} from './JobsList';
 export {default as Stepper} from './Stepper';
-export {default as EnvironmentStep} from './EnvironmentStep';
 export {default as EntitiesStep} from './EntitiesStep';
 export {default as SourceEnvironmentStep} from './SourceEnvironmentStep';
 export {default as TargetEnvironmentStep} from './TargetEnvironmentStep';

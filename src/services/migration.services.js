@@ -15,7 +15,9 @@ async function request(uri, method = 'GET', body = null) {
 }
 
 class MigrationService {
-  BASE_URL = 'http://localhost:44310/api'; //`${window.location.origin}/api`
+  BASE_URL = process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:44310/api' 
+    : `${window.location.origin}/api`;
 
   get = async path => {
     const uri = `${this.BASE_URL}${path}`;
@@ -23,6 +25,9 @@ class MigrationService {
     const res = await request(uri);
 
     if (!res.ok) {
+      if (res.status === 401) {
+        authentication.signOut();
+      }
       throw new Error(`Couldn't fetch ${uri}`);
     }
 

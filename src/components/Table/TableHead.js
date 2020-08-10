@@ -10,20 +10,25 @@ import clsx from 'clsx';
 
 const useStyles = makeStyles({
   tableCellRoot: {
-    padding: 12,
-    fontSize: 13,
-    lineHeight: '20px',
+    padding: '19px 24px',
+    fontSize: 12,
+    lineHeight: '16px',
     fontFamily: 'Segoe UI',
     fontWeight: 400,
-    color: '#757588',
+    borderBottom: 0,
+    color: '#A1ADCE',
+    textTransform: 'uppercase',
   },
   jobsTableCellRoot: {
-    padding: 11.5,
-    fontSize: 12
+    padding: '19px 24px',
+    fontSize: 12,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    color: '#A1ADCE'
   },
   sortLabelRoot: {
     '&.MuiTableSortLabel-active': {
-      color: '#757588'
+      color: '#A1ADCE'
     }
   },
   visuallyHidden: {
@@ -37,8 +42,18 @@ const useStyles = makeStyles({
     top: 20,
     width: 1
   },
-  leftBorder: {
-    borderLeft: '1px solid #ccc'
+  sortIcon: {
+    color: '#A1ADCE !important'
+  },
+  stickyHeader: {
+    background: '#fff',
+    boxShadow: '7px 7px 9px 0 rgba(146,150,156,0.16)',
+    '&:first-child': {
+      boxShadow: '0px 7px 9px 0 rgba(146,150,156,0.16)'
+    }
+  },
+  zeroBorder: {
+    borderBottom: 0
   }
 });
 
@@ -49,7 +64,8 @@ const TableHead = ({
   onRequestSort,
   withCheckbox,
   type,
-  loading
+  loading,
+  ...rest
 }) => {
   const classes = useStyles(true);
 
@@ -58,9 +74,9 @@ const TableHead = ({
   }
 
   return (
-    <MuiTableHead>
+    <MuiTableHead {...rest}>
       <MuiTableRow>
-        {withCheckbox && !loading ? <MuiTableCell classes={{root: classes.leftBorder}}/> : null}
+        {withCheckbox && !loading ? <MuiTableCell classes={{root: classes.zeroBorder, stickyHeader: classes.stickyHeader}}/> : null}
         {
           cellsList.map(({ fieldName, label, activeSort }) => {
             return (
@@ -69,7 +85,8 @@ const TableHead = ({
                 classes={{
                   root: clsx(classes.tableCellRoot, {
                     [classes.jobsTableCellRoot]: type === 'jobs'
-                  })
+                  }),
+                  stickyHeader: classes.stickyHeader
                 }}
               >
                 {activeSort ? (
@@ -78,7 +95,8 @@ const TableHead = ({
                     direction={orderBy === fieldName ? order : 'asc'}
                     onClick={createSortHandler(fieldName)}
                     classes={{
-                      root: classes.sortLabelRoot
+                      root: classes.sortLabelRoot,
+                      icon: classes.sortIcon
                     }}
 
                   >

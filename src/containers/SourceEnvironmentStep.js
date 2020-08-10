@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   setSourceEnvironmentData, 
   fetchSourceEnvironmentData,
   validateStep,
-  setValidationInit
+  setValidationInit,
+  setCurrentStep
 } from '../actions';
 import EnvironmentStepView from '../components/EnvironmentStepView';
 
@@ -23,12 +24,14 @@ const SourceEnvironmentStep = () => {
     /* eslint-disable-next-line */
   }, [id]);
 
-  const handleFieldChange = (event) => {
+  const handleFieldChange = useCallback((event) => {
     event.persist();
     const fieldData = { [event.target.name]: event.target.value }
 
-    dispatch(setSourceEnvironmentData(fieldData))
-  }
+    dispatch(setSourceEnvironmentData(fieldData));
+
+    /* eslint-disable-next-line */
+  }, [])
 
   const validate = (e) => {
     e.preventDefault();
@@ -36,8 +39,8 @@ const SourceEnvironmentStep = () => {
     dispatch(validateStep(id, 'sourceenvironment', data));
   }
   
-  const handleCloseError = () => {
-    dispatch(setValidationInit('sourceenvironment'));
+  const setNextStep = () => {
+    dispatch(setCurrentStep('targetenvironment'));
   }
 
   return (
@@ -49,7 +52,7 @@ const SourceEnvironmentStep = () => {
       isActive={currentStep === 'sourceenvironment'}
       validationData={validationData}
       validate={validate}
-      handleCloseError={handleCloseError}
+      setNextStep={setNextStep}
     />
   )
 }

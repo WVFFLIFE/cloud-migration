@@ -1,32 +1,31 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
+import clsx from 'clsx';
 import { stepsConfig } from '../config'
 import { initStepSettings, setAllInit } from '../actions'
 import {
-  Grid,
   makeStyles
 } from '@material-ui/core'
-import { 
-  EnvironmentStep,
+import {
+  SourceEnvironmentStep,
+  TargetEnvironmentStep,
   EntitiesStep,
   MapUserStep,
-  Buttons,
   MapBusinessUnitsStep,
   MapTeamsStep,
-  SummaryStep
+  SummaryStep,
 } from '../containers'
+import StatusNotification from '../components/StatusNotification'
 import SideBar from '../components/SideBar'
 import Loader from '../components/Loader'
 
 function getCurrentStepView(step) {
-  switch(step) {
-    case 'environments':
-      return <EnvironmentStep />
+  switch (step) {
     case 'sourceenvironment':
-      return <EnvironmentStep />
+      return <SourceEnvironmentStep />
     case 'targetenvironment':
-      return <EnvironmentStep />
+      return <TargetEnvironmentStep />
     case 'entities':
       return <EntitiesStep />
     case 'mapusers':
@@ -42,60 +41,32 @@ function getCurrentStepView(step) {
   }
 }
 
-function getStepTitleData(step) {
+function getStepTitle(step) {
   switch (step) {
     case 'sourceenvironment':
-      return {
-        title: 'Environments connection',
-        number: 1
-      }
+      return 'Environments connection > Source environment'
     case 'targetenvironment':
-      return {
-        title: 'Environments connection',
-        number: 1
-      }
+      return 'Environments connection > Target environment'
     case 'entities':
-      return {
-        title: 'Entities for migration',
-        number: 2
-      }
+      return 'Entities for migration'
     case 'mapusers':
-      return {
-        title: 'Mapping',
-        number: 3
-      }
+      return 'Mapping'
     case 'mapbusinessunits':
-      return {
-        title: 'Mapping',
-        number: 3
-      }
+      return 'Mapping'
     case 'mapteams':
-      return {
-        title: 'Mapping',
-        number: 3
-      }
+      return 'Mapping'
     case 'summary':
-      return {
-        title: 'Summary',
-        number: 4
-      }
+      return 'Schedule'
     default:
-      return {
-        title: 'Environments connection',
-        number: 1
-      }
+      return 'Environments connection > Source environment'
   }
 }
 
 const useStyles = makeStyles({
   leftSide: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     minHeight: loading => loading ? 400 : '100%',
-    background: '#fff',
-    border: '0.5px solid rgba(0, 0, 0, 0.2)',
-    borderRadius: 2
+    padding: 40,
+    background: '#F1F2F6',
   },
   rightSide: {
     display: 'flex',
@@ -103,29 +74,38 @@ const useStyles = makeStyles({
     alignItems: loading => loading ? 'center' : 'normal',
     justifyContent: loading => loading ? 'center' : 'flex-start',
     minHeight: loading => loading ? 400 : '100%',
-    background: '#fff',
-    border: '0.5px solid rgba(0, 0, 0, 0.2)',
-    borderRadius: 2,
-    boxShadow: '0px 2px 14px rgba(0, 0, 0, 0.15)'
-  },
-  topBar: {
-    padding: 20,
-    borderBottom: '0.5px solid rgba(0, 0, 0, 0.2)',
+    padding: 40,
+    background: '#F8F9FB',
   },
   wrapper: {
-    width: '100%'
+    display: 'flex',
+    flexWrap: 'wrap',
+    width: '100%',
+    flex: 1
   },
   h2: {
     margin: 0,
-    fontSize: 24,
+    marginBottom: 40,
+    fontSize: 32,
     fontFamily: 'Segoe UI',
-    fontWeight: 350,
-    color: '#302846'
+    fontWeight: 700,
+    color: '#192B5D'
+  },
+  stepRoot: {
+    background: '#fff',
+    borderRadius: 8,
+    boxShadow: '0 16.6px 29.6px 0 rgba(161,173,206,0.12)',
+  },
+  wrapperLoading: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 })
 
 const Stepper = () => {
   const { id } = useParams();
+  const history = useHistory();
   const dispatch = useDispatch();
   const {
     currentStep,
@@ -134,8 +114,10 @@ const Stepper = () => {
   const stepsList = useSelector(state => state.validation)
   const classes = useStyles(stepLoading);
 
+  const errorCallback = () => history.push('/404');
+
   useEffect(() => {
-    dispatch(initStepSettings(id))
+    dispatch(initStepSettings(id, errorCallback))
 
     return () => {
       dispatch(setAllInit());
@@ -154,69 +136,60 @@ const Stepper = () => {
       }
     })
 
-    if (
-      [
-        'environments',
-        'sourceenvironment',
-        'targetenvironment'
-      ].includes(currentStep)
-    ) {
-      validStepConfig['environments'].isActive = true;
-    } else if (
-      [
-        'map',
-        'mapusers',
-        'mapbusinessunits',
-        'mapteams'
-      ].includes(currentStep)
-    ) {
-      validStepConfig['map'].isActive = true;
-    }
+  if (
+    [
+      'environments',
+      'sourceenvironment',
+      'targetenvironment'
+    ].includes(currentStep)
+  ) {
+    validStepConfig['environments'].isActive = true;
+  } else if (
+    [
+      'map',
+      'mapusers',
+      'mapbusinessunits',
+      'mapteams'
+    ].includes(currentStep)
+  ) {
+    validStepConfig['map'].isActive = true;
+  }
 
-  const { title, number } = getStepTitleData(currentStep)
+  const title = getStepTitle(currentStep);
 
   return (
-    <Grid
-      container
-      spacing={3}
-      alignItems="flex-start"
-    >
-      <Grid
-        item
-        md={3}
-        xs={12}
-      >
-        <div className={classes.leftSide}>
-          {stepLoading ? <Loader /> : (
-            <SideBar
-              stepsConfig={validStepConfig}
-            />
-          )}
-        </div>
-      </Grid>
-      <Grid
-        item
-        md={9}
-        xs={12}
-      >
-        <div className={classes.rightSide}>
-          {!stepLoading
-            ? (
-              <div className={classes.topBar}>
-                <h2 className={classes.h2}>{number}. {title}</h2>
+    <div className={clsx(classes.wrapper, {
+      [classes.wrapperLoading]: stepLoading
+    })}>
+      {stepLoading ? <Loader /> : (
+        <>
+          <div className="col-3">
+            <div className={classes.leftSide}>
+              <SideBar
+                currentStep={currentStep}
+                stepsConfig={validStepConfig}
+              />
+            </div>
+          </div>
+          <div className="col-9">
+            <div className={classes.rightSide}>
+              {['error', 'success'].includes(stepsList[currentStep].status) ? (
+                <StatusNotification
+                  status={stepsList[currentStep].status}
+                  message={stepsList[currentStep].message}
+                />
+              ) : null}
+              <div>
+                <h2 className={classes.h2}>{title}</h2>
               </div>
-            )
-            : null
-          }
-          {
-            stepLoading 
-              ? <Loader /> 
-              : getCurrentStepView(currentStep)
-          }
-        </div>
-        {stepLoading ? null : <Buttons />}
-      </Grid>
-    </Grid>
+              <div className={classes.stepRoot}>
+                {getCurrentStepView(currentStep)}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   )
 }
 

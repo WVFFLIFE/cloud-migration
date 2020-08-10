@@ -84,6 +84,8 @@ const authentication = {
   signOut: () => msalApp.logout(),
   getAccessToken: () => state.accessToken,
   refreshToken: async function (successCallback) {
+    // localStorage.clear();
+
     const account = msalApp.getAccount()
     if (!account) {
       msalApp.loginRedirect(B2C_SCOPES.API_ACCESS)

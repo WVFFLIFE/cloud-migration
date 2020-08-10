@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import MapUserView from '../components/MapUserView';
+import MapDragView from '../components/MapDragView';
 import {
   setToTeamsTarget,
   removeTeamsTarget,
@@ -37,7 +37,7 @@ const MapTeamsStep = () => {
   }
 
   return (
-    <MapUserView
+    <MapDragView
       loading={loading}
       targetList={data.targetTeams}
       sourceList={data.sourceTeams}

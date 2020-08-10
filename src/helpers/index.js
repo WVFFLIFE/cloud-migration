@@ -135,7 +135,19 @@ function getScheduledDate(date, time, timezone) {
   )
 }
 
+function checkResponseError(res) {
+  if (
+    typeof res === 'object' &&
+    !Array.isArray(res) &&
+    res !== null
+  ) {
+    return 'type' in res === 'error'
+  }
+  return false;
+}
+
 export {
+  checkResponseError,
   getScheduledDate,
   isSourceMaped,
   getNextStep,

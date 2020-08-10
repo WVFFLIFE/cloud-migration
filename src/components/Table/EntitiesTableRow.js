@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   makeStyles,
   TableRow as MuiTableRow,
   TableCell as MuiTableCell,
   Checkbox as MuiCheckbox
 } from '@material-ui/core';
-import CollapseError from '../CollapseError';
 import CheckIcon from '@material-ui/icons/Check';
 import clsx from 'clsx';
 
 const useStyles = makeStyles({
   cellRoot: {
     padding: 6,
-  },
-  tableCellBorder: {
-    borderLeft: '1px solid #ccc'
   },
   icon: {
     position: 'relative',
@@ -25,8 +21,8 @@ const useStyles = makeStyles({
     boxSizing: 'border-box'
   },
   checkedIcon: {
-    background: '#0078D4',
-    borderColor: '#0078D4'
+    background: '#192B5D',
+    borderColor: '#192B5D'
   },
   checkIcon: {
     position: 'absolute',
@@ -37,20 +33,23 @@ const useStyles = makeStyles({
   },
   selected: {
     '&.Mui-selected': {
-      background: '#EBF6FF'
+      background: 'transparent',
     },
     '&:hover': {
       '&.Mui-selected': {
-        background: '#EBF6FF'
+        background: 'transparent'
       },
     }
   },
-  disabled: {
-    background: '#EBF6FF'
+  rowRoot: {
+    '&:last-child': {
+      '& .MuiTableCell-root': {
+        borderBottomColor: 'transparent'
+      }
+    }
   },
-  disabledIcon: {
-    borderColor: '#ccc',
-    background: '#ccc'
+  rowError: {
+    background: '#FFE9E1 !important'
   }
 })
 
@@ -59,34 +58,18 @@ const EntitiesTableRow = ({
   selected,
   handleCheckboxChange,
   cellsList,
-  disabled
+  disabled,
 }) => {
   const classes = useStyles();
-  const [errorView, setErrorView] = useState(false);
 
-  const toggleError = () => {
-    setErrorView(flag => !flag);
-  }
-
-  const handleClose = () => {
-    setErrorView(false);
-  }
-
-  const shouldCollapseVisible = data.validationSettings && data.validationSettings.status === 'error';
+  const isError = data.validationSettings && data.validationSettings.status === 'error';
 
   return (
     <React.Fragment>
-      {shouldCollapseVisible ? (
-        <CollapseError
-          isOpen={errorView}
-          messages={data.validationSettings.message}
-          handleClose={handleClose}
-        />
-      ) : null}
       <MuiTableRow
         classes={{
-          root: clsx(classes.selected, {
-            [classes.disabled]: disabled
+          root: clsx(classes.rowRoot, classes.selected, {
+            [classes.rowError]: isError
           })
         }}
         tabIndex={-1}
@@ -95,28 +78,29 @@ const EntitiesTableRow = ({
         <MuiTableCell
           padding="checkbox"
           classes={{
-            root: clsx(classes.cellRoot, classes.tableCellBorder)
+            root: classes.cellRoot
           }}
         >
-          <MuiCheckbox 
+          <MuiCheckbox
             disabled={disabled}
             onChange={event => handleCheckboxChange(event, data.logicalName)}
-            checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon, {
-              [classes.disabledIcon]: disabled
-            })}><CheckIcon className={classes.checkIcon} /></span>}
+            checkedIcon={
+              <span className={clsx(classes.icon, classes.checkedIcon)}>
+                <CheckIcon className={classes.checkIcon} />
+              </span>
+            }
             icon={<span className={classes.icon}></span>}
             checked={selected}
             color="default"
           />
         </MuiTableCell>
         {
-          cellsList.map(({fieldName, renderItem}) => {
+          cellsList.map(({ fieldName, renderItem }) => {
             const cellData = fieldName in data ? data[fieldName] : null;
-            const render = fieldName === 'validationSettings' ? renderItem(toggleError) : renderItem;
 
             return (
               <React.Fragment key={fieldName}>
-                {render(cellData)}
+                {renderItem(cellData)}
               </React.Fragment>
             )
           })

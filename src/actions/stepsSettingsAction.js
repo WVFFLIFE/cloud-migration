@@ -4,10 +4,11 @@ import {
   SETTINGS_INIT_STARTED,
   SETTINGS_INIT_SUCCESS,
   SET_EDIT_ABILITY,
-  SET_STEP_CONTROL_STATUS
+  SET_STEP_CONTROL_STATUS,
 } from '../constants'
 import {
   setValidationSuccess,
+  setValidationInit
 } from '../actions'
 import MigrationService from '../services/migration.services'
 import { getNextStep } from '../helpers';
@@ -40,6 +41,17 @@ export const setStepControlStatus = (status) => ({
   type: SET_STEP_CONTROL_STATUS,
   payload: status
 })
+
+export const setSourceEnvironmentStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setValidationInit('environments'));
+      dispatch(setValidationInit('targetenvironment'));
+      dispatch(setValidationInit('sourceenvironment'));
+      dispatch(setCurrentStep('sourceenvironment'));
+    })
+  }
+}
 
 export const setNextStep = (id, step) => {
   return (dispatch, getState) => {
@@ -150,7 +162,7 @@ export const setValidationSuccessByStep = () => {
   }
 }
 
-export const initStepSettings = (id) => {
+export const initStepSettings = (id, errCallback) => {
   return dispatch => {
     dispatch(settingsInitStarted());
 
@@ -187,5 +199,6 @@ export const initStepSettings = (id) => {
           }
         })
       })
+      .catch(() => errCallback())
   }
 }

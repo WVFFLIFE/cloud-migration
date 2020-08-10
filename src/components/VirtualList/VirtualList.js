@@ -116,7 +116,7 @@ const useStyles = makeStyles({
   }
 });
 
-const TimeZonePicker = ({
+const VirtualList = ({
   disabled,
   value,
   handleChangeValue
@@ -155,4 +155,4 @@ const TimeZonePicker = ({
   )
 }
 
-export default TimeZonePicker;
+export default VirtualList;

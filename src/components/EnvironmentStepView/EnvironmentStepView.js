@@ -2,11 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import {
   makeStyles,
-  Collapse,
 } from '@material-ui/core';
-import {
-  CheckCircleOutline as CheckCircleOutlineIcon,
-} from '@material-ui/icons'
 import Button from '../Button'
 import TextField from '../TextField'
 import LoaderProgress from '../LoaderProgress'
@@ -18,126 +14,110 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    marginTop: 20
   },
   disabledItem: {
-    padding: '20px 40px',
-    background: '#FAFAFA',
     color: '#A19F9D',
-    "&:last-child": {
-      borderTop: '0.5px solid rgba(0, 0, 0, 0.2)'
-    }
   },
   activeItem: {
     background: '#fff',
     color: '#000'
   },
-  title: {
-    margin: 0,
-    textTransform: 'uppercase'
-  },
-  colorTitle: {
-    marginRight: 10,
-    color: '#107C10'
-  },
-  topBar: {
+  buttonsWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: 30
   },
-  topBarSuccess: {
-    background: '#DAF3DB'
+  fieldsWrapper: {
+    width: '100%',
+    padding: 30,
+    borderBottom: '1px solid #A1ADCE'
   },
-  successIcon: {
-    marginRight: 10,
-    color: '#107C10',
-  },
-  successMessage: {
-    fontSize: 14,
-    fontFamily: 'Segoe UI',
-    color: '#919090'
+  center: {
+    textAlign: 'center'
   }
 })
 
 const EnvironmentStepView = ({
-  title,
   handleFieldChange,
   validate,
   data,
   validationData,
   isActive,
   loading,
-  handleCloseError
+  setNextStep,
+  setBackStep,
 }) => {
   const classes = useStyles();
-  const {status, message} = validationData;
+  const { status } = validationData;
 
   const isButtonDisabled = !data.Url || !data.User || !data.Password;
 
   return (
     <div className={clsx(classes.disabledItem, {
-      [classes.activeItem]: isActive,
-      [classes.topBarSuccess]: status === 'success'
+      [classes.center]: loading,
     })}>
-      {status === 'error' ? (
-        <StatusNotification
-          status="error"
-          message={message}
-          handleCloseClick={handleCloseError}
-        />
-      ) : null}
-      <div className={classes.topBar}>
-        {status === 'success' ? (
-          <CheckCircleOutlineIcon className={classes.successIcon}/>
-        ) : null}
-        <span className={clsx(classes.title, {
-          [classes.colorTitle]: status === 'success'
-        })}>{title}</span>
-        {" "}
-        {" "}
-        {status === 'success' ? (
-          <span className={classes.successMessage}> — {message}</span>
-        ) : null}
-      </div>
       {loading
         ? <Loader />
         : (
-          <Collapse in={isActive}>
-            <form
-              className={classes.form}
-              onSubmit={validate}
-            >
+          <form
+            className={classes.form}
+            onSubmit={validate}
+          >
+            <div className={classes.fieldsWrapper}>
               <TextField
                 handleChange={handleFieldChange}
                 label="URL"
                 name="Url"
                 value={data.Url}
+                placeholder="https://"
               />
               <TextField
                 handleChange={handleFieldChange}
                 label="Username"
                 name="User"
                 value={data.User}
+                placeholder="Login"
               />
               <TextField
                 handleChange={handleFieldChange}
-                label="password"
+                label="Password"
                 name="Password"
                 type="password"
                 value={data.Password}
               />
-              <Button
-                type="submit"
-                disabled={status === 'loading' || isButtonDisabled}
-              >
-                Validate
+            </div>
+            <div className={classes.buttonsWrapper}>
+              <div>
+                <Button
+                  type="submit"
+                  disabled={status === 'loading' || isButtonDisabled}
+                >
+                  Validate
               {status !== 'hidden' ? (
-                  <LoaderProgress
-                    status={status}
-                  />
-                ) : null}
-              </Button>
-            </form>
-          </Collapse>
+                    <LoaderProgress
+                      status={status}
+                    />
+                  ) : null}
+                </Button>
+              </div>
+              <div>
+                {setBackStep ? <Button
+                  disabled={loading}
+                  entity="back"
+                  label="Back"
+                  onClick={setBackStep}
+                /> : null}
+                <Button
+                  disabled={status !== 'success'}
+                  entity="next"
+                  label="Next"
+                  onClick={setNextStep}
+                />
+              </div>
+            </div>
+          </form>
         )
       }
     </div>

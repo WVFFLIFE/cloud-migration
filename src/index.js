@@ -1,6 +1,10 @@
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 import 'date-fns';
+import './config/authentication';
+import './assets/fonts/fonts.css';
+import './index.css';
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -12,9 +16,13 @@ import thunk from 'redux-thunk'
 import App from './App'
 import rootReducer from './reducers';
 import authentication from './b2c';
-import './config/authentication';
+import Webfont from 'webfontloader';
 
-import './index.css';
+Webfont.load({
+  custom: {
+    families: ['SegoeUI', 'Gilroy']
+  }
+})
 
 const composeEnhancers =
   typeof window === 'object' &&

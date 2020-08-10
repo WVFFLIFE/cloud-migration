@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   tableCell: {
     width: 200,
     minHeight: 60.8,
-    padding: '16px 12px',
+    padding: '19px 24px',
     boxSizing: 'border-box',
     background: '#fff'
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mock: {
     width: '100%',
-    height: 12.5,
+    height: 18.4,
     borderRadius: 5,
     background: "linear-gradient(to right, #eee 20%, #ddd 50%, #eee 80%)",
     backgroundSize: "500px 100px",

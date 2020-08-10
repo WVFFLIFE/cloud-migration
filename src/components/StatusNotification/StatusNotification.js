@@ -1,8 +1,7 @@
 import React from 'react';
-import { makeStyles, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import { WarningIcon, SkypeIcon } from '../Icons';
 import {
-  Warning as WarningIcon,
-  Close as CloseIcon,
   CheckCircleOutlineOutlined as CheckIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
@@ -13,30 +12,31 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
-    padding: '6px 12px',
-    background: 'rgba(250, 65, 0, 0.2)'
+    marginBottom: 25,
+    padding: 20,
+    background: '#fff',
+    borderRadius: 8,
+    boxShadow: '0 9.6px 18.6px 0 rgba(161,173,206,0.12)'
   },
   icon: {
     marginRight: 15,
-    fontSize: '1rem',
+    fontSize: '1.3rem',
   },
   iconError: {
-    color: '#D83B01'
+    fontSize: 24,
+    color: '#C4001A'
   },
   iconSuccess: {
-    color: '#107C10'
+    color: '#192B5D'
   },
   message: {
-    fontSize: 12,
+    fontSize: 16,
     fontFamily: 'Segoe UI',
+    fontWeight: 600,
     color: '#201F1E'
   },
-  error: {
-    background: 'rgba(250, 65, 0, 0.2)'
-  },
-  success: {
-    background: 'rgba(95, 210, 85, 0.2)'
+  errorMessage: {
+    color: '#C4001A'
   },
   closeIcon: {
     fontSize: '1rem',
@@ -47,48 +47,60 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center'
   },
-  iconButton: {
-    minWidth: 'auto',
-    padding: 3,
-    borderRadius: '50%'
+  skypeContactWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  skypeText: {
+    margin: 0,
+    marginRight: 10,
+    fontSize: 16,
+    fontWeight: 600,
+    lineHeight: '21px',
+    color: '#192B5D'
+  },
+  skypeIcon: {
+    marginRight: 8
+  },
+  skypeLink: {
+    fontSize: 16,
+    lineHeight: '24px',
+    color: '#F26026'
   }
 }))
 
 const StatusNotification = ({
   status,
   message,
-  handleCloseClick
 }) => {
   const classes = useStyles();
 
+  const isSuccess = status === 'success';
+  const isError = !isSuccess;
+
   return (
     <div
-      className={clsx(classes.root, {
-        [classes.success]: status === 'success',
-        [classes.error]: status === 'error'
-      })}
+      className={classes.root}
     >
       <div className={classes.textWrapper}>
-        {status === 'success' ? (
+        {isSuccess ? (
           <CheckIcon className={clsx(classes.icon, classes.iconSuccess)} />
         ) : (
             <WarningIcon
               className={clsx(classes.icon, classes.iconError)}
             />
           )}
-        <span className={classes.message}>{message}</span>
+        <span className={clsx(classes.message, {
+          [classes.errorMessage]: isError
+        })}>{message}</span>
       </div>
-      <Button
-        classes={{
-          root: classes.iconButton
-        }}
-        onClick={handleCloseClick}
-      >
-        <CloseIcon
-          className={classes.closeIcon}
-        />
-      </Button>
-
+      {status === 'error' ? (
+        <div className={classes.skypeContactWrapper}>
+          <p className={classes.skypeText}>Contact us via skype</p>
+          <SkypeIcon color="#F26026" className={classes.skypeIcon}/>
+          <a href="skype:" className={classes.skypeLink}>helptomigrate_skype</a>
+        </div>
+      ) : null}
     </div>
   )
 }

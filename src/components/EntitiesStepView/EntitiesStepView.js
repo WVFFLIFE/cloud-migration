@@ -1,57 +1,71 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { 
-  Table, 
-  TableHead, 
-  TableBody, 
+import {
+  Table,
+  TableHead,
+  TableBody,
   TableBodyLoader,
-  EntitiesTableRow 
+  EntitiesTableRow
 } from '../Table';
 import Checkbox from '../Checkbox';
 import Button from '../Button';
-import Pagination from '../Pagination';
 import LoaderProgress from '../LoaderProgress';
-import StatusNotification from '../StatusNotification';
+import Tabs from '../Tabs';
+import Search from '../Search';
 import { entitiesTableConfig } from '../../config';
-import clsx from 'clsx';
 
 const useStyles = makeStyles(() => ({
-  root: {
-    padding: 20,
-  },
-  paragraph: {
-    margin: 0,
-    marginBottom: 20,
-    fontSize: 14,
-    fontFamily: 'Segoe UI',
-    fontWeight: 400,
-    color: '#878787'
+  contentWrapper: {
+    padding: 30,
+    paddingBottom: 0
   },
   controls: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 10,
-    borderBottom: '2px solid #A19F9D'
+    marginBottom: 15,
   },
   controlsLast: {
     marginTop: 20,
     borderBottom: 0
   },
   amount: {
-    fontSize: 14,
-    fontWeight: 400,
+    display: 'block',
+    paddingLeft: 14.5,
+    fontSize: 16,
+    fontWeight: 700,
     fontFamily: 'Segoe UI',
-    color: '#201F1E'
+    lineHeight: '21px',
+    color: '#192B5D'
   },
   checkboxWrapper: {
-    marginRight: 11,
-    paddingLeft: 6
+    paddingRight: 10,
+    paddingLeft: 7,
+    borderRight: '1px solid #EAE9ED'
   },
   leftSide: {
     display: 'flex',
     alignItems: 'center'
-  }
+  },
+  checkboxRoot: {
+    padding: 9
+  },
+  searchWrapper: {
+    maxWidth: 350,
+    width: '100%'
+  },
+  cell: {
+    padding: '19px 24px',
+    background: '#fff'
+  },
+  buttonsWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: 30,
+    borderTop: '1px solid #A1ADCE'
+  },
 }))
 
 const EntityStepView = ({
@@ -59,13 +73,7 @@ const EntityStepView = ({
   data,
   validationData,
   handleValidate,
-  itemsPerPage,
-  currentPage,
-  order,
-  orderBy,
-  setPage,
   handleRequestSort,
-  totalItems,
   setInitialStepValidation,
   handleChangeSelectedEntities,
   selectedEntities,
@@ -73,7 +81,10 @@ const EntityStepView = ({
   notReportedList
 }) => {
   const classes = useStyles();
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('displayName');
   const [isSelectedAll, setIsSelectedAll] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const { cellsList } = entitiesTableConfig;
 
   const handleSelectAll = (event) => {
@@ -90,107 +101,101 @@ const EntityStepView = ({
     handleChangeSelectedEntities(entity)
   }
 
-  const renderRows = () => {
-    return data.map(item => {
-      const isSelected = selectedEntities.includes(item.logicalName)
-      const isReported = notReportedList.includes(item.logicalName);
+  const handleChangeSearchValue = (e) => {
+    e.persist();
+    const { value } = e.target;
 
-      return (
-        <EntitiesTableRow
-          key={item.logicalName} 
-          data={item}
-          selected={isSelectedAll ? !isSelected || isReported : isSelected || isReported}
-          disabled={isReported}
-          handleCheckboxChange={handleSelectItem}
-          cellsList={cellsList}
-        />
-      )
-    })
+    setSearchValue(value);
   }
 
-  const handleSelectPage = useCallback((page) => setPage(page), [setPage]);
+  const modifyList = (list) => {
+    return list
+      .map(item => ({...item, displayName: item.displayName || '' }))
+      .filter(item => searchValue ? item.displayName.toLowerCase().includes(searchValue.toLowerCase()) : true)
+  }
 
-  const maxPage = Math.ceil(totalItems / itemsPerPage);
-  const selectedCount = isSelectedAll ? totalItems - selectedEntities.length : selectedEntities.length;
-  const { status, message } = validationData;
+  const renderRows = (list) => {
+    return list
+      .map(item => {
+        const isSelected = selectedEntities.includes(item.logicalName)
+        const isReported = notReportedList.includes(item.logicalName);
 
-  return (
-    <div className={classes.root}>
-      {['success', 'error'].includes(status) ? (
-        <StatusNotification 
-          status={status}
-          message={message}
-          handleCloseClick={setInitialStepValidation}
-        />
-      ) : null}
-      <p className={classes.paragraph}>Please choose entities for migration</p>
-      <div className={classes.controls}>
-        <div className={classes.leftSide}>
-          <div
-            className={classes.checkboxWrapper}
-          >
-            <Checkbox
-              onChange={handleSelectAll}
-              isItemSelected={isSelectedAll ? isSelectedAll && !selectedEntities.length : selectedEntities.length === totalItems}
-            />
-          </div>
-          <span className={classes.amount}>
-            {selectedCount}/{totalItems} chosen
-          </span>
-        </div>
-        <div>
-          <Button
-            type="button"
-            disabled={loading || status === 'loading' || !selectedCount}
-            handleClick={() => handleValidate(selectedEntities, isSelectedAll)}
-          >
-            Validate
-              {status !== 'hidden' ? (
-              <LoaderProgress
-                status={status}
-              />
-            ) : null}
-          </Button>
-        </div>
-      </div>
-      <Table>
-        <TableHead
-          order={order}
-          orderBy={orderBy}
-          cellsList={cellsList}
-          withCheckbox
-          onRequestSort={handleRequestSort}
-          loading={loading}
-        />
-        {loading ? (
-          <TableBodyLoader
-            rows={3}
+        return (
+          <EntitiesTableRow
+            key={item.logicalName}
+            data={item}
+            selected={isSelectedAll ? !isSelected || isReported : isSelected || isReported}
+            disabled={isReported || validationData.status === 'loading'}
+            handleCheckboxChange={handleSelectItem}
             cellsList={cellsList}
           />
-        ) : (
-            <TableBody
-              renderRows={renderRows}
-            />
-          )}
-      </Table>
-      <Pagination
-        disabled={loading || status === 'loading'}
-        maxPage={maxPage}
-        currentPage={currentPage}
-        handleSelectPage={handleSelectPage}
-        diff={3}
+        )
+      })
+  }
+
+  const filteredData = modifyList(data);
+  const totalItems = filteredData.length;
+  const selectedCount = isSelectedAll ? totalItems - selectedEntities.length : selectedEntities.length;
+  const { status } = validationData;
+  
+  return (
+    <div>
+      <Tabs 
+        currentTab="core"
       />
-      <div className={clsx(classes.controls, classes.controlsLast)}>
-        <div className={classes.leftSide}>
-          <span className={classes.amount}>
-            {selectedCount}/{totalItems} chosen
+      <div className={classes.contentWrapper}>
+        <div className={classes.controls}>
+          <div className={classes.leftSide}>
+            <div
+              className={classes.checkboxWrapper}
+            >
+              <Checkbox
+                disabled={validationData.status === 'loading'}
+                onChange={handleSelectAll}
+                isItemSelected={isSelectedAll ? isSelectedAll && !selectedEntities.length : selectedEntities.length === totalItems}
+                classes={{
+                  root: classes.checkboxRoot
+                }}
+              />
+            </div>
+            <span className={classes.amount}>
+              {selectedCount}/{totalItems} chosen
           </span>
+          </div>
+          <div className={classes.searchWrapper}>
+            <Search
+              text={searchValue}
+              handleTextChange={handleChangeSearchValue}
+            />
+          </div>
         </div>
+        <Table>
+          <TableHead
+            order={order}
+            orderBy={orderBy}
+            cellsList={cellsList}
+            withCheckbox
+            onRequestSort={handleRequestSort}
+            loading={loading}
+          />
+          {loading ? (
+            <TableBodyLoader
+              rows={3}
+              cellsList={cellsList}
+            />
+          ) : (
+              <TableBody
+                renderRows={() => renderRows(filteredData)}
+              />
+            )}
+        </Table>
+      </div>
+      <div className={classes.buttonsWrapper}>
         <div>
           <Button
-            type="button"
+            type="submit"
             disabled={loading || status === 'loading' || !selectedCount}
-            handleClick={() => handleValidate(selectedEntities, isSelectedAll)}
+            onClick={() => handleValidate(selectedEntities, isSelectedAll)}
           >
             Validate
               {status !== 'hidden' ? (
@@ -199,6 +204,20 @@ const EntityStepView = ({
               />
             ) : null}
           </Button>
+        </div>
+        <div>
+          <Button
+            disabled={loading || status === 'loading'}
+            entity="back"
+            label="Back"
+            onClick={() => {}}
+          />
+          <Button
+            disabled={status !== 'success'}
+            entity="next"
+            label="Next"
+            onClick={() => { }}
+          />
         </div>
       </div>
     </div>

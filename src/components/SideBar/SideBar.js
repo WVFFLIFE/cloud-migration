@@ -1,55 +1,98 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, Collapse } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
+import {SkypeIcon} from '../Icons';
 
 const getCircleClasses = makeStyles(() => ({
   wrapper: {
+    position: 'relative',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 32,
+    width: 28,
     height: 32,
-    marginRight: 10
+    marginRight: 12,
+    background: '#F1F2F6',
+    zIndex: 99
+  },
+  wrapperSmall: {
+    width: 21,
+    height: 25,
+    marginRight: 30,
+    marginLeft: 3,
+    opacity: 0
+  },
+  wrapperSmallActive: {
+    opacity: 1
+  },
+  wrapperSmallValid: {
+    opacity: 1
   },
   big: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    fontSize: 18,
+    width: 24,
+    height: 24,
+    fontSize: 14,
+    lineHeight: '24px',
     fontFamily: 'Segoe UI',
-    fontWeight: 600,
-    background: '#fff',
-    border: '1px solid #828282',
+    fontWeight: 700,
+    background: 'transparent',
+    border: '2px solid #A1ADCE',
     borderRadius: '50%',
-    color: '#828282'
+    color: '#A1ADCE'
   },
   bigActive: {
-    background: '#0078D4',
-    borderColor: '#0078D4',
-    color: '#fff'
+    background: 'transparent',
+    borderColor: '#192B5D',
+    color: '#192B5D'
   },
   small: {
+    position: "relative",
     display: 'block',
-    width: 10,
-    height: 10,
-    border: '1px solid #C4C4C4',
-    borderRadius: '50%'
+    width: 17,
+    height: 17,
+    borderRadius: '50%',
   },
   smallActive: {
-    borderColor: '#0078D4'
+    border: '1px solid #E05D2A',
+    '&::before': {
+      content: "''",
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      width: 9,
+      height: 9,
+      background: '#E05D2A',
+      borderRadius: '50%',
+      transform: 'translate(-50%, -50%)'
+    }
   },
   smallValid: {
-    background: '#0078D4'
+    borderColor: 'transparent',
+    background: '#192B5D',
+    '&::before': {
+      display: 'none'
+    }
   },
   checkIcon: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     color: '#fff',
   },
+  checkIconBig: {
+    fontSize: '1.1rem'
+  },
+  checkIconSmall: {
+    fontSize: '0.8rem'
+  },
   bigValid: {
-    borderColor: '#107C10',
-    background: '#107C10'
+    borderColor: '#192B5D',
+    background: '#192B5D'
   }
 }))
 
@@ -61,7 +104,17 @@ const getSidebarClasses = makeStyles(() => ({
     listStyle: 'none'
   },
   rootUl: {
-    padding: 20,
+    position: 'relative',
+    padding: 0,
+    '&::before': {
+      content: "''",
+      position: 'absolute',
+      top: 0,
+      left: 13,
+      width: 2,
+      height: '100%',
+      background: '#A1ADCE'
+    }
   },
   li: {
     marginBottom: 15,
@@ -71,19 +124,54 @@ const getSidebarClasses = makeStyles(() => ({
   },
   flex: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 25
   },
   label: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Segoe UI',
-    fontWeight: 600,
-    color: '#878787'
+    fontWeight: 700,
+    color: '#A1ADCE'
   },
   labelActive: {
-    color: '#0078D4'
+    color: '#192B5D'
   },
   labelValid: {
-    color: '#107C10'
+    color: '#192B5D'
+  },
+  sidebarTitle: {
+    margin: 0,
+    marginBottom: 25,
+    padding: 0,
+    fontSize: 16,
+    fontWeight: 'bold',
+    lineHeight: '21px',
+    color: '#192B5D',
+    textTransform: 'uppercase'
+  },
+  skypeBlock: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: 16,
+    background: '#E5E8F1',
+    borderRadius: 8
+  },
+  skypeIcon: {
+    marginRight: 8
+  },
+  skypeText: {
+    display: 'block',
+    marginRight: 8,
+    fontSize: 16,
+    fontWeight: 600,
+    lineHeight: '24px',
+    color: "#192B5D"
+  },
+  skypeLink: {
+    fontSize: 15,
+    lineHeight: '24px',
+    fontWeight: 600,
+    color: '#F26026'
   }
 }))
 
@@ -91,6 +179,7 @@ const getSubstepClasses = makeStyles(() => ({
   li: {
     display: 'flex',
     alignItems: 'center',
+    marginBottom: 30
   },
   label: {
     fontSize: 16,
@@ -99,10 +188,10 @@ const getSubstepClasses = makeStyles(() => ({
     color: '#C4C4C4'
   },
   labelActive: {
-    color: '#0078D4'
+    color: '#F26026'
   },
   labelValid: {
-    color: '#0078D4'
+    color: '#192B5D'
   }
 }))
 
@@ -115,16 +204,21 @@ function Circle({
   const classes = getCircleClasses();
   const activeType = size === 'small' ? 'smallActive' : 'bigActive';
   const validType = size === 'small' ? 'smallValid' : 'bigValid';
+  const checkIconSizeClass = size === 'small' ? classes.checkIconSmall : classes.checkIconBig;
 
   return (
-    <span className={classes.wrapper}>
+    <span className={clsx(classes.wrapper, {
+      [classes.wrapperSmall]: size === 'small',
+      [classes.wrapperSmallActive]: active,
+      [classes.wrapperSmallValid]: valid
+    })}>
       <span
         className={clsx(classes[size], {
           [classes[activeType]]: active,
           [classes[validType]]: valid
         })}
       >
-        {valid ? <CheckIcon className={classes.checkIcon} /> : text}
+        {valid ? <CheckIcon className={clsx(classes.checkIcon, checkIconSizeClass)} /> : text}
       </span>
     </span>
   )
@@ -140,10 +234,11 @@ function buildSubsteps(substeps, config) {
         <Circle
           active={currentStep.isActive}
           valid={currentStep.isValid}
+          hidden
         />
         <span className={clsx(classes.label, {
           [classes.labelActive]: currentStep.isActive,
-          [classes.labelValid]: currentStep.isValid
+          [classes.labelValid]: currentStep.isValid,
         })}>{currentStep.label}</span>
       </li>
     )
@@ -151,45 +246,51 @@ function buildSubsteps(substeps, config) {
 }
 
 const SideBar = ({
-  stepsConfig
+  stepsConfig,
+  currentStep
 }) => {
   const classes = getSidebarClasses();
 
   return (
-    <ul className={clsx(classes.ul, classes.rootUl)}>
-      {Object.keys(stepsConfig)
-        .filter(step => stepsConfig[step].parent)
-        .map((step, idx) => {
-          const currentStep = stepsConfig[step];
+    <>
+      <h2 className={classes.sidebarTitle}>Migration to cloud</h2>
+      <ul className={clsx(classes.ul, classes.rootUl)}>
+        {Object.keys(stepsConfig)
+          .filter(step => stepsConfig[step].parent)
+          .map((step, idx) => {
+            const currentStepData = stepsConfig[step];
 
-          return (
-            <li key={currentStep.label} className={classes.li}>
-              <div className={classes.flex}>
-                <Circle
-                  size="big"
-                  text={idx + 1}
-                  active={currentStep.isActive}
-                  valid={currentStep.isValid}
-                />
-                <span className={clsx(classes.label, {
-                  [classes.labelActive]: currentStep.isActive,
-                  [classes.labelValid]: currentStep.isValid
-                })}>{currentStep.label}</span>
-              </div>
-              <Collapse in={!currentStep.isValid}>
-                {'substeps' in currentStep && currentStep.substeps.length ? (
+            return (
+              <li key={currentStepData.label} className={classes.li}>
+                <div className={classes.flex}>
+                  <Circle
+                    size="big"
+                    text={idx + 1}
+                    active={currentStepData.isActive}
+                    valid={currentStepData.isValid}
+                  />
+                  <span className={clsx(classes.label, {
+                    [classes.labelActive]: currentStepData.isActive,
+                    [classes.labelValid]: currentStepData.isValid
+                  })}>{currentStepData.label}</span>
+                </div>
+                {'substeps' in currentStepData && currentStepData.substeps.length ? (
                   <ul className={classes.ul}>
-                    {buildSubsteps(currentStep.substeps, stepsConfig)}
+                    {buildSubsteps(currentStepData.substeps, stepsConfig)}
                   </ul>
                 ) : null}
-              </Collapse>
-
-            </li>
-          )
-        })
-      }
-    </ul>
+              </li>
+            )
+          })
+        }
+      </ul>
+      <div className={classes.skypeBlock}>
+        <SkypeIcon className={classes.skypeIcon}/>
+        <span className={classes.skypeText}>Need help?</span>
+        <a href="skype:" className={classes.skypeLink}>helptomigrate</a>
+      </div>
+    </>
   )
 }
 
-export default SideBar;
+export default React.memo(SideBar);

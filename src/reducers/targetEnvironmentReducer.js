@@ -27,7 +27,8 @@ export default function (state = INITIAL_STATE, action) {
         loading: false,
         data: {
           ...state.data,
-          ...action.payload
+          ...action.payload,
+          Password: ''
         }
       }
     case SET_TARGETENVIRONMENT_DATA:

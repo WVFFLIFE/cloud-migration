@@ -45,7 +45,7 @@ export const stepsConfig = {
     isValid: false,
   },
   'summary': {
-    label: 'Summary',
+    label: 'Schedule',
     isActive: false,
     isValid: false,
     parent: true

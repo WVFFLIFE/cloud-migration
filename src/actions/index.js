@@ -7,7 +7,8 @@ import {
   initStepSettings,
   setCurrentStep,
   setNextStep,
-  setStepControlStatus
+  setStepControlStatus,
+  setSourceEnvironmentStep
 } from './stepsSettingsAction';
 import {
   validateStep,
@@ -71,6 +72,7 @@ import {
 } from './initAction';
 
 export {
+  setSourceEnvironmentStep,
   setStepControlStatus,
   fetchSummaryData,
   setAllInit,

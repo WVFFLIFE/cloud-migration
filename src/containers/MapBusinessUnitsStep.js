@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import MapUserView from '../components/MapUserView';
+import MapDragView from '../components/MapDragView';
 import {
   fetchBusinessUnits,
   setToBusinessUnitsSource,
@@ -37,7 +37,7 @@ const MapBusinessUnitsStep = () => {
   }
 
   return (
-    <MapUserView
+    <MapDragView
       loading={loading}
       targetList={data.targetBusinessUnits}
       sourceList={data.sourceBusinessUnits}

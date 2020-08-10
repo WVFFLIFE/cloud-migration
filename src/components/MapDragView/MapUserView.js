@@ -39,7 +39,8 @@ const useStyles = makeStyles(() => ({
       background: '#fff'
     },
     '&::-webkit-scrollbar-thumb': {
-      background: '#E5E8EC'
+      background: '#E5E8EC',
+      borderRadius: 2
     }
   },
   title: {

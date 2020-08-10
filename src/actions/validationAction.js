@@ -4,13 +4,11 @@ import {
   SET_VALIDATION_SUCCESS,
   SET_VALIDATION_ERROR
 } from '../constants';
-import {batch} from 'react-redux';
-import { setCurrentStep } from './stepsSettingsAction';
 import MigrationService from '../services/migration.services';
-import {getNextStep} from '../helpers';
+import { batch } from 'react-redux';
 
 function getStepPoint(step) {
-  switch(step) {
+  switch (step) {
     case 'sourceenvironment':
       return 'source-environment'
     case 'targetenvironment':
@@ -56,18 +54,12 @@ export const validateStep = (id, step, data) => {
       .validate(`/migration-job/${id}/${stepPoint}`, data)
       .then(({ status, message }) => {
         if (status === 'success') {
-          dispatch(setValidationSuccess(step, message))
-
-          setTimeout(() => {
-            batch(() => {
-              const newStep = getNextStep(step);
-              dispatch(setCurrentStep(newStep));
-
-              if (newStep === 'environments') {
-                dispatch(setValidationSuccess(newStep, ''))
-              }
-            })
-          }, 900)
+          batch(() => {
+            dispatch(setValidationSuccess(step, message));
+            if (step === 'targetenvironment') {
+              dispatch(setValidationSuccess('environments'))
+            }
+          })
         } else if (status === 'error') {
           dispatch(setValidationError(step, message))
         }

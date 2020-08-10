@@ -6,7 +6,12 @@ import {
 
 const useStyles = makeStyles({
   root: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:last-child': {
+      '& .MuiTableCell-root': {
+        borderBottom: 0
+      }
+    }
   }
 })
 

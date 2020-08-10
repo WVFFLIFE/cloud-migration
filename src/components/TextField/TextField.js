@@ -1,21 +1,40 @@
-import React from 'react';
-
+import React, {useState} from 'react';
 import {
   makeStyles,
-  TextField as MuiTextField
 } from '@material-ui/core';
+import clsx from 'clsx';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 const useStyles = makeStyles({
   formControlRoot: {
     maxWidth: 350,
     width: '100%',
     marginBottom: 25,
+    '&:last-child': {
+      marginBottom: 0
+    }
+  },
+  inputWrapper: {
+    position: 'relative'
   },
   input: {
+    display: 'block',
+    width: '100%',
     padding: '6px 15px',
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Segoe UI',
-    fontWeight: 400
+    fontWeight: 400,
+    border: '1px solid #A1ADCE',
+    borderRadius: 6,
+    '&:focus, &:active': {
+      border: '1px solid #192B5D',
+      outline: 'none'
+    },
+    '&::placeholder': {
+      fontSize: 16,
+      color: '#A1ADCE'
+    }
   },
   outlined: {
     fontSize: 12,
@@ -29,6 +48,25 @@ const useStyles = makeStyles({
   },
   formControl: {
     top: -10
+  },
+  label: {
+    display: 'block',
+    marginBottom: 10,
+    fontSize: 16,
+    lineHeight: '20px',
+    color: "#192B5D"
+  },
+  passwordInput: {
+    paddingRight: 35
+  },
+  visibilityIcon: {
+    position: 'absolute',
+    top: '50%',
+    right: 12,
+    fontSize: '1.1rem',
+    color: '#A1ADCE',
+    cursor: 'pointer',
+    transform: 'translateY(-50%)'
   }
 })
 
@@ -37,34 +75,36 @@ const TextField = ({
   handleChange,
   name,
   label,
-  type = 'text'
+  type = 'text',
+  ...rest
 }) => {
   const classes = useStyles();
+  const [isVisible, setIsVisible] = useState(false);
+  const Icon = isVisible ? VisibilityIcon : VisibilityOffIcon;
+  const passwordType = isVisible ? 'text' : 'password';
+
+  const handleChangeVisible = () => setIsVisible(!isVisible);
   
   return (
-    <MuiTextField
-      onChange={handleChange}
-      label={label}
-      name={name}
-      value={value}
-      type={type}
-      variant="outlined"
-      classes={{
-        root: classes.formControlRoot
-      }}
-      InputProps={{
-        classes: {
-          input: classes.input,
+    <div className={classes.formControlRoot}>
+      <label className={classes.label}>{label}</label>
+      <div className={classes.inputWrapper}>
+        <input 
+          name={name}
+          onChange={handleChange}
+          value={value}
+          type={type === 'password' ? passwordType : type}
+          className={clsx(classes.input, {
+            [classes.passwordInput]: type === 'password'
+          })}
+          {...rest}
+        />
+        {
+          type === 'password' ? <Icon className={classes.visibilityIcon} onClick={handleChangeVisible}/> : null
         }
-      }}
-      InputLabelProps={{
-        classes: {
-          outlined: classes.outlined,
-          formControl: classes.formControl
-        }
-      }}
-    />
+      </div>
+    </div>
   )
 }
 
-export default TextField;
+export default React.memo(TextField);

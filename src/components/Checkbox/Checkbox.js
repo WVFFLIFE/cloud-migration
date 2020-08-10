@@ -9,13 +9,13 @@ const useStyles = makeStyles(() => ({
     position: 'relative',
     width: 16,
     height: 16,
-    border: '1px solid #323130',
+    border: '1px solid #586B9D',
     borderRadius: 2,
     boxSizing: 'border-box'
   },
   checkedIcon: {
-    background: '#0078D4',
-    borderColor: '#0078D4'
+    background: '#192B5D',
+    borderColor: '#192B5D'
   },
   checkIcon: {
     position: 'absolute',

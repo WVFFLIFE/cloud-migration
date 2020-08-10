@@ -27,6 +27,7 @@ const SummaryStep = () => {
   }
 
   const handleTime = (date) => {
+    console.log(date);
     dispatch(setCurrentTime(date))
   }
 

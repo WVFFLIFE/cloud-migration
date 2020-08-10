@@ -1,14 +1,14 @@
 import React from 'react';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   styled,
-  Button
+  Button,
+  makeStyles
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add'
-import { 
-  Table, 
-  TableHead, 
-  TableBody, 
+import {
+  Table,
+  TableHead,
+  TableBody,
   TableBodyLoader,
   JobsTableRow
 } from '../Table';
@@ -20,35 +20,43 @@ const Top = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginBottom: 20
+  marginBottom: 40
 })
 
 const Title = styled('h2')({
   margin: 0,
-  fontSize: 24,
-  fontWeight: 600,
-  color: '#3A3A45',
+  fontSize: 32,
+  fontWeight: 700,
+  color: '#192B5D',
 })
 
-const AddButton = styled(Button)({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '6px 10px',
-  border: '1px solid #E05D2A'
+const Wrapper = styled('div')({
+  paddingTop: 45,
+  paddingBottom: 45
 })
 
-const AddButtonText = styled('span')({
-  fontFamily: 'Segoe UI',
-  fontSize: 12,
-  fontWeight: 600,
-  lineHeight: '20px',
-  color: '#E05D2A',
-  textTransform: 'uppercase'
-})
-
-const AddButtonIcon = styled(AddIcon)({
-  marginRight: 5,
-  color: '#E05D2A'
+const useStyles = makeStyles({
+  label: {
+    fontSize: 16,
+    fontFamily: 'Segoe UI',
+    fontWeight: 'bold',
+    lineHeight: '21px',
+    color: '#fff',
+    textTransform: 'none'
+  },
+  root: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 'auto',
+    padding: '12.5px 19px',
+    background: '#192B5D',
+    borderRadius: 6
+  },
+  tableRoot: {
+    background: '#fff',
+    boxShadow: '0 16.6px 29.6px 0 rgba(161,173,206,0.22)'
+  }
 })
 
 const JobsListView = ({
@@ -57,6 +65,7 @@ const JobsListView = ({
   handleJobDelete,
   handleAddJob
 }) => {
+  const classes = useStyles();
   const history = useHistory();
   const { initOrder, initOrderBy } = jobsTableBaseConfig;
   const {
@@ -69,8 +78,8 @@ const JobsListView = ({
 
   const cellsList = jobsTableBaseConfig.cellsList.map(cellItem => ({
     ...cellItem,
-    renderItem: cellItem.fieldName === 'action' ? 
-      cellItem.renderItem(handleJobDelete) : 
+    renderItem: cellItem.fieldName === 'action' ?
+      cellItem.renderItem(handleJobDelete) :
       cellItem.renderItem
   }));
 
@@ -88,39 +97,48 @@ const JobsListView = ({
   }
 
   return (
-    <>
-      <Top>
-        <Title>Jobs list</Title>
-        <AddButton
-          onClick={handleAddJob}
-          type="button"
-          disabled={loading}
+    <Wrapper>
+      <div className="container">
+        <Top>
+          <Title>Jobs list</Title>
+          <Button
+            classes={{
+              root: classes.root,
+              label: classes.label
+            }}
+            onClick={handleAddJob}
+            type="button"
+            disabled={loading}
+          >
+            Add Job
+        </Button>
+        </Top>
+        <Table
+          classes={{
+            root: classes.tableRoot
+          }}
         >
-          <AddButtonIcon />
-          <AddButtonText>Add</AddButtonText>
-        </AddButton>
-      </Top>
-      <Table>
-        <TableHead 
-          order={order}
-          orderBy={orderBy}
-          onRequestSort={handleRequestSort}
-          loading={loading}
-          cellsList={cellsList}
-          type="jobs"
-        />
-        {loading ? (
-          <TableBodyLoader 
-            rows={3}
+          <TableHead
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            loading={loading}
             cellsList={cellsList}
+            type="jobs"
           />
-        ) : (
-          <TableBody 
-            renderRows={renderRows}
-          />
-        )}
-      </Table>
-    </>
+          {loading ? (
+            <TableBodyLoader
+              rows={3}
+              cellsList={cellsList}
+            />
+          ) : (
+              <TableBody
+                renderRows={renderRows}
+              />
+            )}
+        </Table>
+      </div>
+    </Wrapper>
   )
 }
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import MapUserView from '../components/MapUserView';
+import MapUserView from '../components/MapDragView';
 import {
   fetchUsers,
   setToSource,

@@ -1,9 +1,9 @@
 import React from 'react';
 import { styled } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { Button, TableCell } from '@material-ui/core';
-import SuccessBlock from '../components/SuccessBlock';
-import ErrorBlock from '../components/ErrorBlock';
+import Tooltip from '../components/Tooltip';
 import format from 'date-fns/format';
 
 const Action = styled(Button)({
@@ -17,7 +17,7 @@ const Action = styled(Button)({
   textTransform: 'capitalize',
   outline: 'none',
   '&:hover': {
-    background: '#DCDCDC',
+    background: 'rgba(191, 95, 103, .1)',
     borderRadius: 3
   }
 })
@@ -25,128 +25,130 @@ const Action = styled(Button)({
 const Paragraph = styled('p')({
   margin: 0,
   marginBottom: 5,
-  fontSize: 12,
+  fontSize: 14,
   fontFamily: 'Segoe UI',
   fontWeight: 400,
-  lineHeight: '20px',
-  color: '#757588',
+  lineHeight: '19px',
+  color: '#192B5D',
   '&:last-child': {
     marginBottom: 0
   }
 });
 
 const CustomText = styled('span')({
-  fontSize: 12,
+  fontSize: 14,
   fontFamily: 'Segoe UI',
   fontWeight: 400,
-  lineHeight: '20px',
-  color: '#3A3A45'
+  lineHeight: '19px',
+  color: '#192B5D'
 })
 
-const StyledCloseIcon = styled(CloseIcon)({
+const StyledCloseIcon = styled(HighlightOffIcon)({
   marginRight: 5,
   fontSize: '1.1rem',
-  color: '#201F1E'
+  color: '#BF5F67'
 })
 
 const ButtonText = styled('span')({
-  fontSize: 12,
-  lineHeight: '20px',
-  fontWeight: 600,
-  color: '#1F2E5F'
+  fontSize: 14,
+  lineHeight: '19px',
+  fontWeight: 400,
+  color: '#BF5F67'
 })
 
 const EntityName = styled('span')({
-  fontSize: 13,
+  fontSize: 14,
   fontWeight: 400,
   fontFamily: 'Segoe UI',
-  color: '#302846'
+  color: '#192B5D'
 });
 
 const TechnicalName = styled('span')({
-  fontSize: 13,
+  fontSize: 14,
   fontWeight: 400,
   fontFamily: 'Segoe UI',
-  color: '#605E5C'
+  color: '#192B5D'
 })
 
-const DraftStatus = styled('span')({
+const Status = styled('span')({
   display: 'inline-block',
-  padding: '2px 8px',
-  fontSize: 12,
+  padding: '5px 12px',
+  fontSize: 10,
   fontFamily: 'Segoe UI',
-  fontWeight: 400,
-  borderRadius: 10,
-  background: '#F3F2F1',
-  color: '#3A3A45'
+  fontWeight: 600,
+  lineHeight: '14px',
+  borderRadius: 13,
+  textTransform: 'uppercase'
 })
 
-const ScheduledStatus = styled('span')({
-  display: 'inline-block',
-  padding: '2px 8px',
-  fontSize: 12,
-  fontFamily: 'Segoe UI',
-  fontWeight: 400,
-  borderRadius: 10,
+const DraftStatus = styled(Status)({
+  background: '#EAE9ED',
+  color: '#7886AE',
+})
+
+const ScheduledStatus = styled(Status)({
   background: '#D9EEFF',
-  color: '#00006F'
+  color: '#2E83DD',
 })
 
-const StartedStatus = styled('span')({
-  display: 'inline-block',
-  padding: '2px 8px',
-  fontSize: 12,
-  fontFamily: 'Segoe UI',
-  fontWeight: 400,
-  borderRadius: 10,
-  background: '#FFF4CE',
-  color: '#A88200'
+const StartedStatus = styled(Status)({
+  background: '#FFF8D9',
+  color: '#FFB034'
 })
 
-const InvolvementNedeedStatus = styled('span')({
-  display: 'inline-block',
-  padding: '2px 8px',
-  fontSize: 12,
-  fontFamily: 'Segoe UI',
-  fontWeight: 400,
-  borderRadius: 10,
-  background: '#FDE7E9',
-  color: '#8F000D'
+const InvolvementNedeedStatus = styled(Status)({
+  background: '#FFB8C7',
+  color: '#C4001A'
 })
 
-const CompletedStatus = styled('span')({
-  display: 'inline-block',
-  padding: '2px 8px',
-  fontSize: 12,
-  fontFamily: 'Segoe UI',
-  fontWeight: 400,
-  borderRadius: 10,
-  background: '#DAF3DB',
-  color: '#107C10'
+const CompletedStatus = styled(Status)({
+  background: '#DAF6CD',
+  color: '#2F9033'
 })
 
 const EntityTableCell = styled(TableCell)({
-  padding: 6
+  padding: '19px 24px'
 });
 
 const JobsListTableCell = styled(TableCell)({
-  padding: 11.5
+  padding: '19px 24px',
+  fontSize: 0,
+  borderBottom: '1px solid #EAE9ED'
 })
 
 const ValidateTableCell = styled(TableCell)({
   width: 144,
-  padding: '6px 12px'
+  padding: '19px 24px'
 })
 
-const SuccessEntityTableCell = styled(ValidateTableCell)({
-  background: 'rgba(95, 210, 85, 0.2)'
+const StatusBlockWrapper = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
 })
 
-const ErrorEntityTableCell = styled(ValidateTableCell)({
-  paddingTop: 0,
-  paddingRight: 0,
-  paddingBottom: 0,
-  background: 'rgba(250, 65, 0, 0.2)'
+const ErrorBlockText = styled('span')({
+  fontSize: 14,
+  color: '#BF5F67',
+  textDecoration: 'underline',
+  textTransform: 'capitalize'
+})
+
+const SuccessBlockText = styled('span')({
+  fontSize: 14,
+  color: '#A1ADCE'
+})
+
+const ErrorIcon = styled(HighlightOffIcon)({
+  marginRight: 8,
+  fontSize: '1.1rem',
+  color: '#BF5F67'
+})
+
+const SuccessIcon = styled(CheckCircleOutlineIcon)({
+  marginRight: 8,
+  fontSize: '1.1rem',
+  color: '#A1ADCE'
 })
 
 export const jobsTableBaseConfig = {
@@ -284,31 +286,42 @@ export const entitiesTableConfig = {
     {
       fieldName: 'validationSettings',
       label: 'Validate Status',
-      renderItem: (handleAction) => (data) => {
+      renderItem: (data) => {
         if (!data) return <ValidateTableCell></ValidateTableCell>
 
-        const {status} = data;
+        const { status, message } = data;
         const emptyCell = (<ValidateTableCell></ValidateTableCell>);
         const successCell = (
-          <SuccessEntityTableCell>
-            <SuccessBlock />
-          </SuccessEntityTableCell>
+          <ValidateTableCell>
+            <StatusBlockWrapper>
+              <SuccessIcon />
+              <SuccessBlockText>Success</SuccessBlockText>
+            </StatusBlockWrapper>
+          </ValidateTableCell>
         );
         const errorBlock = (
-          <ErrorEntityTableCell>
-            <ErrorBlock 
-              handleClick={handleAction}
-            />
-          </ErrorEntityTableCell>
+          <ValidateTableCell>
+            <Tooltip
+              title="Failed"
+              description={message}
+              placement="left-start"
+              interactive
+            >
+              <StatusBlockWrapper>
+                <ErrorIcon />
+                <ErrorBlockText>Failed</ErrorBlockText>
+              </StatusBlockWrapper>
+            </Tooltip>
+          </ValidateTableCell>
         )
 
-        return status === 'hidden' 
+        return status === 'hidden'
           ? emptyCell :
-            status === 'success' 
-          ? successCell :
+          status === 'success'
+            ? successCell :
             status === 'error'
-          ? errorBlock :
-            emptyCell;
+              ? errorBlock :
+              emptyCell;
       },
       activeSort: false
     }

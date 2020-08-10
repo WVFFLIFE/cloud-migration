@@ -10,23 +10,28 @@ const useStyles = makeStyles({
     alignItems: 'center',
     marginRight: 10,
     padding: 6,
-    border: '1px solid #D6D8DF',
+    border: '1px solid #A1ADCE',
     borderRadius: 5
   },
   icon: {
-    fontSize: '1.4rem',
-    color: '#0078D4'
+    marginRight: 5,
+    fontSize: '1.25rem',
+    color: '#192B5D',
+    transform: 'scale(-1, 1)'
   },
   input: {
     display: 'block',
     width: '100%',
+    fontSize: 16,
+    color: "#192B5D",
     border: 0,
     outline: 0,
     '&::placeholder': {
-      fontSize: 14,
+      fontSize: 16,
+      lineHeight: '20px',
       fontFamily: 'Segoe UI',
       fontStyle: 'normal',
-      color: '#B8B4AF'
+      color: '#A1ADCE'
     }
   }
 })

@@ -2,24 +2,24 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { styled, Button, makeStyles } from '@material-ui/core';
 import { JobsList, Stepper } from './containers';
-import Tabs from './components/Tabs';
-import Breadcrumbs from './components/Breadcrumbs';
+import Header from './components/Header';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import authentication from './b2c';
-
-const Container = styled('div')({
-  padding: '24px'
-});
 
 const TopBar = styled('div')({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '0 24px',
+  justifyContent: 'flex-end',
+  minHeight: 41,
   background: '#1F2E5F'
 })
 
 const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
+  },
   button: {
     padding: 5,
     minWidth: 'auto'
@@ -27,44 +27,41 @@ const useStyles = makeStyles({
   icon: {
     fontSize: '1.2rem',
     color: '#fff'
+  },
+  row: {
+    display: 'flex',
+    justifyContent: 'flex-end',
   }
 })
 
 const App = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const handleTabChange = (event, newValue) => {
-    setValue(newValue);
-  }
 
   return (
-    <div>
+    <div className={classes.root}>
+      <Header />
       <TopBar>
-        <Tabs
-          value={value}
-          handleTabChange={handleTabChange}
-        />
-        <Button
-          onClick={() => authentication.signOut()}
-          classes={{
-            root: classes.button
-          }}
-        >
-          <ExitToAppIcon className={classes.icon}/>
-        </Button>
+        <div className="container">
+          <div className={classes.row}>
+            <Button
+              onClick={() => authentication.signOut()}
+              classes={{
+                root: classes.button
+              }}
+            >
+              <ExitToAppIcon className={classes.icon} />
+            </Button>
+          </div>
+        </div>
       </TopBar>
-      <Breadcrumbs />
-      <Container>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/migrationjob" />
-          </Route>
-          <Route exact path="/migrationjob" component={JobsList}/>
-          <Route exact path="/migrationjob/:id" component={Stepper}/>
+      <Switch>
+        <Route exact path="/">
           <Redirect to="/migrationjob" />
-        </Switch>
-      </Container>
+        </Route>
+        <Route exact path="/migrationjob" component={JobsList} />
+        <Route exact path="/migrationjob/:id" component={Stepper} />
+        <Redirect to="/migrationjob" />
+      </Switch>
     </div>
   )
 }

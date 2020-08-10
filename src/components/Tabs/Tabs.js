@@ -1,65 +1,79 @@
 import React from 'react';
-import {
-    makeStyles,
-    Tabs as MuiTabs,
-    Tab as MuiTab
-} from '@material-ui/core';
-import {CompleteList} from '../Icons';
+import { makeStyles } from '@material-ui/core';
+import clsx from 'clsx';
 
-const useStyles = makeStyles(() => ({
-    tabRoot: {
-        minWidth: 'auto',
-        paddingLeft: 20,
-        paddingRight: 20
-    },
-    wrapper: {
-        flexDirection: 'row',
-        fontSize: 14,
-        fontFamily: 'Segoe UI',
-        fontWeight: 400,
-        lineHeight: 1,
-        color: '#fff',
-        textTransform: 'none'
-    },
-    labelIcon: {
-        minHeight: 48,
-        '& .MuiTab-wrapper > *:first-child': {
-            marginBottom: 0,
-            marginRight: 15
-        }
-    },
-    indicator: {
-        height: 4,
-        background: '#E05D2A'
+const tabsList = [
+  { id: 'core', title: 'Core Records' },
+  { id: 'marketing', title: 'Marketing & Sales' },
+  { id: 'service', title: 'Service' },
+  { id: 'misc', title: 'Misc' },
+  { id: 'entities', title: 'Custom entities' }
+]
+
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    background: '#FAFBFC'
+  },
+  tab: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+    background: '#FAFBFC',
+    borderRight: '1px solid rgba(179,186,205,0.23)',
+    cursor: 'pointer',
+    '&:last-child': {
+      flex: 1,
+      justifyContent: 'flex-start',
+      borderRightColor: 'transparent',
     }
-}))
+  },
+  tabActive: {
+    background: '#fff',
+    borderRightColor: 'transparent',
+    cursor: 'default'
+  },
+  tabTitle: {
+    fontSize: 24,
+    fontWeight: 600,
+    lineHeight: '32px',
+    color: '#A1ADCE'
+  },
+  tabTitleActive: {
+    color: '#192B5D'
+  }
+})
 
-const Tabs = ({
-    value,
-    handleTabChange
-}) => {
-    const classes = useStyles();
+const Tabs = () => {
+  const classes = useStyles();
+  const [currentTab, setCurrentTab] = React.useState('core');
 
-    return (
-        <MuiTabs
-            value={value}
-            onChange={handleTabChange}
-            aria-label="tabs"
-            classes={{
-                indicator: classes.indicator
-            }}
-        >
-            <MuiTab
-                classes={{
-                    root: classes.tabRoot,
-                    wrapper: classes.wrapper,
-                    labelIcon: classes.labelIcon
-                }}
-                label="Jobs list"
-                icon={<CompleteList />}
-            />
-        </MuiTabs>
-    )
+  const handleChangeCurrentTab = (id) => setCurrentTab(id);
+
+  return (
+    <div className={classes.root}>
+      {tabsList.map(tabItem => {
+        const isActive = tabItem.id === currentTab;
+        return (
+          <div
+            onClick={() => handleChangeCurrentTab(tabItem.id)}
+            id={tabItem.id}
+            key={tabItem.id}
+            className={clsx(classes.tab, {
+              [classes.tabActive]: isActive
+            })}
+          >
+            <span className={clsx(classes.tabTitle, {
+              [classes.tabTitleActive]: isActive
+            })}>
+              {tabItem.title}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 export default Tabs;

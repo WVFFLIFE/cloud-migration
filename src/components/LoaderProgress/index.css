@@ -92,8 +92,8 @@
   transition: fill 1s ease-in-out, stroke-width 0.5s ease-in-out;
 }
 .loader {
-  margin-left: 15px;
-  margin-top: -24px;
+  margin-left: 10px;
+  margin-top: -47px;
   height: 28px;
   width: 28px;
   opacity: 0;
@@ -122,12 +122,12 @@
 .loader::after {
   font-family: FontAwesome;
   content: "\f00d";
-  color: white;
+  color: #F26026;
   font-size: 15px;
   line-height: 1;
   position: relative;
   left: 0;
-  top: -29px;
+  top: -40px;
   opacity: 0;
   -moz-transition: opacity 1s ease-in-out;
   -o-transition: opacity 1s ease-in-out;
@@ -147,6 +147,7 @@
 }
 
 .loader.loading .spinner {
+  margin-top: -4px;
   -moz-animation: rotator 1.4s linear infinite;
   -o-animation: rotator 1.4s linear infinite;
   -webkit-animation: rotator 1.4s linear infinite;
@@ -158,7 +159,7 @@
 }
 
 .loader.success .path {
-  fill: rgb(92, 184, 92);
+  fill: transparent;
   stroke-width: 0;
 }
 
@@ -171,7 +172,7 @@
 }
 
 .loader.error .path {
-  fill: rgb(217, 83, 79);
+  fill: transparent;
   stroke-width: 0;
 }
 

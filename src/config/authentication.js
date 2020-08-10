@@ -1,5 +1,3 @@
-/** @format */
-
 import authentication from '../b2c';
 
 authentication.initialize({

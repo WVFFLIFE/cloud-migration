@@ -1,91 +1,82 @@
 import React from 'react';
 import MuiButton from '@material-ui/core/Button';
 import {makeStyles} from '@material-ui/core/styles';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '6px 20px',
-    background: '#F3F2F1',
-    borderRadius: 2,
-    transition: '.2s linear',
+    padding: '10px 20px',
+    borderRadius: 6,
+    cursor: 'pointer',
     '&.Mui-disabled': {
-      color: '#A19F9D',
-      background: '#F3F2F1',
-      borderColor: '#f3f2f1'
+      color: '#fff',
+      background: '#DFE3EB'
     }
   },
-  text: {
-    fontSize: 14,
-    fontWeight: 600,
-    lineHeight: '20px',
-    fontFamily: 'Segoe UI',
-    color: '#A19F9D',
-    textTransform: 'capitalize'
-  },
   validation: {
-    background: '#005A9E',
-    color: '#fff',
-    '&:hover': {
-      background: '#005A9E',
-      color: '#fff',
-      opacity: .6
-    },
-  },
-  back: {
-    paddingLeft: 30,
-    paddingRight: 30,
-    background: '#302846',
-    color: '#fff',
-    '&:hover': {
-      background: '#302846',
-      color: '#fff',
-      opacity: .6
-    },
+    background: '#192B5D',
+    color: '#fff'
   },
   next: {
-    paddingLeft: 30,
-    paddingRight: 30,
     background: '#fff',
-    border: '1px solid #8A8886',
-    color: '#201F1E',
-    '&:hover': {
-      background: '#fff',
-      color: '#201F1E',
-      opacity: .6
-    },
+    border: '1px solid #F26026',
+    color: '#F26026',
+    '&.Mui-disabled': {
+      color: '#fff',
+      border: '1px solid transparent',
+    }
+  },
+  back: {
+    marginRight: 25,
+    background: '#fff',
+    border: '1px solid #F26026',
+    color: '#F26026',
+    '&.Mui-disabled': {
+      color: '#fff',
+      border: '1px solid transparent',
+    }
   },
   label: {
-    display: 'inline-flex',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    fontSize: 16,
+    fontFamily: 'Segoe UI',
+    fontWeight: 700,
+    textTransform: 'capitalize'
   },
+  chevron: {
+    marginTop: 3,
+    fontSize: '1.3rem'
+  }
 }))
 
 const Button = ({
   children,
-  handleClick = () => {},
+  label,
   type = 'button',
   entity = 'validation',
-  disabled = false
+  disabled = false,
+  ...rest
 }) => {
   const classes = useStyles();
 
   return (
     <MuiButton
-      onClick={handleClick}
       type={type}
       classes={{
-        root: classes.root,
+        root: clsx(classes.root, classes[entity]),
         text: classes.text,
-        label: classes.label,
+        label: clsx(classes.label),
       }}
       disabled={disabled}
-      className={classes[entity]}
+      {...rest}
     >
-      {children}
+      {entity === 'back' ? <ChevronLeftIcon className={clsx(classes.chevron)}/> : null}
+      {children || label}
+      {entity === 'next' ? <ChevronRightIcon className={clsx(classes.chevron)}/> : null}
     </MuiButton>
   )
 }
