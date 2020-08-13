@@ -8,7 +8,15 @@ import {
   setCurrentStep,
   setNextStep,
   setStepControlStatus,
-  setSourceEnvironmentStep
+  backToSourceEnvrionmentStep,
+  backToTargetEnvironmentStep,
+  setNextMapBusinessUnitsStep,
+  setNextMapTeamsStep,
+  setNextScheduleStep,
+  backToEntitiesStep,
+  backToMapUsersStep,
+  backToMapBusinessUnitsStep,
+  backToMapTeamsStep
 } from './stepsSettingsAction';
 import {
   validateStep,
@@ -28,32 +36,37 @@ import {
 import {
   fetchEntities,
   validateEntities,
-  setCurrentPage,
-  setOrder,
-  setOrderBy,
   setSelectedEntities,
-  setInitSelectedEntities
+  setInitSelectedEntities,
+  setCurrentTab,
+  setIsBack
 } from './entitiesAction';
 import {
   fetchUsers,
   setToSource,
   removeTarget,
   setToTarget,
-  runAutomap
+  runAutomap,
+  clearAllUsers,
+  automapUser
 } from './usersAction';
 import {
   setToBusinessUnitsTarget,
   removeBusinessUnitsTarget,
   setToBusinessUnitsSource,
   runBusinessUnitsAutomap,
-  fetchBusinessUnits
+  fetchBusinessUnits,
+  automapBusinessUnits,
+  clearAllBusiniessUnits
 } from './businessUnitsAction';
 import {
   setToTeamsTarget,
   removeTeamsTarget,
   setToTeamsSource,
   runTeamsAutomap,
-  fetchTeams
+  fetchTeams,
+  clearAllTeams,
+  automapTeams
 } from './teamsAction';
 import {
   setCurrentDate,
@@ -72,7 +85,11 @@ import {
 } from './initAction';
 
 export {
-  setSourceEnvironmentStep,
+  backToMapBusinessUnitsStep,
+  backToMapTeamsStep,
+  backToEntitiesStep,
+  setNextMapBusinessUnitsStep,
+  setCurrentTab,
   setStepControlStatus,
   fetchSummaryData,
   setAllInit,
@@ -104,9 +121,6 @@ export {
   setToTarget,
   setToSource,
   fetchUsers,
-  setCurrentPage,
-  setOrder,
-  setOrderBy,
   setValidationStart,
   setValidationSuccess,
   setValidationError,
@@ -121,5 +135,17 @@ export {
   setTargetEnvironmentData,
   setCurrentStep,
   fetchEntities,
-  removeTarget
+  removeTarget,
+  clearAllUsers,
+  automapUser,
+  automapBusinessUnits,
+  clearAllBusiniessUnits,
+  setNextMapTeamsStep,
+  clearAllTeams,
+  automapTeams,
+  setNextScheduleStep,
+  backToSourceEnvrionmentStep,
+  backToTargetEnvironmentStep,
+  setIsBack,
+  backToMapUsersStep
 }

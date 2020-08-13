@@ -1,79 +1,48 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import DatePicker from '../DatePicker';
+import Calendar from '../Calendar';
 import TimePicker from '../TimePicker';
-import VirtualList from '../VirtualList';
-import Loader from '../Loader';
 
 const useStyles = makeStyles(() => ({
-  root: {
-    padding: 20
-  },
-  paragraph: {
+  title: {
     margin: 0,
-    marginBottom: 20,
-    fontSize: 16,
-    color: '#878787'
+    marginBottom: 30,
+    fontSize: 24,
+    fontWeight: 600,
+    color: '#192B5D'
   },
-  controls: {
-    width: '50%'
+  wrapper: {
+    padding: 30
   },
-  controlsTop: {
-    display: 'flex',
-    marginBottom: 20
+  timePickerWrapper: {
+    marginLeft: 50
   },
-  loadingWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+  content: {
+    display: 'flex'
   }
 }))
 
 const SummaryView = ({
-  currentStatus,
-  canEdit,
   date,
-  time,
-  timezone,
-  handleDate,
-  handleTime,
-  handleTimezone,
-  getLoading,
-  postLoading
+  handleChangeDate
 }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <p className={classes.paragraph}>All is ready for your migration to start. Please schedule your migration.</p>
-      {getLoading ? (
-        <div className={classes.loadingWrapper}>
-          <Loader />
-        </div>
-      ) : (
-          <div className={classes.controls}>
-            <div className={classes.controlsTop}>
-              <DatePicker
-                disabled={!canEdit}
-                selectedDate={date}
-                handleChangeDate={handleDate}
-              />
-              <TimePicker
-                disabled={!canEdit}
-                selectedTime={time}
-                handleChangeTime={handleTime}
-              />
-            </div>
-            <div className={classes.controlsBottom}>
-              <VirtualList
-                disabled={!(['Draft', 'Scheduled'].includes(currentStatus) && canEdit)}
-                value={timezone}
-                handleChangeValue={handleTimezone}
-              />
-            </div>
+    <>
+      <div className={classes.wrapper}>
+        <h3 className={classes.title}>Date & Time to start migration</h3>
+        <div className={classes.content}>
+          <Calendar
+            date={date}
+            handleChangeDate={handleChangeDate}
+          />
+          <div className={classes.timePickerWrapper}>
+            <TimePicker />
           </div>
-        )}
-    </div>
+        </div>
+      </div>
+    </>
   )
 }
 

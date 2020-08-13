@@ -1,54 +1,63 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import MapUserView from '../components/MapDragView';
+import MapSelectView from '../components/MapSelectView';
 import {
   fetchUsers,
   setToSource,
-  removeTarget,
-  setToTarget,
-  runAutomap
+  clearAllUsers,
+  automapUser,
+  setNextMapBusinessUnitsStep,
+  backToEntitiesStep
 } from '../actions';
 
 const MapUserStep = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const {data, loading} = useSelector(state => state.users);
+  const {mapusers: validationData} = useSelector(state => state.validation);
 
   useEffect(() => {
     dispatch(fetchUsers(id))
     /* eslint-disable-next-line */
   }, []);
 
-  const handleSetToSource = (sourceIndex, target) => {
+  const handleSetToSource = useCallback((sourceIndex, target) => {
     dispatch(setToSource(sourceIndex, target))
+    /* eslint-disable-next-line */
+  }, [])
+
+  const handleClearAll = () => {
+    dispatch(clearAllUsers());
   }
 
-  const handleRemoveFromSource = (target) => {
-    dispatch(removeTarget(target))
+  const automapEntities = () => {
+    dispatch(automapUser());
   }
 
-  const handleDragToTarget = (guid, items) => {
-    dispatch(setToTarget(guid, items))
+  const forwardToNextStep = () => {
+    dispatch(setNextMapBusinessUnitsStep(id))
   }
 
-  const handleAutomap = () => {
-    dispatch(runAutomap());
+  const backToPrevStep = () => {
+    dispatch(backToEntitiesStep());
   }
+
+  const getOptionLabel = useCallback(option => option.fullName, [])
 
   return (
-    <MapUserView 
-      loading={loading}
-      targetList={data.targetUsers}
+    <MapSelectView 
       sourceList={data.sourceUsers}
-      mappedList={data.mapedUsers}
+      targetList={data.targetUsers}
       handleSetToSource={handleSetToSource}
-      handleRemoveFromSource={handleRemoveFromSource}
-      handleDragToTarget={handleDragToTarget}
-      handleAutomap={handleAutomap}
-      title="Please map users. Drag and Drop Active users from Target system to each record from Source system."
-      filterField="fullName"
-      type="user"
+      handleClearAll={handleClearAll}
+      validationData={validationData}
+      loading={loading}
+      automapEntities={automapEntities}
+      forwardToNextStep={forwardToNextStep}
+      backToPrevStep={backToPrevStep}
+      getOptionLabel={getOptionLabel}
+      type="users"
     />
   )
 }

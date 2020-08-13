@@ -22,7 +22,7 @@ const SummaryStep = () => {
     /* eslint-disable-next-line */
   }, [])
 
-  const handleDate = (date) => {
+  const handleChangeDate = (date) => {
     dispatch(setCurrentDate(date))
   }
 
@@ -38,16 +38,8 @@ const SummaryStep = () => {
   return (
     <>
       <SummaryView
-        currentStatus={currentStatus}
-        canEdit={canEdit}
         date={date}
-        time={time}
-        timezone={timezone}
-        getLoading={getLoading}
-        postLoading={postLoading}
-        handleDate={handleDate}
-        handleTime={handleTime}
-        handleTimezone={handleTimezone}
+        handleChangeDate={handleChangeDate}
       />
       <Dialog 
         status={stepControlStatus}

@@ -1,10 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import {useParams} from 'react-router-dom';
+import { makeStyles, Button } from '@material-ui/core';
 import { WarningIcon, SkypeIcon } from '../Icons';
 import {
   CheckCircleOutlineOutlined as CheckIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
+import MigrationService from '../../services/migration.services';
+import FileSaver from 'file-saver';
+import format from 'date-fns/format';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -74,9 +78,19 @@ const StatusNotification = ({
   message,
 }) => {
   const classes = useStyles();
-
+  const {id} = useParams();
   const isSuccess = status === 'success';
   const isError = !isSuccess;
+
+  const handleClick = async () => {
+    const fileName = `Reports ${format(new Date(), 'dd.MM.yyyy hh:mm:ss')}.xlsx`
+    const blob = await MigrationService
+      .download(`/migration-job/${id}/entities/download/report`);
+
+    console.log(blob);
+
+    FileSaver.saveAs(blob, fileName)
+  }
 
   return (
     <div
@@ -94,6 +108,7 @@ const StatusNotification = ({
           [classes.errorMessage]: isError
         })}>{message}</span>
       </div>
+      <Button onClick={handleClick}>XSLX</Button>
       {status === 'error' ? (
         <div className={classes.skypeContactWrapper}>
           <p className={classes.skypeText}>Contact us via skype</p>

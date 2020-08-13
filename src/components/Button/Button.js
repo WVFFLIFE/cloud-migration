@@ -41,6 +41,11 @@ const useStyles = makeStyles(theme => ({
       border: '1px solid transparent',
     }
   },
+  clear: {
+    background: '#fff',
+    border: '1px solid #192B5D',
+    color: '#192B5D'
+  },
   label: {
     fontSize: 16,
     fontFamily: 'Segoe UI',

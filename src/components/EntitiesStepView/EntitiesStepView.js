@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core';
 import {
   Table,
@@ -10,9 +10,9 @@ import {
 import Checkbox from '../Checkbox';
 import Button from '../Button';
 import LoaderProgress from '../LoaderProgress';
-import Tabs from '../Tabs';
 import Search from '../Search';
 import { entitiesTableConfig } from '../../config';
+import { stableSort, getComparator } from '../../helpers';
 
 const useStyles = makeStyles(() => ({
   contentWrapper: {
@@ -73,44 +73,49 @@ const EntityStepView = ({
   data,
   validationData,
   handleValidate,
-  handleRequestSort,
-  setInitialStepValidation,
   handleChangeSelectedEntities,
   selectedEntities,
-  handleInitSelectedEntities,
-  notReportedList
+  forwardToNextStep,
+  backToPrevStep
 }) => {
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('displayName');
-  const [isSelectedAll, setIsSelectedAll] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const { cellsList } = entitiesTableConfig;
 
-  const handleSelectAll = (event) => {
+  const handleSelectAll = useCallback((event) => {
     if (event.target.checked) {
-      setIsSelectedAll(true);
-      handleInitSelectedEntities([])
+      handleChangeSelectedEntities(
+        data.map(item => item.logicalName)
+      )
     } else {
-      setIsSelectedAll(false);
-      handleInitSelectedEntities([])
+      handleChangeSelectedEntities([])
     }
-  }
+    
+    /* eslint-disable-next-line */
+  }, [data]);
 
   const handleSelectItem = (event, entity) => {
     handleChangeSelectedEntities(entity)
   }
 
-  const handleChangeSearchValue = (e) => {
+  const handleChangeSearchValue = useCallback((e) => {
     e.persist();
     const { value } = e.target;
 
     setSearchValue(value);
+  }, [])
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property)
   }
 
   const modifyList = (list) => {
     return list
-      .map(item => ({...item, displayName: item.displayName || '' }))
+      .map(item => ({ ...item, displayName: item.displayName || '' }))
       .filter(item => searchValue ? item.displayName.toLowerCase().includes(searchValue.toLowerCase()) : true)
   }
 
@@ -118,14 +123,13 @@ const EntityStepView = ({
     return list
       .map(item => {
         const isSelected = selectedEntities.includes(item.logicalName)
-        const isReported = notReportedList.includes(item.logicalName);
 
         return (
           <EntitiesTableRow
             key={item.logicalName}
             data={item}
-            selected={isSelectedAll ? !isSelected || isReported : isSelected || isReported}
-            disabled={isReported || validationData.status === 'loading'}
+            selected={isSelected}
+            disabled={validationData.status === 'loading'}
             handleCheckboxChange={handleSelectItem}
             cellsList={cellsList}
           />
@@ -133,16 +137,14 @@ const EntityStepView = ({
       })
   }
 
-  const filteredData = modifyList(data);
+  const modifiedList = modifyList(data);
+  const filteredData = stableSort(modifiedList, getComparator(order, orderBy));
   const totalItems = filteredData.length;
-  const selectedCount = isSelectedAll ? totalItems - selectedEntities.length : selectedEntities.length;
+  const selectedCount = selectedEntities.length;
   const { status } = validationData;
-  
+
   return (
-    <div>
-      <Tabs 
-        currentTab="core"
-      />
+    <>
       <div className={classes.contentWrapper}>
         <div className={classes.controls}>
           <div className={classes.leftSide}>
@@ -152,7 +154,7 @@ const EntityStepView = ({
               <Checkbox
                 disabled={validationData.status === 'loading'}
                 onChange={handleSelectAll}
-                isItemSelected={isSelectedAll ? isSelectedAll && !selectedEntities.length : selectedEntities.length === totalItems}
+                isItemSelected={selectedCount === filteredData.length}
                 classes={{
                   root: classes.checkboxRoot
                 }}
@@ -195,7 +197,7 @@ const EntityStepView = ({
           <Button
             type="submit"
             disabled={loading || status === 'loading' || !selectedCount}
-            onClick={() => handleValidate(selectedEntities, isSelectedAll)}
+            onClick={() => handleValidate(selectedEntities)}
           >
             Validate
               {status !== 'hidden' ? (
@@ -210,17 +212,17 @@ const EntityStepView = ({
             disabled={loading || status === 'loading'}
             entity="back"
             label="Back"
-            onClick={() => {}}
+            onClick={backToPrevStep}
           />
           <Button
             disabled={status !== 'success'}
             entity="next"
             label="Next"
-            onClick={() => { }}
+            onClick={forwardToNextStep}
           />
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

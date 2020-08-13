@@ -1,13 +1,14 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, batch } from 'react-redux';
 import { 
   setTargetEnvironmentData, 
   fetchTargetEnvironmentData,
   validateStep,
   setValidationInit,
   setCurrentStep,
-  setSourceEnvironmentStep
+  backToSourceEnvrionmentStep,
+  setIsBack
 } from '../actions';
 import EnvironmentStepView from '../components/EnvironmentStepView';
 
@@ -44,12 +45,15 @@ const TargetEnvironmentStep = () => {
     dispatch(setValidationInit('targetenvironment'));
   }
 
-  const setNextStep = () => {
-    dispatch(setCurrentStep('entities'));
+  const forwardToNextStep = () => {
+    batch(() => {
+      dispatch(setIsBack(false));
+      dispatch(setCurrentStep('entities'));
+    })
   }
 
-  const setBackStep = () => {
-    dispatch(setSourceEnvironmentStep());
+  const backToPrevStep = () => {
+    dispatch(backToSourceEnvrionmentStep());
   }
 
   return (
@@ -62,8 +66,8 @@ const TargetEnvironmentStep = () => {
       validationData={validationData}
       validate={validate}
       handleCloseError={handleCloseError}
-      setNextStep={setNextStep}
-      setBackStep={setBackStep}
+      forwardToNextStep={forwardToNextStep}
+      backToPrevStep={backToPrevStep}
     />
   )
 }

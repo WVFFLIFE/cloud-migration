@@ -52,8 +52,8 @@ const getCircleClasses = makeStyles(() => ({
   small: {
     position: "relative",
     display: 'block',
-    width: 17,
-    height: 17,
+    width: 18,
+    height: 18,
     borderRadius: '50%',
   },
   smallActive: {

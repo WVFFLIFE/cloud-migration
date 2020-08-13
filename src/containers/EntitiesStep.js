@@ -1,79 +1,93 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector, batch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchEntities, validateEntities,
-  setOrderBy, setOrder,
-  setCurrentPage, setValidationInit,
+  fetchEntities,
+  validateEntities,
+  setValidationInit,
   setSelectedEntities,
-  setInitSelectedEntities
+  setInitSelectedEntities,
+  setCurrentTab,
+  setCurrentStep,
+  backToTargetEnvironmentStep
 } from '../actions';
 import EntitiesStepView from '../components/EntitiesStepView';
+import Tabs from '../components/Tabs';
 
 const EntitiesStep = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const {
-    loading, data, itemsPerPage,
-    order, orderBy, currentPage,
-    totalItems, selectedEntities,
-    notReportedList
+    loading,
+    data,
+    selectedEntities,
+    currentTab,
+    isBack
   } = useSelector(state => state.entities);
   const { entities: validationData } = useSelector(state => state.validation);
 
   useEffect(() => {
-    dispatch(fetchEntities(id))
+    if (!isBack) {
+      dispatch(fetchEntities(id))
+    }
+    /* eslint-disable-next-line */
+  }, [])
+
+  const handleValidate = useCallback((list, flag) => {
+    dispatch(validateEntities(id, list, flag))
 
     /* eslint-disable-next-line */
-  }, [id, currentPage, itemsPerPage, order, orderBy])
+  }, []);
 
-  const handleValidate = (list, flag) => {
-    dispatch(validateEntities(id, list, flag))
-  }
+  const setInitialStepValidation = useCallback(() => {
+    dispatch(setValidationInit('entities'));
+    /* eslint-disable-next-line */
+  }, [])
 
-  const setPage = (page) => {
-    dispatch(setCurrentPage(page));
-  }
+  const handleChangeSelectedEntities = useCallback((entity) => {
+    dispatch(setSelectedEntities(entity));
+    /* eslint-disable-next-line */
+  }, [])
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    batch(() => {
-      dispatch(setOrder(isAsc ? 'desc' : 'asc'));
-      dispatch(setOrderBy(property));
-    })
-  }
-
-  const setInitialStepValidation = () => {
-    dispatch(setValidationInit('entities'))
-  }
-
-  const handleChangeSelectedEntities = (entity) => {
-    dispatch(setSelectedEntities(entity))
-  }
-
-  const handleInitSelectedEntities = () => {
+  const handleInitSelectedEntities = useCallback(() => {
     dispatch(setInitSelectedEntities())
+    /* eslint-disable-next-line */
+  }, []);
+
+  const handleChangeCurrentTab = useCallback((newTab) => {
+    dispatch(setCurrentTab(newTab));
+    /* eslint-disable-next-line */
+  }, [])
+
+  const forwardToNextStep = () => {
+    dispatch(setCurrentStep('mapusers'))
   }
+
+  const backToPrevStep = () => {
+    dispatch(backToTargetEnvironmentStep());
+  }
+
+  const filteredData = data.filter(item => item.category === currentTab);
 
   return (
-    <EntitiesStepView
-      notReportedList={notReportedList}
-      loading={loading}
-      data={data}
-      selectedEntities={selectedEntities}
-      handleValidate={handleValidate}
-      validationData={validationData}
-      order={order}
-      orderBy={orderBy}
-      itemsPerPage={itemsPerPage}
-      currentPage={currentPage}
-      handleRequestSort={handleRequestSort}
-      setPage={setPage}
-      totalItems={totalItems}
-      setInitialStepValidation={setInitialStepValidation}
-      handleChangeSelectedEntities={handleChangeSelectedEntities}
-      handleInitSelectedEntities={handleInitSelectedEntities}
-    />
+    <>
+      <Tabs
+        currentTab={currentTab}
+        handleChangeTab={handleChangeCurrentTab}
+      />
+      <EntitiesStepView
+        loading={loading}
+        data={filteredData}
+        selectedEntities={selectedEntities[currentTab]}
+        handleValidate={handleValidate}
+        validationData={validationData}
+        setInitialStepValidation={setInitialStepValidation}
+        handleChangeSelectedEntities={handleChangeSelectedEntities}
+        handleInitSelectedEntities={handleInitSelectedEntities}
+        forwardToNextStep={forwardToNextStep}
+        backToPrevStep={backToPrevStep}
+      />
+    </>
   )
 }
 

@@ -1,54 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import MapDragView from '../components/MapDragView';
+import MapSelectView from '../components/MapSelectView';
 import {
-  setToTeamsTarget,
-  removeTeamsTarget,
   setToTeamsSource,
-  runTeamsAutomap,
-  fetchTeams
+  fetchTeams,
+  clearAllTeams,
+  automapTeams,
+  setNextScheduleStep,
+  backToMapBusinessUnitsStep
 } from '../actions';
 
 const MapTeamsStep = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { data, loading } = useSelector(state => state.teams);
+  const {mapteams: validationData} = useSelector(state => state.validation);
 
   useEffect(() => {
     dispatch(fetchTeams(id))
     /* eslint-disable-next-line */
   }, []);
 
-  const handleSetToSource = (sourceIndex, target) => {
-    dispatch(setToTeamsSource(sourceIndex, target))
+  const handleSetToSource = useCallback((sourceIndex, target) => {
+    dispatch(setToTeamsSource(sourceIndex, target));
+    /* eslint-disable-next-line */
+  }, []);
+
+  const handleClearAll = () => {
+    dispatch(clearAllTeams());
   }
 
-  const handleRemoveFromSource = (target) => {
-    dispatch(removeTeamsTarget(target))
+  const automapEntities = () => {
+    dispatch(automapTeams());
   }
 
-  const handleDragToTarget = (guid, items) => {
-    dispatch(setToTeamsTarget(guid, items))
+  const forwardToNextStep = () => {
+    dispatch(setNextScheduleStep(id));
   }
 
-  const handleAutomap = () => {
-    dispatch(runTeamsAutomap());
+  const backToPrevStep = () => {
+    dispatch(backToMapBusinessUnitsStep());
   }
+
+  const getOptionLabel = useCallback(option => option.name, [])
 
   return (
-    <MapDragView
-      loading={loading}
-      targetList={data.targetTeams}
+    <MapSelectView 
       sourceList={data.sourceTeams}
-      mappedList={data.mapedTeams}
+      targetList={data.targetTeams}
       handleSetToSource={handleSetToSource}
-      handleRemoveFromSource={handleRemoveFromSource}
-      handleDragToTarget={handleDragToTarget}
-      handleAutomap={handleAutomap}
-      title="Please map teams. Drag and Drop Active team from Target system to each record from Source system."
-      filterField="name"
-      type="team"
+      handleClearAll={handleClearAll}
+      validationData={validationData}
+      loading={loading}
+      automapEntities={automapEntities}
+      forwardToNextStep={forwardToNextStep}
+      backToPrevStep={backToPrevStep}
+      getOptionLabel={getOptionLabel}
+      type="teams"
     />
   )
 }

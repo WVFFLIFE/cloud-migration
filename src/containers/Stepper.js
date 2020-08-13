@@ -50,11 +50,11 @@ function getStepTitle(step) {
     case 'entities':
       return 'Entities for migration'
     case 'mapusers':
-      return 'Mapping'
+      return 'Map > Users'
     case 'mapbusinessunits':
-      return 'Mapping'
+      return 'Map > Business units'
     case 'mapteams':
-      return 'Mapping'
+      return 'Map Teams'
     case 'summary':
       return 'Schedule'
     default:
@@ -173,7 +173,7 @@ const Stepper = () => {
           </div>
           <div className="col-9">
             <div className={classes.rightSide}>
-              {['error', 'success'].includes(stepsList[currentStep].status) ? (
+              {['error', 'success'].includes(stepsList[currentStep].status) && stepsList[currentStep].message ? (
                 <StatusNotification
                   status={stepsList[currentStep].status}
                   message={stepsList[currentStep].message}

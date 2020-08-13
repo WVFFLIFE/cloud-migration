@@ -1,15 +1,12 @@
 import {
   FETCH_ENTITIES_DATA_STARTED,
   FETCH_ENTITIES_DATA_SUCCESS,
-  SET_CURRENT_PAGE,
-  SET_ORDER,
-  SET_ORDER_BY,
-  SET_TOTAL_ITEMS,
   SET_REPORTS,
   SET_SELECTED_ENTITIES,
   SET_INIT_SELECTED_ENTITIES,
-  SET_NOT_REPORTED_LIST,
-  SET_INIT_ENTITIES_DATA
+  SET_INIT_ENTITIES_DATA,
+  SET_TAB,
+  SET_IS_BACK
 } from '../constants';
 import {
   setValidationStart,
@@ -17,13 +14,13 @@ import {
   setValidationError,
   setValidationInit
 } from '../actions'
-import {batch} from 'react-redux';
+import { batch } from 'react-redux';
 import MigrationService from '../services/migration.services';
 
 function modifyEntities(prevList, validationList) {
   return prevList.map(item => {
     const validationData = validationList.find(validationItem => validationItem.logicalName === item.logicalName);
-    let validationSettings = {status: 'hidden', message: ''};
+    let validationSettings = { status: 'hidden', message: '' };
 
     if (!validationData) {
       return {
@@ -31,9 +28,9 @@ function modifyEntities(prevList, validationList) {
         validationSettings
       }
     } else if (!validationData.errors.length) {
-      validationSettings = {status: 'success', message: 'Success!'}
+      validationSettings = { status: 'success', message: 'Success!' }
     } else if (validationData.errors.length) {
-      validationSettings = {status: "error", message: validationData.errors}
+      validationSettings = { status: "error", message: validationData.errors }
     }
 
     return {
@@ -52,110 +49,79 @@ const fetchEntitiesSuccess = (list) => ({
   payload: list
 })
 
-const setTotalItems = (total) => ({
-  type: SET_TOTAL_ITEMS,
-  payload: total
-})
-
 const setReports = (reports) => ({
   type: SET_REPORTS,
   payload: reports
-})
-
-const initEntitiesData = () => ({
-  type: SET_INIT_ENTITIES_DATA
 })
 
 export const setInitSelectedEntities = () => ({
   type: SET_INIT_SELECTED_ENTITIES
 })
 
-export const selectEntity = (entity) => ({
+export const selectEntity = (entities) => ({
   type: SET_SELECTED_ENTITIES,
-  payload: entity
+  payload: entities
 })
 
-export const setSelectedEntities = entity => {
+export const setCurrentTab = (newTab) => ({
+  type: SET_TAB,
+  payload: newTab
+})
+
+export const setIsBack = (flag) => ({
+  type: SET_IS_BACK,
+  payload: flag
+})
+
+export const setSelectedEntities = (selected) => {
   return (dispatch, getState) => {
-    const {entities} = getState().validation;
+    const { entities } = getState().validation;
+    const { currentTab } = getState().entities;
+    const selectedEntities = getState().entities.selectedEntities[currentTab];
+
+    const newSelectedEntities = Array.isArray(selected) 
+      ? selected
+      : selectedEntities.includes(selected)
+      ? selectedEntities.filter(selectedEntity => selectedEntity !== selected)
+      : [...selectedEntities, selected];
 
     batch(() => {
       if (entities.status === 'success') {
         dispatch(setValidationInit('entities'));
       }
 
-      dispatch(selectEntity(entity));
+      dispatch(selectEntity(newSelectedEntities));
     })
   }
 }
 
-export const setCurrentPage = (page) => ({
-  type: SET_CURRENT_PAGE,
-  payload: page
-})
-
-export const setOrder = (order) => ({
-  type: SET_ORDER,
-  payload: order
-})
-
-export const setOrderBy = (orderBy) => ({
-  type: SET_ORDER_BY,
-  payload: orderBy
-})
-
-export const setNotReportedList = (list) => ({
-  type: SET_NOT_REPORTED_LIST,
-  payload: list
-})
-
 export const fetchEntities = (id) => {
   return (dispatch, getState) => {
-    const {
-      currentPage: pageNumber,
-      itemsPerPage: pageSize,
-      orderBy,
-      order,
-      reports
-    } = getState().entities;
-
     dispatch(fetchEntitiesStarted());
 
-    const descStatus = order === 'desc';
-
     MigrationService
-      .get(`/migration-job/${id}/entities?pageNumber=${pageNumber + 1}&pageSize=${pageSize}&orderBy=${orderBy}&descending=${descStatus}`)
-      .then(data => {
-        const {paginationParameters, result} = data;
-        const entitiesList = reports.length ? modifyEntities(result, reports) : result;
-
-        batch(() => {
-          dispatch(fetchEntitiesSuccess(entitiesList))
-          dispatch(setTotalItems(paginationParameters.totalCount))
-        })
+      .get(`/migration-job/${id}/entities`)
+      .then(({ entities }) => {
+        dispatch(fetchEntitiesSuccess(entities))
       })
   }
 }
 
-export const validateEntities = (id, SelectedEntities, flag) => {
-  return (dispatch, getState) => {
-    const body = {SelectedEntities}
-    const {data: currentEntities} = getState().entities;
-    const query = flag ? `?all=${flag}` : '';
+export const validateEntities = (id, SelectedEntities) => {
+  return async (dispatch, getState) => {
+    const body = { SelectedEntities }
+    const { data: currentEntities } = getState().entities;
 
-    batch(() => {
-      dispatch(initEntitiesData());
-      dispatch(setValidationStart('entities'));
-    })
+    dispatch(setValidationStart('entities'));
+
+    // const {reports, validationResult} = await MigrationService.post(`/migration-job/${id}/entities/validate-entities${query}`, body);
+    // const postValidationBody = reports.map(report => )
 
     MigrationService
-      .post(`/migration-job/${id}/entities/validate-entities${query}`, body)
-      .then(({validationResult, reports}) => {
-        const notReportedList = reports
-          .filter(report => !SelectedEntities.includes(report.logicalName))
-          .map(item => item.logicalName);
+      .post(`/migration-job/${id}/entities/validate-entities`, body)
+      .then(({ validationResult, reports }) => {
         const newEntities = modifyEntities(currentEntities, reports);
-        
+
         batch(() => {
           if (validationResult) {
             dispatch(setValidationSuccess('entities', 'Validation successful. No compatibility issues detected. Press “Next” to go further.'));
@@ -164,7 +130,6 @@ export const validateEntities = (id, SelectedEntities, flag) => {
           }
           dispatch(fetchEntitiesSuccess(newEntities))
           dispatch(setReports(reports));
-          dispatch(setNotReportedList(notReportedList))
         })
       })
   }

@@ -1,18 +1,14 @@
 import React from 'react';
-import { listTimeZones } from 'timezone-support';
 import {
   useTheme,
   useMediaQuery,
   TextField,
   ListSubheader,
-  Typography,
   makeStyles
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { VariableSizeList } from 'react-window';
-import PublicIcon from '@material-ui/icons/Public';
 
-const timeZones = listTimeZones();
 const LISTBOX_PADDING = 8;
 
 function renderRow(props) {
@@ -119,7 +115,9 @@ const useStyles = makeStyles({
 const VirtualList = ({
   disabled,
   value,
-  handleChangeValue
+  handleChangeValue,
+  options,
+  getOptionLabel
 }) => {
   const classes = useStyles();
 
@@ -130,12 +128,12 @@ const VirtualList = ({
         inputRoot: classes.inputRoot 
       }}
       value={value}
-      popupIcon={<PublicIcon className={classes.icon}/>}
       style={{ width: '100%' }}
+      getOptionLabel={getOptionLabel}
       disableListWrap
       ListboxComponent={ListboxComponent}
       renderGroup={renderGroup}
-      options={timeZones}
+      options={options}
       onChange={(event, newValue) => handleChangeValue(newValue)}
       renderInput={(params) => (
         <TextField 
@@ -150,7 +148,7 @@ const VirtualList = ({
         />
       )}
       
-      renderOption={(option) => <Typography noWrap>{option}</Typography>}
+      // renderOption={(option) => <Typography noWrap>{option.fullName}</Typography>}
     />
   )
 }

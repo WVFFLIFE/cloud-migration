@@ -286,6 +286,7 @@ export const entitiesTableConfig = {
     {
       fieldName: 'validationSettings',
       label: 'Validate Status',
+      activeSort: true,
       renderItem: (data) => {
         if (!data) return <ValidateTableCell></ValidateTableCell>
 
@@ -323,7 +324,7 @@ export const entitiesTableConfig = {
               ? errorBlock :
               emptyCell;
       },
-      activeSort: false
+      
     }
   ]
 }

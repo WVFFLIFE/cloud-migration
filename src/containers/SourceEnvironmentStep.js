@@ -5,7 +5,6 @@ import {
   setSourceEnvironmentData, 
   fetchSourceEnvironmentData,
   validateStep,
-  setValidationInit,
   setCurrentStep
 } from '../actions';
 import EnvironmentStepView from '../components/EnvironmentStepView';
@@ -39,7 +38,7 @@ const SourceEnvironmentStep = () => {
     dispatch(validateStep(id, 'sourceenvironment', data));
   }
   
-  const setNextStep = () => {
+  const forwardToNextStep = () => {
     dispatch(setCurrentStep('targetenvironment'));
   }
 
@@ -52,7 +51,7 @@ const SourceEnvironmentStep = () => {
       isActive={currentStep === 'sourceenvironment'}
       validationData={validationData}
       validate={validate}
-      setNextStep={setNextStep}
+      forwardToNextStep={forwardToNextStep}
     />
   )
 }

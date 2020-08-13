@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
 const tabsList = [
-  { id: 'core', title: 'Core Records' },
-  { id: 'marketing', title: 'Marketing & Sales' },
-  { id: 'service', title: 'Service' },
-  { id: 'misc', title: 'Misc' },
-  { id: 'entities', title: 'Custom entities' }
+  { id: 'CoreRecords', title: 'Core Records' },
+  { id: 'MarketingAndSales', title: 'Marketing & Sales' },
+  { id: 'Service', title: 'Service' },
+  { id: 'Miscellaneous', title: 'Misc' },
+  { id: 'CustomEntities', title: 'Custom entities' }
 ]
 
 const useStyles = makeStyles({
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 32,
+    padding: 16,
     background: '#FAFBFC',
     borderRight: '1px solid rgba(179,186,205,0.23)',
     cursor: 'pointer',
@@ -35,9 +35,8 @@ const useStyles = makeStyles({
     cursor: 'default'
   },
   tabTitle: {
-    fontSize: 24,
+    fontSize: 17,
     fontWeight: 600,
-    lineHeight: '32px',
     color: '#A1ADCE'
   },
   tabTitleActive: {
@@ -45,11 +44,11 @@ const useStyles = makeStyles({
   }
 })
 
-const Tabs = () => {
+const Tabs = ({
+  currentTab,
+  handleChangeTab
+}) => {
   const classes = useStyles();
-  const [currentTab, setCurrentTab] = React.useState('core');
-
-  const handleChangeCurrentTab = (id) => setCurrentTab(id);
 
   return (
     <div className={classes.root}>
@@ -57,7 +56,7 @@ const Tabs = () => {
         const isActive = tabItem.id === currentTab;
         return (
           <div
-            onClick={() => handleChangeCurrentTab(tabItem.id)}
+            onClick={() => handleChangeTab(tabItem.id)}
             id={tabItem.id}
             key={tabItem.id}
             className={clsx(classes.tab, {

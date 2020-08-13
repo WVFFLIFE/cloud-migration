@@ -114,6 +114,22 @@ class MigrationService {
       message
     };
   };
+
+  download = async (path) => {
+    const uri = `${this.BASE_URL}${path}`;
+    const token = await authentication.getAccessToken();
+
+    const res = await fetch(uri, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token.accessToken}`,
+      }
+    })
+
+    console.log(res.headers.get('Content-Disposition'))
+
+    return await res.blob();
+  }
 }
 
 export default new MigrationService();

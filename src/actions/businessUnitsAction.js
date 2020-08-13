@@ -4,9 +4,11 @@ import {
   SET_TARGET_BUSINESS_UNITS,
   REMOVE_BUSINESS_TARGET_FROM_SOURCE,
   USE_BUSINESS_AUTOMAP,
-  SET_TO_BUSINESS_TARGET
+  SET_TO_BUSINESS_TARGET,
+  AUTOMAP_BUSINESSUNITS,
+  SET_INIT_BUSINESSUNITS
 } from '../constants'
-import { setValidationSuccess, setValidationInit } from '../actions';
+import { setValidationSuccess, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import { v4 as uuid } from "uuid";
@@ -30,7 +32,8 @@ const checkAction = (action) => (...args) => {
     ) {
       dispatch(setValidationSuccess('mapbusinessunits'))
     } else {
-      dispatch(setValidationInit('mapbusinessunits'))
+      const incompatibilityLength = sourceBusinessUnits.reduce((acc, next) => next.target ? acc : acc + 1, 0);
+      dispatch(setValidationError('mapbusinessunits', `Detected ${incompatibilityLength} issues with mapping business units.`))
     }
   }
 }
@@ -61,6 +64,12 @@ const runAutomapAction = (data) => ({
   payload: data
 })
 
+const automapBusinessUnitsAction = () => ({
+  type: AUTOMAP_BUSINESSUNITS
+})
+
+export const automapBusinessUnits = (...args) => checkAction(automapBusinessUnitsAction)(...args)
+
 const runAutomap = () => {
   return (dispatch, getState) => {
     const { sourceBusinessUnits, targetBusinessUnits, mapedBusinessUnits } = getState().businessunits.data;
@@ -85,6 +94,12 @@ const runAutomap = () => {
     dispatch(runAutomapAction(newSourceBusinessUnits))
   }
 }
+
+const clearBusinessUnitsAction = () => ({
+  type: SET_INIT_BUSINESSUNITS
+})
+
+export const clearAllBusiniessUnits = (...args) => checkAction(clearBusinessUnitsAction)(...args);
 
 export const setToBusinessUnitsTarget = (...args) => checkAction(setToTargetAction)(...args);
 

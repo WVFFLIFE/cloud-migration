@@ -4,9 +4,11 @@ import {
   SET_TARGET_USER,
   REMOVE_TARGET_FROM_SOURCE,
   SET_TO_TARGET,
-  USE_AUTOMAP
+  USE_AUTOMAP,
+  SET_INIT_USERS,
+  AUTOMAP_USERS
 } from '../constants'
-import { setValidationSuccess, setValidationInit } from '../actions';
+import { setValidationSuccess, setValidationInit, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import { v4 as uuid } from "uuid";
@@ -30,7 +32,8 @@ const checkAction = (action) => (...args) => {
     ) {
       dispatch(setValidationSuccess('mapusers'))
     } else {
-      dispatch(setValidationInit('mapusers'))
+      const incompatibilityLength = sourceUsers.reduce((acc, next) => next.target ? acc : acc + 1, 0);
+      dispatch(setValidationError('mapusers', `Detected ${incompatibilityLength} issues with mapping users.`))
     }
   }
 }
@@ -93,6 +96,18 @@ export const removeTarget = (...args) => checkAction(removeTargeAction)(...args)
 export const setToSource = (...args) => checkAction(setToSourceAction)(...args)
 
 export const runAutomap = (...args) => checkAction(rnAuto)(...args); 
+
+const automapUsersAction = () => ({
+  type: AUTOMAP_USERS
+})
+
+export const automapUser = (...args) => checkAction(automapUsersAction)(...args);
+
+const clearUsersAction = () => ({
+  type: SET_INIT_USERS
+})
+
+export const clearAllUsers = (...args) => checkAction(clearUsersAction)(...args);
 
 export const fetchUsers = (id) => {
   return dispatch => {

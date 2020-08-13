@@ -7,7 +7,6 @@ import Button from '../Button'
 import TextField from '../TextField'
 import LoaderProgress from '../LoaderProgress'
 import Loader from '../Loader'
-import StatusNotification from '../StatusNotification'
 
 const useStyles = makeStyles({
   form: {
@@ -46,8 +45,8 @@ const EnvironmentStepView = ({
   validationData,
   isActive,
   loading,
-  setNextStep,
-  setBackStep,
+  forwardToNextStep,
+  backToPrevStep,
 }) => {
   const classes = useStyles();
   const { status } = validationData;
@@ -103,17 +102,17 @@ const EnvironmentStepView = ({
                 </Button>
               </div>
               <div>
-                {setBackStep ? <Button
+                {backToPrevStep ? <Button
                   disabled={loading}
                   entity="back"
                   label="Back"
-                  onClick={setBackStep}
+                  onClick={backToPrevStep}
                 /> : null}
                 <Button
                   disabled={status !== 'success'}
                   entity="next"
                   label="Next"
-                  onClick={setNextStep}
+                  onClick={forwardToNextStep}
                 />
               </div>
             </div>

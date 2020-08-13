@@ -4,9 +4,11 @@ import {
   SET_TARGET_TEAMS,
   REMOVE_TEAMS_TARGET_FROM_SOURCE,
   SET_TO_TEAMS_TARGET,
-  USE_TEAMS_AUTOMAP
+  USE_TEAMS_AUTOMAP,
+  CLEAR_TARGET_TEAMS,
+  AUTOMAP_TEAMS
 } from '../constants'
-import { setValidationSuccess, setValidationInit } from '../actions';
+import { setValidationSuccess, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import { v4 as uuid } from "uuid";
@@ -20,7 +22,7 @@ const fetchUsersSuccess = (data) => ({
   payload: data
 })
 
-const checkAction = (action) => (...args) => {
+const checkValidity = (action) => (...args) => {
   return (dispatch, getState) => {
     dispatch(action(...args));
     const { sourceTeams } = getState().teams.data;
@@ -30,7 +32,8 @@ const checkAction = (action) => (...args) => {
     ) {
       dispatch(setValidationSuccess('mapteams'))
     } else {
-      dispatch(setValidationInit('mapteams'))
+      const incompatibilityLength = sourceTeams.reduce((acc, next) => next.target ? acc : acc + 1, 0);
+      dispatch(setValidationError('mapteams', `Detected ${incompatibilityLength} issues with mapping teams.`))
     }
   }
 }
@@ -86,13 +89,25 @@ const runAutomap = () => {
   }
 }
 
-export const setToTeamsTarget = (...args) => checkAction(setToTargetAction)(...args);
+const automapTeamsAction = () => ({
+  type: AUTOMAP_TEAMS
+})
 
-export const removeTeamsTarget = (...args) => checkAction(removeTargeAction)(...args);
+const clearAllTeamsAction = () => ({
+  type: CLEAR_TARGET_TEAMS
+})
 
-export const setToTeamsSource = (...args) => checkAction(setToSourceAction)(...args)
+export const automapTeams = (...args) => checkValidity(automapTeamsAction)(...args);
 
-export const runTeamsAutomap = (...args) => checkAction(runAutomap)(...args); 
+export const clearAllTeams = (...args) => checkValidity(clearAllTeamsAction)(...args);
+
+export const setToTeamsTarget = (...args) => checkValidity(setToTargetAction)(...args);
+
+export const removeTeamsTarget = (...args) => checkValidity(removeTargeAction)(...args);
+
+export const setToTeamsSource = (...args) => checkValidity(setToSourceAction)(...args)
+
+export const runTeamsAutomap = (...args) => checkValidity(runAutomap)(...args); 
 
 export const fetchTeams = (id) => {
   return dispatch => {

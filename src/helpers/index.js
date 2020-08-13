@@ -12,8 +12,8 @@ function stableSort(array, comparator) {
 }
 
 function descendingComparator(a, b, orderBy) {
-  const x = typeof a[orderBy] === 'string' ? a[orderBy].toLowerCase() : a;
-  const y = typeof b[orderBy] === 'string' ? b[orderBy].toLowerCase() : b;
+  const x = typeof a[orderBy] === 'string' ? a[orderBy].toLowerCase() : a[orderBy]?.status.toLowerCase();
+  const y = typeof b[orderBy] === 'string' ? b[orderBy].toLowerCase() : b[orderBy]?.status.toLowerCase();
 
   if (y < x) {
     return -1;

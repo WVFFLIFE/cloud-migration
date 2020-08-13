@@ -1,4 +1,4 @@
-import {batch} from 'react-redux';
+import { batch } from 'react-redux';
 import {
   SET_CURRENT_STEP,
   SETTINGS_INIT_STARTED,
@@ -8,7 +8,8 @@ import {
 } from '../constants'
 import {
   setValidationSuccess,
-  setValidationInit
+  setValidationInit,
+  setIsBack
 } from '../actions'
 import MigrationService from '../services/migration.services'
 import { getNextStep } from '../helpers';
@@ -42,21 +43,88 @@ export const setStepControlStatus = (status) => ({
   payload: status
 })
 
-export const setSourceEnvironmentStep = () => {
-  return dispatch => {
-    batch(() => {
-      dispatch(setValidationInit('environments'));
-      dispatch(setValidationInit('targetenvironment'));
-      dispatch(setValidationInit('sourceenvironment'));
-      dispatch(setCurrentStep('sourceenvironment'));
+// export const setSourceEnvironmentStep = () => {
+//   return dispatch => {
+//     batch(() => {
+//       dispatch(setValidationInit('environments'));
+//       dispatch(setValidationInit('targetenvironment'));
+//       dispatch(setValidationInit('sourceenvironment'));
+//       dispatch(setCurrentStep('sourceenvironment'));
+//     })
+//   }
+// }
+
+export const setNextMapBusinessUnitsStep = (id) => {
+  return (dispatch, getState) => {
+    const users = getState().users.data.sourceUsers.map(item => {
+      return {
+        source: item.source.guid,
+        target: item.target.guid
+      }
     })
+
+    setStepControlStatus('loading')
+
+    MigrationService
+      .postStep(`/migration-job/${id}/users/add-users`, { users })
+      .then(() => {
+        batch(() => {
+          dispatch(setStepControlStatus('hidden'));
+          dispatch(setCurrentStep('mapbusinessunits'))
+        })
+      })
+  }
+}
+
+export const setNextMapTeamsStep = (id) => {
+  return (dispatch, getState) => {
+    const mapedBusinessUnits = getState().businessunits.data.sourceBusinessUnits.map(item => {
+      return {
+        source: item.source.guid,
+        target: item.target.guid
+      }
+    })
+
+    setStepControlStatus('loading')
+
+    MigrationService
+      .postStep(`/migration-job/${id}/business-units`, { mapedBusinessUnits })
+      .then(() => {
+        batch(() => {
+          dispatch(setStepControlStatus('hidden'));
+          dispatch(setCurrentStep('mapteams'))
+        })
+      })
+  }
+}
+
+export const setNextScheduleStep = (id) => {
+  return (dispatch, getState) => {
+    const mapedTeams = getState().teams.data.sourceTeams.map(item => {
+      return {
+        source: item.source.guid,
+        target: item.target.guid
+      }
+    })
+
+    setStepControlStatus('loading')
+
+    MigrationService
+      .postStep(`/migration-job/${id}/teams/add-teams`, { mapedTeams })
+      .then(() => {
+        batch(() => {
+          dispatch(setStepControlStatus('hidden'));
+          dispatch(setValidationSuccess('map'))
+          dispatch(setCurrentStep('summary'));
+        })
+      })
   }
 }
 
 export const setNextStep = (id, step) => {
   return (dispatch, getState) => {
     if (step === 'entities') {
-      const {data, selectedEntities} = getState().entities;
+      const { data, selectedEntities } = getState().entities;
 
       const entities = data
         .filter(entity => selectedEntities.includes(entity.logicalName))
@@ -77,7 +145,7 @@ export const setNextStep = (id, step) => {
           })
         })
     } else if (step === 'mapusers') {
-      const {sourceUsers, targetUsers} = getState().users.data;
+      const { sourceUsers, targetUsers } = getState().users.data;
       const users = sourceUsers.map(sourceUser => {
         const target = targetUsers.find(targetUser => targetUser.fullName === sourceUser.target.fullName);
 
@@ -99,7 +167,7 @@ export const setNextStep = (id, step) => {
         })
 
     } else if (step === 'mapbusinessunits') {
-      const {sourceBusinessUnits, targetBusinessUnits} = getState().businessunits.data;
+      const { sourceBusinessUnits, targetBusinessUnits } = getState().businessunits.data;
       const mapedBusinessUnits = sourceBusinessUnits.map(sourceBusinessUnit => {
         const target = targetBusinessUnits.find(targetBusinessUnit => targetBusinessUnit.name === sourceBusinessUnit.target.name);
 
@@ -120,7 +188,7 @@ export const setNextStep = (id, step) => {
           })
         })
     } else if (step === 'mapteams') {
-      const {sourceTeams, targetTeams} = getState().teams.data;
+      const { sourceTeams, targetTeams } = getState().teams.data;
       const mapedTeams = sourceTeams.map(sourceTeam => {
         const target = targetTeams.find(targetTeam => targetTeam.name === sourceTeam.target.name);
 
@@ -147,17 +215,78 @@ export const setNextStep = (id, step) => {
   }
 }
 
+export const backToSourceEnvrionmentStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setValidationInit('environments'));
+      dispatch(setValidationInit('targetenvironment'));
+      dispatch(setValidationInit('sourceenvironment'));
+      dispatch(setCurrentStep('sourceenvironment'));
+    })
+  }
+}
+
+export const backToTargetEnvironmentStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setValidationInit('entities'));
+      dispatch(setValidationInit('environments'));
+      dispatch(setValidationInit('targetenvironment'));
+      dispatch(setCurrentStep('targetenvironment'))
+    })
+  }
+}
+
+export const backToEntitiesStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setIsBack(true));
+      dispatch(setValidationInit('mapusers'));
+      dispatch(setValidationInit('entities'));
+      dispatch(setCurrentStep('entities'));
+    })
+  }
+}
+
+export const backToMapUsersStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setValidationInit('mapbusinessunits'));
+      dispatch(setValidationInit('mapusers'));
+      dispatch(setCurrentStep('mapusers'));
+    })
+  }
+}
+
+export const backToMapBusinessUnitsStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setValidationInit('map'));
+      dispatch(setValidationInit('mapteams'));
+      dispatch(setValidationInit('mapbusinessunits'));
+      dispatch(setCurrentStep('mapbusinessunits'));
+    })
+  }
+}
+
+export const backToMapTeamsStep = () => {
+  return dispatch => {
+    batch(() => {
+      dispatch(setValidationInit('summary'));
+      dispatch(setValidationInit('map'));
+      dispatch(setValidationInit('mapteams'));
+      dispatch(setCurrentStep('mapteams'));
+    })
+  }
+}
+
 export const setValidationSuccessByStep = () => {
   return dispatch => {
     batch(() => {
-      dispatch(setValidationSuccess('sourceenvironments'))
-      dispatch(setValidationSuccess('targetenvironments'))
-      dispatch(setValidationSuccess('environments'))
-      dispatch(setValidationSuccess('entities'))
-      dispatch(setValidationSuccess('map'))
-      dispatch(setValidationSuccess('mapusers'))
-      dispatch(setValidationSuccess('mapbusinessunits'))
-      dispatch(setValidationSuccess('mapteams'))
+      [
+        'sourceenvironments', 'targetenvironments', 'entities',
+        'entities', 'map', 'mapusers', 'mapbusinessunits', 'mapteams'
+      ].forEach(step => dispatch(setValidationSuccess(step)))
     })
   }
 }
@@ -168,31 +297,31 @@ export const initStepSettings = (id, errCallback) => {
 
     MigrationService
       .get(`/migration-job/${id}`)
-      .then(({status}) => {
+      .then(({ status }) => {
         batch(() => {
           if (status === 'Draft') {
             dispatch(settingsInitSuccess({
-              step: 'sourceenvironment', 
+              step: 'sourceenvironment',
               status,
             }))
             dispatch(setEditAbility(true))
           } else if (status === 'Scheduled') {
             dispatch(settingsInitSuccess({
-              step: 'summary', 
+              step: 'summary',
               status,
             }))
             dispatch(setValidationSuccessByStep())
             dispatch(setEditAbility(true))
           } else if (['Started', 'Completed', 'Involvement needed']) {
             dispatch(settingsInitSuccess({
-              step: 'summary', 
+              step: 'summary',
               status,
             }))
             dispatch(setValidationSuccessByStep())
             dispatch(setEditAbility(false))
           } else {
             dispatch(settingsInitSuccess({
-              step: 'sourceenvironment', 
+              step: 'sourceenvironment',
               status,
             }))
             dispatch(setValidationSuccessByStep())

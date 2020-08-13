@@ -3,7 +3,9 @@ import {
   FETCH_USERS_SUCCESS,
   SET_TARGET_USER,
   REMOVE_TARGET_FROM_SOURCE,
-  USE_AUTOMAP
+  USE_AUTOMAP,
+  SET_INIT_USERS,
+  AUTOMAP_USERS
 } from '../constants';
 
 const INITIAL_STATE = {
@@ -35,20 +37,12 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
         ...state,
         data: {
           ...state.data,
-          sourceUsers: state.data.sourceUsers
-            .map(item => {
-              if (item.target && item.target.guid === action.payload.target.guid) {
-                return {
-                  source: item.source,
-                  target: null
-                }
-              }
-              return item;
-            })
-            .map((item, idx) => ({
-              source: item.source,
+          sourceUsers: state.data.sourceUsers.map(item => {
+            return {
+              ...item,
               target: item.source.guid === action.payload.sourceId ? action.payload.target : item.target
-            }))
+            }
+          })
         }
       }
     case REMOVE_TARGET_FROM_SOURCE:
@@ -77,6 +71,34 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
         data: {
           ...state.data,
           sourceUsers: action.payload
+        }
+      }
+    case AUTOMAP_USERS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          sourceUsers: state.data.sourceUsers.map(sourceUser => {
+            let target = null;
+            const mapedSourceUser = state.data.mapedUsers.find(mapedUser => mapedUser.source === sourceUser.source.guid) || null;
+
+            if (mapedSourceUser) {
+              target = state.data.targetUsers.find(targetUser => targetUser.guid === mapedSourceUser.target) || null;
+            }
+
+            return {
+              source: sourceUser.source,
+              target
+            }
+          })
+        }
+      }
+    case SET_INIT_USERS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          sourceUsers: state.data.sourceUsers.map(item => ({...item, target: null}))
         }
       }
 

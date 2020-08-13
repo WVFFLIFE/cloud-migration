@@ -1,54 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import MapDragView from '../components/MapDragView';
+import MapSelectView from '../components/MapSelectView';
 import {
   fetchBusinessUnits,
   setToBusinessUnitsSource,
-  removeBusinessUnitsTarget,
-  setToBusinessUnitsTarget,
-  runBusinessUnitsAutomap
+  automapBusinessUnits,
+  clearAllBusiniessUnits,
+  setNextMapTeamsStep,
+  backToMapUsersStep
 } from '../actions';
 
 const MapBusinessUnitsStep = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { data, loading } = useSelector(state => state.businessunits);
+  const {mapbusinessunits: validationData} = useSelector(state => state.validation);
 
   useEffect(() => {
     dispatch(fetchBusinessUnits(id))
     /* eslint-disable-next-line */
-  }, [id]);
+  }, []);
 
-  const handleSetToSource = (sourceIndex, target) => {
-    dispatch(setToBusinessUnitsSource(sourceIndex, target))
+  const handleSetToSource = useCallback((sourceIndex, target) => {
+    dispatch(setToBusinessUnitsSource(sourceIndex, target));
+    /* eslint-disable-next-line */
+  }, []);
+
+  const handleClearAll = () => {
+    dispatch(clearAllBusiniessUnits());
   }
 
-  const handleRemoveFromSource = (target) => {
-    dispatch(removeBusinessUnitsTarget(target))
+  const automapEntities = () => {
+    dispatch(automapBusinessUnits());
   }
 
-  const handleDragToTarget = (guid, items) => {
-    dispatch(setToBusinessUnitsTarget(guid, items))
+  const forwardToNextStep = () => {
+    dispatch(setNextMapTeamsStep(id));
   }
 
-  const handleAutomap = () => {
-    dispatch(runBusinessUnitsAutomap());
+  const backToPrevStep = () => {
+    dispatch(backToMapUsersStep());
   }
+
+  const getOptionLabel = useCallback(option => option.name, [])
 
   return (
-    <MapDragView
-      loading={loading}
-      targetList={data.targetBusinessUnits}
+    <MapSelectView
       sourceList={data.sourceBusinessUnits}
-      mappedList={data.mapedBusinessUnits}
+      targetList={data.targetBusinessUnits}
       handleSetToSource={handleSetToSource}
-      handleRemoveFromSource={handleRemoveFromSource}
-      handleDragToTarget={handleDragToTarget}
-      handleAutomap={handleAutomap}
-      title="Please map business units. Drag and Drop Active units from Target system to each record from Source system."
-      filterField="name"
-      type="unit"
+      handleClearAll={handleClearAll}
+      validationData={validationData}
+      loading={loading}
+      automapEntities={automapEntities}
+      forwardToNextStep={forwardToNextStep}
+      backToPrevStep={backToPrevStep}
+      getOptionLabel={getOptionLabel}
+      type="businessunits"
     />
   )
 }

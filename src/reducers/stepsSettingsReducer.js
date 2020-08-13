@@ -25,7 +25,7 @@ function stepsSettingsReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: false,
-        currentStep: 'mapusers',//action.payload.step,
+        currentStep: 'summary',//action.payload.step, // change to set custom step for debug
         currentStatus: action.payload.status
       }
     case SET_CURRENT_STEP:
