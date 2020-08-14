@@ -107,11 +107,12 @@ class MigrationService {
       }
     }
 
-    const { message } = await res.json();
+    const { message, ...rest } = await res.json();
 
     return {
       status: 'success',
-      message
+      message,
+      ...rest
     };
   };
 
@@ -125,8 +126,6 @@ class MigrationService {
         Authorization: `Bearer ${token.accessToken}`,
       }
     })
-
-    console.log(res.headers.get('Content-Disposition'))
 
     return await res.blob();
   }

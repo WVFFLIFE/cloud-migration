@@ -27,7 +27,7 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         [action.payload.step]: {
           status: 'loading',
-          message: ''
+          message: '',
         }
       }
     case SET_VALIDATION_SUCCESS:
@@ -35,7 +35,8 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         [action.payload.step]: {
           status: 'success',
-          message: action.payload.message
+          message: action.payload.message,
+          ...action.payload.other
         }
       }
     case SET_VALIDATION_ERROR:

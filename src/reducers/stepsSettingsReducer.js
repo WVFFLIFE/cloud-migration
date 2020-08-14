@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   currentStep: null,
   currentStatus: null,
   canEdit: true,
-  stepControlStatus: 'hidden'
+  stepControlStatus: 'hidden',
 }
 
 function stepsSettingsReducer(state = INITIAL_STATE, action) {
@@ -25,7 +25,7 @@ function stepsSettingsReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: false,
-        currentStep: 'summary',//action.payload.step, // change to set custom step for debug
+        currentStep: action.payload.step, // set custom step for debug
         currentStatus: action.payload.status
       }
     case SET_CURRENT_STEP:

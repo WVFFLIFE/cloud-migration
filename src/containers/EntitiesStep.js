@@ -78,6 +78,7 @@ const EntitiesStep = () => {
       <EntitiesStepView
         loading={loading}
         data={filteredData}
+        currentTab={currentTab}
         selectedEntities={selectedEntities[currentTab]}
         handleValidate={handleValidate}
         validationData={validationData}

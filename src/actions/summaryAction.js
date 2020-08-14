@@ -14,6 +14,7 @@ import {
 } from '../actions';
 import MigrationService from '../services/migration.services';
 import {getScheduledDate} from '../helpers';
+import {parseFromTimeZone} from 'date-fns-timezone';
 
 export const setCurrentDate = (date) => ({
   type: SET_CURRENT_DATE,
@@ -54,9 +55,12 @@ export const fetchSummaryData = (id) => {
     MigrationService
       .get(`/migration-job/${id}/summary`)
       .then(({scheduledDate, timeZone}) => {
+        const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, {timeZone})) : new Date();
+        const time = scheduledDate ? {h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes()} : {h: 9, m: 0}
         dispatch(
           fetchSummarySuccess({
-            date: scheduledDate ? new Date(scheduledDate) : new Date(),
+            date: scheduledDate ? parsedDate: new Date(),
+            time,
             timezone: timeZone || 'Etc/GMT-0'
           })
         )
@@ -71,7 +75,9 @@ export const finishMigration = (id) => {
 
     dispatch(setStepControlStatus('loading'));
 
-    const scheduledDate = getScheduledDate(date, time, timezone)
+    const scheduledDate = getScheduledDate(date, time, timezone);
+
+    console.log(scheduledDate);
 
     MigrationService
       .postStep(`/migration-job/${id}/summary`, {scheduledDate, timeZone: timezone})

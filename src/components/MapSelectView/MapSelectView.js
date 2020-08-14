@@ -27,9 +27,13 @@ const useStylesItem = makeStyles({
     color: '#192B5D'
   },
   login: {
+    display: 'block',
     fontSize: 16,
     lineHeight: '21px',
-    color: '#A1ADCE'
+    color: '#A1ADCE',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
 })
 
@@ -39,6 +43,7 @@ const useStylesRoot = makeStyles({
   },
   itemWrapper: {
     display: 'flex',
+    alignItems: 'center',
     marginBottom: 24,
     '&:last-child': {
       marginBottom: 0
@@ -126,7 +131,7 @@ const Item = ({
     return type === 'users' ? (
       <>
         <span className={classes.fullName}>{data.fullName}</span>
-        <span className={classes.login}>{data.login}</span>
+        <span className={classes.login} title={data.login}>{data.login}</span>
       </>
     ) : type === 'businessunits' ? (
       <span className={classes.fullName}>{data.name}</span>

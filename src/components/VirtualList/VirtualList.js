@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { VariableSizeList } from 'react-window';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const LISTBOX_PADDING = 8;
 
@@ -80,6 +81,9 @@ const renderGroup = (params) => [
 ];
 
 const useStyles = makeStyles({
+  autocompleteRoot: {
+    maxWidth: 400
+  },
   listbox: {
     '& ul': {
       padding: 0,
@@ -93,6 +97,9 @@ const useStyles = makeStyles({
     transform: 'translate(0px, 5px) scale(1)',
     '&.MuiInputLabel-shrink': {
       transform: 'translate(5px, -11px) scale(0.8)'
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#192B5D'
     }
   },
   inputRoot: {
@@ -100,7 +107,8 @@ const useStyles = makeStyles({
       padding: 0
     },
     '&[class*="MuiOutlinedInput-root"]': {
-      paddingLeft: 15
+      paddingLeft: 15,
+      color: '#192B5D',
     },
     '&[class*="MuiOutlinedInput-root"] .MuiAutocomplete-endAdornment': {
       right: 15
@@ -108,7 +116,7 @@ const useStyles = makeStyles({
   },
   icon: {
     fontSize: '1.2rem',
-    color: '#605E5C'
+    color: '#192B5D'
   }
 });
 
@@ -125,30 +133,28 @@ const VirtualList = ({
     <Autocomplete
       disabled={disabled}
       classes={{
+        root: classes.autocompleteRoot,
         inputRoot: classes.inputRoot 
       }}
       value={value}
-      style={{ width: '100%' }}
       getOptionLabel={getOptionLabel}
       disableListWrap
       ListboxComponent={ListboxComponent}
       renderGroup={renderGroup}
+      popupIcon={<ExpandMoreIcon className={classes.icon}/>}
       options={options}
       onChange={(event, newValue) => handleChangeValue(newValue)}
       renderInput={(params) => (
         <TextField 
           {...params}
-          variant="outlined" 
-          label="Timezone" 
+          variant="outlined"
           InputLabelProps={{
             classes: {
-              outlined: classes.outlined
+              outlined: classes.outlined,
             }
           }}
         />
       )}
-      
-      // renderOption={(option) => <Typography noWrap>{option.fullName}</Typography>}
     />
   )
 }

@@ -5,9 +5,12 @@ import {
   setCurrentDate,
   setCurrentTime,
   setTimeZone,
-  fetchSummaryData
+  fetchSummaryData,
+  finishMigration,
+  backToMapTeamsStep
 } from '../actions'
 import SummaryView from '../components/SummaryView';
+
 import Dialog from '../components/Dialog';
 
 const SummaryStep = () => {
@@ -26,20 +29,36 @@ const SummaryStep = () => {
     dispatch(setCurrentDate(date))
   }
 
-  const handleTime = (date) => {
-    console.log(date);
+  const handleChangeTime = (date) => {
     dispatch(setCurrentTime(date))
   }
 
-  const handleTimezone = (timezone) => {
+  const handleChangeTimezone = (timezone) => {
     dispatch(setTimeZone(timezone));
+  }
+
+  const handleFinishMigration = () => {
+    dispatch(finishMigration(id));
+  }
+
+  const backToPrevStep = () => {
+    dispatch(backToMapTeamsStep())
   }
 
   return (
     <>
       <SummaryView
         date={date}
+        time={time}
+        currentTimezone={timezone}
+        currentStatus={currentStatus}
+        canEdit={canEdit}
+        loading={{get: getLoading, post: postLoading}}
         handleChangeDate={handleChangeDate}
+        handleChangeTime={handleChangeTime}
+        handleChangeTimezone={handleChangeTimezone}
+        handleFinishMigration={handleFinishMigration}
+        backToPrevStep={backToPrevStep}
       />
       <Dialog 
         status={stepControlStatus}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import {
   Table,
@@ -71,6 +71,7 @@ const useStyles = makeStyles(() => ({
 const EntityStepView = ({
   loading,
   data,
+  currentTab,
   validationData,
   handleValidate,
   handleChangeSelectedEntities,
@@ -95,6 +96,10 @@ const EntityStepView = ({
     
     /* eslint-disable-next-line */
   }, [data]);
+
+  useEffect(() => {
+    setSearchValue('')
+  }, [currentTab])
 
   const handleSelectItem = (event, entity) => {
     handleChangeSelectedEntities(entity)

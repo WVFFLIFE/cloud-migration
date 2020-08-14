@@ -14,7 +14,6 @@ import {
 import clsx from 'clsx';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {formatToTimeZone} from 'date-fns-timezone';
 
 const DAYS_IN_WEEK = 7
 
@@ -208,11 +207,6 @@ const Calendar = ({
 
   const currentMonthView = format(currentMonth, 'MMMM yyyy');
   const shouldShowPrevButton = isAfter(currentMonth, new Date());
-
-  const timeZone = 'Europe/Berlin'
-  const formatT = 'DD.MM.YYYY HH:mm:ss'
-  const formatD = formatToTimeZone(date, formatT, {timeZone})
-  console.log(format(date, 'dd.MM.yyyy HH:mm:ss'), formatD);
 
   return (
     <div className={classes.calendar}>

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { listTimeZones } from 'timezone-support';
+import format from 'date-fns/format';
 import { makeStyles } from '@material-ui/core';
 import Calendar from '../Calendar';
 import TimePicker from '../TimePicker';
+import VirtualList from '../VirtualList';
+import Button from '../Button';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -15,18 +19,56 @@ const useStyles = makeStyles(() => ({
     padding: 30
   },
   timePickerWrapper: {
-    marginLeft: 50
+    marginLeft: '14%'
   },
   content: {
-    display: 'flex'
+    display: 'flex',
+    marginBottom: 30
+  },
+  dateViewText: {
+    margin: 0,
+    marginBottom: 30,
+    fontSize: 16,
+    lineHeight: '42px',
+    color: '#192B5D',
+  },
+  timeZoneLabel: {
+    display: 'block',
+    margin: 0,
+    marginBottom: 10,
+    fontSize: 16,
+    lineHeight: '20px',
+    color: '#192B5D'
+  },
+  buttonsWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+    padding: 30,
+    borderTop: '1px solid #A1ADCE'
   }
 }))
 
 const SummaryView = ({
   date,
-  handleChangeDate
+  time,
+  currentTimezone,
+  loading,
+  currentStatus,
+  handleChangeDate,
+  handleChangeTime,
+  handleChangeTimezone,
+  handleFinishMigration,
+  backToPrevStep
 }) => {
   const classes = useStyles();
+  const dateView = format(new Date(date), 'EEEE, MMMM dd');
+  const timeZones = listTimeZones();
+
+  const getOptionLabel = useCallback(option => option, []);
+
+  console.log(currentStatus)
 
   return (
     <>
@@ -38,9 +80,36 @@ const SummaryView = ({
             handleChangeDate={handleChangeDate}
           />
           <div className={classes.timePickerWrapper}>
-            <TimePicker />
+            <p className={classes.dateViewText}>{dateView}</p>
+            <TimePicker
+              currentTime={time}
+              handleChangeTime={handleChangeTime}
+            />
           </div>
         </div>
+        <div>
+          <label className={classes.timeZoneLabel}>Your timezone</label>
+          <VirtualList
+            options={timeZones}
+            getOptionLabel={getOptionLabel}
+            value={currentTimezone}
+            handleChangeValue={handleChangeTimezone}
+          />
+        </div>
+      </div>
+      <div className={classes.buttonsWrapper}>
+        {currentStatus !== 'Scheduled' ? <Button
+          disabled={loading.get}
+          entity="back"
+          label="Back"
+          onClick={backToPrevStep}
+        /> : null}
+        <Button
+          disabled={loading.get}
+          entity="finish"
+          label="Finish"
+          onClick={handleFinishMigration}
+        />
       </div>
     </>
   )

@@ -116,7 +116,7 @@ export const setAllInit = () => {
       dispatch(setBusinessUnitsInit());
       dispatch(setTeamsInit());
       dispatch(allValidationInit());
-      dispatch(setCurrentStep(null));
+      dispatch(setCurrentStep('sourceenvironment'));
       dispatch(setStepControlStatus('hidden'));
     })
   }

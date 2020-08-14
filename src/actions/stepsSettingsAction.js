@@ -66,7 +66,7 @@ export const setNextMapBusinessUnitsStep = (id) => {
     setStepControlStatus('loading')
 
     MigrationService
-      .postStep(`/migration-job/${id}/users/add-users`, { users })
+      .postStep(`/migration-job/${id}/users`, { users })
       .then(() => {
         batch(() => {
           dispatch(setStepControlStatus('hidden'));
@@ -110,7 +110,7 @@ export const setNextScheduleStep = (id) => {
     setStepControlStatus('loading')
 
     MigrationService
-      .postStep(`/migration-job/${id}/teams/add-teams`, { mapedTeams })
+      .postStep(`/migration-job/${id}/teams`, { mapedTeams })
       .then(() => {
         batch(() => {
           dispatch(setStepControlStatus('hidden'));
@@ -284,7 +284,7 @@ export const setValidationSuccessByStep = () => {
   return dispatch => {
     batch(() => {
       [
-        'sourceenvironments', 'targetenvironments', 'entities',
+        'environments', 'sourceenvironment', 'targetenvironment', 'entities',
         'entities', 'map', 'mapusers', 'mapbusinessunits', 'mapteams'
       ].forEach(step => dispatch(setValidationSuccess(step)))
     })

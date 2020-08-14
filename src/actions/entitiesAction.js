@@ -79,11 +79,11 @@ export const setSelectedEntities = (selected) => {
     const { currentTab } = getState().entities;
     const selectedEntities = getState().entities.selectedEntities[currentTab];
 
-    const newSelectedEntities = Array.isArray(selected) 
+    const newSelectedEntities = Array.isArray(selected)
       ? selected
       : selectedEntities.includes(selected)
-      ? selectedEntities.filter(selectedEntity => selectedEntity !== selected)
-      : [...selectedEntities, selected];
+        ? selectedEntities.filter(selectedEntity => selectedEntity !== selected)
+        : [...selectedEntities, selected];
 
     batch(() => {
       if (entities.status === 'success') {
@@ -114,23 +114,32 @@ export const validateEntities = (id, SelectedEntities) => {
 
     dispatch(setValidationStart('entities'));
 
-    // const {reports, validationResult} = await MigrationService.post(`/migration-job/${id}/entities/validate-entities${query}`, body);
-    // const postValidationBody = reports.map(report => )
+    const { reports, validationResult } = await MigrationService.post(`/migration-job/${id}/entities/validate-entities`, body);
+    const postValidationBody = reports.map(reportItem => {
+      const entity = currentEntities.find(item => item.logicalName === reportItem.logicalName);
+      const selected = SelectedEntities.includes(reportItem.logicalName);
 
-    MigrationService
-      .post(`/migration-job/${id}/entities/validate-entities`, body)
-      .then(({ validationResult, reports }) => {
-        const newEntities = modifyEntities(currentEntities, reports);
+      return {
+        displayName: entity?.displayName || '',
+        logicalName: reportItem.logicalName,
+        description: entity?.description || '',
+        report: reportItem.report,
+        category: reportItem.group,
+        selected
+      }
+    });
+    await MigrationService.postStep(`/migration-job/${id}/entities`, {entities: postValidationBody});
 
-        batch(() => {
-          if (validationResult) {
-            dispatch(setValidationSuccess('entities', 'Validation successful. No compatibility issues detected. Press “Next” to go further.'));
-          } else {
-            dispatch(setValidationError('entities', 'Detected compatibility issues with target environment'));
-          }
-          dispatch(fetchEntitiesSuccess(newEntities))
-          dispatch(setReports(reports));
-        })
-      })
+    const newEntities = modifyEntities(currentEntities, reports);
+
+    batch(() => {
+      if (validationResult) {
+        dispatch(setValidationSuccess('entities', 'Validation successful. No compatibility issues detected. Press “Next” to go further.'));
+      } else {
+        dispatch(setValidationError('entities', 'Detected compatibility issues with target environment'));
+      }
+      dispatch(fetchEntitiesSuccess(newEntities))
+      dispatch(setReports(reports));
+    })
   }
 }

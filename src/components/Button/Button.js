@@ -1,6 +1,6 @@
 import React from 'react';
 import MuiButton from '@material-ui/core/Button';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import clsx from 'clsx';
@@ -31,6 +31,15 @@ const useStyles = makeStyles(theme => ({
       border: '1px solid transparent',
     }
   },
+  finish: {
+    background: '#F26026',
+    border: '1px solid #F26026',
+    color: '#fff',
+    '&:hover': {
+      background: 'rgba(242, 96, 38, .7)',
+      borderColor: 'rgba(242, 96, 38, .7)'
+    }
+  },
   back: {
     marginRight: 25,
     background: '#fff',
@@ -55,6 +64,9 @@ const useStyles = makeStyles(theme => ({
   chevron: {
     marginTop: 3,
     fontSize: '1.3rem'
+  },
+  chevronFinish: {
+    color: '#fff'
   }
 }))
 
@@ -79,9 +91,13 @@ const Button = ({
       disabled={disabled}
       {...rest}
     >
-      {entity === 'back' ? <ChevronLeftIcon className={clsx(classes.chevron)}/> : null}
+      {entity === 'back' ? <ChevronLeftIcon className={clsx(classes.chevron)} /> : null}
       {children || label}
-      {entity === 'next' ? <ChevronRightIcon className={clsx(classes.chevron)}/> : null}
+      {['next', 'finish'].includes(entity) ? (
+        <ChevronRightIcon className={clsx(classes.chevron, {
+          [classes.chevronFinish]: entity === 'finish'
+        })} />
+      ) : null}
     </MuiButton>
   )
 }

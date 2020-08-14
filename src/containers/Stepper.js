@@ -132,7 +132,8 @@ const Stepper = () => {
       validStepConfig[key] = {
         ...stepsConfig[key],
         isValid: stepsList[key].status === 'success',
-        isActive: currentStep === key
+        isActive: currentStep === key,
+        data: {...stepsList[key]}
       }
     })
 
@@ -144,6 +145,7 @@ const Stepper = () => {
     ].includes(currentStep)
   ) {
     validStepConfig['environments'].isActive = true;
+    validStepConfig[currentStep].environmentName = stepsList[currentStep].environmentName
   } else if (
     [
       'map',
@@ -177,6 +179,7 @@ const Stepper = () => {
                 <StatusNotification
                   status={stepsList[currentStep].status}
                   message={stepsList[currentStep].message}
+                  currentStep={currentStep}
                 />
               ) : null}
               <div>

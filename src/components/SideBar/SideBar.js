@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
-import {SkypeIcon} from '../Icons';
+import { SkypeIcon } from '../Icons';
 
 const getCircleClasses = makeStyles(() => ({
   wrapper: {
@@ -178,7 +178,6 @@ const getSidebarClasses = makeStyles(() => ({
 const getSubstepClasses = makeStyles(() => ({
   li: {
     display: 'flex',
-    alignItems: 'center',
     marginBottom: 30
   },
   label: {
@@ -191,6 +190,16 @@ const getSubstepClasses = makeStyles(() => ({
     color: '#F26026'
   },
   labelValid: {
+    color: '#192B5D'
+  },
+  labelWrapper: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  envName: {
+    display: 'block',
+    marginTop: 10,
+    fontSize: 14,
     color: '#192B5D'
   }
 }))
@@ -236,10 +245,14 @@ function buildSubsteps(substeps, config) {
           valid={currentStep.isValid}
           hidden
         />
-        <span className={clsx(classes.label, {
-          [classes.labelActive]: currentStep.isActive,
-          [classes.labelValid]: currentStep.isValid,
-        })}>{currentStep.label}</span>
+        <div>
+          <span className={clsx(classes.label, {
+            [classes.labelActive]: currentStep.isActive,
+            [classes.labelValid]: currentStep.isValid,
+          })}>{currentStep.label}</span>
+          {currentStep?.data?.environmentName ? <span className={classes.envName}>{currentStep.data.environmentName}</span> : null}
+        </div>
+
       </li>
     )
   })
@@ -285,7 +298,7 @@ const SideBar = ({
         }
       </ul>
       <div className={classes.skypeBlock}>
-        <SkypeIcon className={classes.skypeIcon}/>
+        <SkypeIcon className={classes.skypeIcon} />
         <span className={classes.skypeText}>Need help?</span>
         <a href="skype:" className={classes.skypeLink}>helptomigrate</a>
       </div>

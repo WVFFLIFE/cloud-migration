@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import MigrationService from '../../services/migration.services';
 import FileSaver from 'file-saver';
 import format from 'date-fns/format';
+import xlsxIcon from '../../assets/images/xlsx.png';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -70,12 +71,31 @@ const useStyles = makeStyles(() => ({
     fontSize: 16,
     lineHeight: '24px',
     color: '#F26026'
+  },
+  xlsxIcon: {
+    display: 'block',
+    maxWidth: '100%',
+    width: 20,
+    height: 'auto',
+    marginRight: 10
+  },
+  downloadWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  downloadText: {
+    fontSize: 16,
+    lineHeight: '21px',
+    color: '#f26026',
+    cursor: 'pointer',
+    textDecoration: 'underline'
   }
 }))
 
 const StatusNotification = ({
   status,
   message,
+  currentStep
 }) => {
   const classes = useStyles();
   const {id} = useParams();
@@ -85,9 +105,7 @@ const StatusNotification = ({
   const handleClick = async () => {
     const fileName = `Reports ${format(new Date(), 'dd.MM.yyyy hh:mm:ss')}.xlsx`
     const blob = await MigrationService
-      .download(`/migration-job/${id}/entities/download/report`);
-
-    console.log(blob);
+      .download(`/migration-job/${id}/download/report`);
 
     FileSaver.saveAs(blob, fileName)
   }
@@ -108,7 +126,12 @@ const StatusNotification = ({
           [classes.errorMessage]: isError
         })}>{message}</span>
       </div>
-      <Button onClick={handleClick}>XSLX</Button>
+      {currentStep === 'entities' && status === 'error' ? (
+        <div className={classes.downloadWrapper}>
+          <img src={xlsxIcon} alt="Download report" className={classes.xlsxIcon}/>
+          <span className={classes.downloadText} onClick={handleClick}>Export in XSLX</span>
+        </div>
+      ) : null}
       {status === 'error' ? (
         <div className={classes.skypeContactWrapper}>
           <p className={classes.skypeText}>Contact us via skype</p>

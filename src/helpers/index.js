@@ -1,5 +1,5 @@
-import {format} from 'date-fns';
-// import {parseFromTimeZone} from 'date-fns-timezone';
+import {formatToTimeZone, parseFromTimeZone} from 'date-fns-timezone';
+import format from 'date-fns/format';
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -111,28 +111,20 @@ function isSourceMaped(sourceUsers) {
   return sourceUsers.every(item => item.target);
 }
 
-function getScheduledDate(date, time, timezone) {
-  const dd = date.getDate();
-  const mm = date.getMonth();
-  const yyyy = date.getFullYear();
-  
-  const h = time.getHours();
-  const m = time.getMinutes();
+function getScheduledDate(date, time, timeZone) {
+  const scheduledDate = new Date(date.getTime());
+  const timeZoneFormat = "YYYY-MM-DDTHH:mm:ss.SSS";
 
-  const scheduledDate = new Date();
-  
-  scheduledDate.setDate(dd);
-  scheduledDate.setMonth(mm);
-  scheduledDate.setFullYear(yyyy);
-  scheduledDate.setHours(h);
-  scheduledDate.setMinutes(m);
+  scheduledDate.setHours(time.h);
+  scheduledDate.setMinutes(time.m);
   scheduledDate.setSeconds(0);
   scheduledDate.setMilliseconds(0);
 
-  return format(
+  return `${formatToTimeZone(
     scheduledDate,
-    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-  )
+    timeZoneFormat,
+    {timeZone}
+  )}`
 }
 
 function checkResponseError(res) {
