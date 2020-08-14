@@ -113,7 +113,7 @@ const SummaryView = ({
               onClick={backToPrevStep}
             /> : null}
             <Button
-              disabled={loading.get || !date || !time || loading.post}
+              disabled={loading.get || !date || !time || loading.post || !currentTimezone}
               entity="finish"
               label="Finish"
               onClick={handleFinishMigration}

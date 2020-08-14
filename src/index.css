@@ -1,4 +1,11 @@
-@import url(//db.onlinewebfonts.com/c/4f1c0acc06ffec914158fe07e208b731?family=Segoe+MDL2+Assets);
+@font-face {font-family: "Segoe MDL2 Assets";
+    src: url("https://db.onlinewebfonts.com/t/4f1c0acc06ffec914158fe07e208b731.eot"); /* IE9*/
+    src: url("https://db.onlinewebfonts.com/t/4f1c0acc06ffec914158fe07e208b731.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("https://db.onlinewebfonts.com/t/4f1c0acc06ffec914158fe07e208b731.woff2") format("woff2"), /* chrome firefox */
+    url("https://db.onlinewebfonts.com/t/4f1c0acc06ffec914158fe07e208b731.woff") format("woff"), /* chrome firefox */
+    url("https://db.onlinewebfonts.com/t/4f1c0acc06ffec914158fe07e208b731.ttf") format("truetype"), /* chrome firefox opera Safari, Android, iOS 4.2+*/
+    url("https://db.onlinewebfonts.com/t/4f1c0acc06ffec914158fe07e208b731.svg#Segoe MDL2 Assets") format("svg"); /* iOS 4.1- */
+}
 
 * {
     box-sizing: border-box;
