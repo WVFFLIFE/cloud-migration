@@ -15,7 +15,7 @@ const useStylesTimeItem = makeStyles({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
     padding: '10px 20px',
     border: '1px solid #a1adce',
     borderRadius: 6,
@@ -55,7 +55,7 @@ const useStyles = makeStyles({
   leftColumn: {
     display: 'flex',
     flexDirection: 'column',
-    marginRight: 30
+    marginRight: 20
   },
   rightColumn: {
     display: 'flex',

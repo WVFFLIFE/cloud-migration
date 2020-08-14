@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 400,
     color: '#302846',
     textTransform: 'uppercase'

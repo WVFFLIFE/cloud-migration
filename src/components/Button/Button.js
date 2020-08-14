@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     color: '#192B5D'
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Segoe UI',
     fontWeight: 700,
     textTransform: 'capitalize'

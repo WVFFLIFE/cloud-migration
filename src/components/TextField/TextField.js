@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     display: 'block',
     width: '100%',
     padding: '6px 15px',
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Segoe UI',
     fontWeight: 400,
     border: '1px solid #A1ADCE',
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
       outline: 'none'
     },
     '&::placeholder': {
-      fontSize: 16,
+      fontSize: 14,
       color: '#A1ADCE'
     }
   },
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
   label: {
     display: 'block',
     marginBottom: 10,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '20px',
     color: "#192B5D"
   },

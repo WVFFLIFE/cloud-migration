@@ -57,14 +57,14 @@ const ButtonText = styled('span')({
 })
 
 const EntityName = styled('span')({
-  fontSize: 14,
+  fontSize: 13,
   fontWeight: 400,
   fontFamily: 'Segoe UI',
   color: '#192B5D'
 });
 
 const TechnicalName = styled('span')({
-  fontSize: 14,
+  fontSize: 13,
   fontWeight: 400,
   fontFamily: 'Segoe UI',
   color: '#192B5D'
@@ -107,7 +107,7 @@ const CompletedStatus = styled(Status)({
 })
 
 const EntityTableCell = styled(TableCell)({
-  padding: '19px 24px'
+  padding: 15
 });
 
 const JobsListTableCell = styled(TableCell)({

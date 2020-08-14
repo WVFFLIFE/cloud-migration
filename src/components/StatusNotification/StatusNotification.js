@@ -28,20 +28,19 @@ const useStyles = makeStyles(() => ({
     fontSize: '1.3rem',
   },
   iconError: {
-    fontSize: 24,
+    fontSize: 23,
     color: '#C4001A'
   },
   iconSuccess: {
     color: '#192B5D'
   },
   message: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Segoe UI',
     fontWeight: 600,
     color: '#201F1E'
   },
   errorMessage: {
-    maxWidth: '60%',
     color: '#C4001A'
   },
   closeIcon: {
@@ -52,6 +51,8 @@ const useStyles = makeStyles(() => ({
   textWrapper: {
     display: 'flex',
     alignItems: 'center',
+  },
+  errorTextWrapper: {
     maxWidth: '40%',
   },
   skypeContactWrapper: {
@@ -61,7 +62,7 @@ const useStyles = makeStyles(() => ({
   skypeText: {
     margin: 0,
     marginRight: 10,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 600,
     lineHeight: '21px',
     color: '#192B5D'
@@ -70,7 +71,7 @@ const useStyles = makeStyles(() => ({
     marginRight: 8
   },
   skypeLink: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '24px',
     color: '#F26026'
   },
@@ -86,7 +87,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   downloadText: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '21px',
     color: '#f26026',
     cursor: 'pointer',
@@ -112,11 +113,15 @@ const StatusNotification = ({
     FileSaver.saveAs(blob, fileName)
   }
 
+  const isErrorWrapper = ['sourcenvironment', 'targetenvironment'];
+
   return (
     <div
       className={classes.root}
     >
-      <div className={classes.textWrapper}>
+      <div className={clsx(classes.textWrapper, {
+        [classes.errorTextWrapper]: status === 'error' && isErrorWrapper.includes(currentStep) 
+      })}>
         {isSuccess ? (
           <CheckIcon className={clsx(classes.icon, classes.iconSuccess)} />
         ) : (

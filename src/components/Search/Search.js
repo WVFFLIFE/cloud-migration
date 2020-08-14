@@ -22,12 +22,12 @@ const useStyles = makeStyles({
   input: {
     display: 'block',
     width: '100%',
-    fontSize: 16,
+    fontSize: 14,
     color: "#192B5D",
     border: 0,
     outline: 0,
     '&::placeholder': {
-      fontSize: 16,
+      fontSize: 14,
       lineHeight: '20px',
       fontFamily: 'Segoe UI',
       fontStyle: 'normal',

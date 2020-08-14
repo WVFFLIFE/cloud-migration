@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     padding: 30
   },
   timePickerWrapper: {
-    marginLeft: '14%'
+    marginLeft: '10%'
   },
   content: {
     display: 'flex',
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
   dateViewText: {
     margin: 0,
     marginBottom: 30,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '42px',
     color: '#192B5D',
   },
@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
     display: 'block',
     margin: 0,
     marginBottom: 10,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '20px',
     color: '#192B5D'
   },

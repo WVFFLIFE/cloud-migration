@@ -65,7 +65,7 @@ function getStepTitle(step) {
 const useStyles = makeStyles({
   leftSide: {
     minHeight: loading => loading ? 400 : '100%',
-    padding: 40,
+    padding: 25,
     background: '#F1F2F6',
   },
   rightSide: {
@@ -74,7 +74,7 @@ const useStyles = makeStyles({
     alignItems: loading => loading ? 'center' : 'normal',
     justifyContent: loading => loading ? 'center' : 'flex-start',
     minHeight: loading => loading ? 400 : '100%',
-    padding: 40,
+    padding: 25,
     background: '#F8F9FB',
   },
   wrapper: {
@@ -85,8 +85,8 @@ const useStyles = makeStyles({
   },
   h2: {
     margin: 0,
-    marginBottom: 40,
-    fontSize: 32,
+    marginBottom: 25,
+    fontSize: 26,
     fontFamily: 'Segoe UI',
     fontWeight: 700,
     color: '#192B5D'

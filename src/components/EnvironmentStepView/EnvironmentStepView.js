@@ -26,11 +26,11 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    padding: 30
+    padding: 25
   },
   fieldsWrapper: {
     width: '100%',
-    padding: 30,
+    padding: 25,
     borderBottom: '1px solid #A1ADCE'
   },
   center: {

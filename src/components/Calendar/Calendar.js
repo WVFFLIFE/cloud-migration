@@ -105,7 +105,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     width: 42,
     height: 42,
-    marginRight: 20,
+    marginRight: 15,
     borderRadius: 6,
     cursor: 'pointer',
     transition: 'background-color .15s linear',
@@ -138,13 +138,13 @@ const useStyles = makeStyles({
   },
   week: {
     display: 'flex',
-    marginBottom: 10,
+    marginBottom: 7,
     '&:last-child': {
       marginBottom: 0
     }
   },
   day: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '20px',
     color: '#192b5d'
   },
@@ -181,7 +181,7 @@ const useStyles = makeStyles({
   },
   currentMonth: {
     margin: 0,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '20px',
     color: '#192B5D'
   }

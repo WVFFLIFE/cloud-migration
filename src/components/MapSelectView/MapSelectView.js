@@ -22,13 +22,13 @@ const useStylesItem = makeStyles({
   },
   fullName: {
     marginRight: '15%',
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '21px',
     color: '#192B5D'
   },
   login: {
     display: 'block',
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '21px',
     color: '#A1ADCE',
     overflow: 'hidden',

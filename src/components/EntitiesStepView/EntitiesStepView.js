@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
   amount: {
     display: 'block',
     paddingLeft: 14.5,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 700,
     fontFamily: 'Segoe UI',
     lineHeight: '21px',

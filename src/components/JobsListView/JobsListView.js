@@ -37,7 +37,7 @@ const Wrapper = styled('div')({
 
 const useStyles = makeStyles({
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Segoe UI',
     fontWeight: 'bold',
     lineHeight: '21px',

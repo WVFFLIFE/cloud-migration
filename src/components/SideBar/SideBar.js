@@ -128,7 +128,7 @@ const getSidebarClasses = makeStyles(() => ({
     marginBottom: 25
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Segoe UI',
     fontWeight: 700,
     color: '#A1ADCE'
@@ -143,7 +143,7 @@ const getSidebarClasses = makeStyles(() => ({
     margin: 0,
     marginBottom: 25,
     padding: 0,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     lineHeight: '21px',
     color: '#192B5D',
@@ -162,7 +162,7 @@ const getSidebarClasses = makeStyles(() => ({
   skypeText: {
     display: 'block',
     marginRight: 8,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 600,
     lineHeight: '24px',
     color: "#192B5D"
@@ -181,7 +181,7 @@ const getSubstepClasses = makeStyles(() => ({
     marginBottom: 30
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Segoe UI',
     fontWeight: 400,
     color: '#C4C4C4'

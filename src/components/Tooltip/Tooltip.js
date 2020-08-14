@@ -8,7 +8,7 @@ const useStyles = makeStyles({
   bodyWrapper: {
     maxWidth: 500,
     maxHeight: 400,
-    padding: 30,
+    padding: 20,
     background: '#FBFBFB',
     borderRadius: 4,
     boxShadow: '0 6.4px 14.4px 0 rgba(20,0,0,0.13)',
@@ -25,14 +25,14 @@ const useStyles = makeStyles({
   title: {
     margin: 0,
     marginBottom: 25,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 600,
     color: '#192B5D'
   },
   description: {
     margin: 0,
     marginBottom: 10,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: '24px',
     color: '#3D3C5A',
     '&:last-child': {
