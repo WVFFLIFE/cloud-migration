@@ -191,7 +191,7 @@ export const jobsTableBaseConfig = {
       renderItem: (data) => (
         <JobsListTableCell>
           <CustomText>
-            {format(new Date(data), 'dd/MM/yyyy')}
+            {data ? format(new Date(data), 'dd/MM/yyyy') : null}
           </CustomText>
         </JobsListTableCell>
 
@@ -221,9 +221,7 @@ export const jobsTableBaseConfig = {
       renderItem: (data) => {
         return (
           <JobsListTableCell>
-            {Array.isArray(data) ? data.map((item, index) => (
-              <Paragraph key={index}>{item.text}</Paragraph>
-            )) : null}
+            <Paragraph>{data}</Paragraph>
           </JobsListTableCell>
         )
       },

@@ -159,4 +159,4 @@ const VirtualList = ({
   )
 }
 
-export default VirtualList;
+export default React.memo(VirtualList);

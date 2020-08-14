@@ -7,7 +7,6 @@ import {
   ADD_JOB_SUCCESS
 } from '../constants';
 import MigrationService from '../services/migration.services';
-import {checkResponseError} from '../helpers';
 
 const fetchJobsStarted = () => ({
   type: FETCH_JOBS_STARTED
@@ -68,6 +67,15 @@ export const fetchJobsList = (loading) => {
     }
 
     MigrationService.get('/migration-job')
-      .then(data => dispatch(fetchJobsSuccess(data)))
+      .then(data => {
+        let modifiedData = data.map(item => {
+          return {
+            ...item,
+            notifications: item.notifications.join('. ')
+          }
+        })
+
+        dispatch(fetchJobsSuccess(modifiedData))
+      })
   }
 }

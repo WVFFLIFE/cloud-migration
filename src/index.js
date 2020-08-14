@@ -18,6 +18,10 @@ import rootReducer from './reducers';
 import authentication from './b2c';
 import Webfont from 'webfontloader';
 
+if (process.env.NODE_ENV === 'production'){
+  window.console.log = () => {}
+}
+
 Webfont.load({
   custom: {
     families: ['SegoeUI', 'Gilroy']

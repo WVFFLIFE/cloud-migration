@@ -6,7 +6,6 @@ import {
 import {
   initStepSettings,
   setCurrentStep,
-  setNextStep,
   setStepControlStatus,
   backToSourceEnvrionmentStep,
   backToTargetEnvironmentStep,
@@ -116,7 +115,6 @@ export {
   setToBusinessUnitsSource,
   runBusinessUnitsAutomap,
   fetchBusinessUnits,
-  setNextStep,
   runAutomap,
   setToTarget,
   setToSource,

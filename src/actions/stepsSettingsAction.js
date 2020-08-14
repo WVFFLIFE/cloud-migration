@@ -43,17 +43,6 @@ export const setStepControlStatus = (status) => ({
   payload: status
 })
 
-// export const setSourceEnvironmentStep = () => {
-//   return dispatch => {
-//     batch(() => {
-//       dispatch(setValidationInit('environments'));
-//       dispatch(setValidationInit('targetenvironment'));
-//       dispatch(setValidationInit('sourceenvironment'));
-//       dispatch(setCurrentStep('sourceenvironment'));
-//     })
-//   }
-// }
-
 export const setNextMapBusinessUnitsStep = (id) => {
   return (dispatch, getState) => {
     const users = getState().users.data.sourceUsers.map(item => {
@@ -63,7 +52,7 @@ export const setNextMapBusinessUnitsStep = (id) => {
       }
     })
 
-    setStepControlStatus('loading')
+    dispatch(setStepControlStatus('loading'));
 
     MigrationService
       .postStep(`/migration-job/${id}/users`, { users })
@@ -85,7 +74,7 @@ export const setNextMapTeamsStep = (id) => {
       }
     })
 
-    setStepControlStatus('loading')
+    dispatch(setStepControlStatus('loading'));
 
     MigrationService
       .postStep(`/migration-job/${id}/business-units`, { mapedBusinessUnits })
@@ -107,7 +96,7 @@ export const setNextScheduleStep = (id) => {
       }
     })
 
-    setStepControlStatus('loading')
+    dispatch(setStepControlStatus('loading'));
 
     MigrationService
       .postStep(`/migration-job/${id}/teams`, { mapedTeams })
@@ -118,100 +107,6 @@ export const setNextScheduleStep = (id) => {
           dispatch(setCurrentStep('summary'));
         })
       })
-  }
-}
-
-export const setNextStep = (id, step) => {
-  return (dispatch, getState) => {
-    if (step === 'entities') {
-      const { data, selectedEntities } = getState().entities;
-
-      const entities = data
-        .filter(entity => selectedEntities.includes(entity.logicalName))
-        .map(entity => ({
-          displayName: '',
-          logicalName: entity.logicalName,
-          description: ''
-        }))
-
-      dispatch(setStepControlStatus('loading'))
-
-      MigrationService
-        .postStep(`/migration-job/${id}/entities/add-entities-list`, { entities })
-        .then(() => {
-          batch(() => {
-            dispatch(setStepControlStatus('hidden'));
-            dispatch(setNextStepAction(step));
-          })
-        })
-    } else if (step === 'mapusers') {
-      const { sourceUsers, targetUsers } = getState().users.data;
-      const users = sourceUsers.map(sourceUser => {
-        const target = targetUsers.find(targetUser => targetUser.fullName === sourceUser.target.fullName);
-
-        return {
-          source: sourceUser.source.guid,
-          target: target.guid
-        }
-      })
-
-      dispatch(setStepControlStatus('loading'));
-
-      MigrationService
-        .postStep(`/migration-job/${id}/users/add-users`, { users })
-        .then(() => {
-          batch(() => {
-            dispatch(setStepControlStatus('hidden'));
-            dispatch(setNextStepAction(step))
-          })
-        })
-
-    } else if (step === 'mapbusinessunits') {
-      const { sourceBusinessUnits, targetBusinessUnits } = getState().businessunits.data;
-      const mapedBusinessUnits = sourceBusinessUnits.map(sourceBusinessUnit => {
-        const target = targetBusinessUnits.find(targetBusinessUnit => targetBusinessUnit.name === sourceBusinessUnit.target.name);
-
-        return {
-          source: sourceBusinessUnit.source.guid,
-          target: target.guid
-        }
-      })
-
-      dispatch(setStepControlStatus('loading'));
-
-      MigrationService
-        .postStep(`/migration-job/${id}/business-units`, { mapedBusinessUnits })
-        .then(() => {
-          batch(() => {
-            dispatch(setStepControlStatus('hidden'));
-            dispatch(setNextStepAction(step))
-          })
-        })
-    } else if (step === 'mapteams') {
-      const { sourceTeams, targetTeams } = getState().teams.data;
-      const mapedTeams = sourceTeams.map(sourceTeam => {
-        const target = targetTeams.find(targetTeam => targetTeam.name === sourceTeam.target.name);
-
-        return {
-          source: sourceTeam.source.guid,
-          target: target.guid
-        }
-      })
-
-      dispatch(setStepControlStatus('loading'));
-
-      MigrationService
-        .postStep(`/migration-job/${id}/teams/add-teams`, { mapedTeams })
-        .then(() => {
-          batch(() => {
-            dispatch(setStepControlStatus('hidden'));
-            dispatch(setValidationSuccess('map'))
-            dispatch(setNextStepAction(step))
-          })
-        })
-    } else {
-      dispatch(setNextStepAction(step));
-    }
   }
 }
 

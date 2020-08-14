@@ -12,14 +12,11 @@ const INITIAL_STATE = {
   getLoading: false,
   postLoading: false,
   date: new Date(),
-  time: {h: 9, m: 0},
+  time: null,
   timezone: 'Etc/GMT-0'
 }
 
 export default function (state = INITIAL_STATE, action) {
-  if (action.type === SET_CURRENT_DATE) {
-    console.log(action.payload);
-  }
   switch (action.type) {
     case SET_CURRENT_DATE:
       return {

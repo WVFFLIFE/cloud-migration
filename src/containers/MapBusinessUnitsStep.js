@@ -16,6 +16,7 @@ const MapBusinessUnitsStep = () => {
   const dispatch = useDispatch();
   const { data, loading } = useSelector(state => state.businessunits);
   const {mapbusinessunits: validationData} = useSelector(state => state.validation);
+  const {stepControlStatus} = useSelector(state => state.stepsSettings);
 
   useEffect(() => {
     dispatch(fetchBusinessUnits(id))
@@ -57,6 +58,7 @@ const MapBusinessUnitsStep = () => {
       forwardToNextStep={forwardToNextStep}
       backToPrevStep={backToPrevStep}
       getOptionLabel={getOptionLabel}
+      stepControlStatus={stepControlStatus}
       type="businessunits"
     />
   )

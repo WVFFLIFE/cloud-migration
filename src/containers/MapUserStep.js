@@ -16,6 +16,7 @@ const MapUserStep = () => {
   const dispatch = useDispatch();
   const {data, loading} = useSelector(state => state.users);
   const {mapusers: validationData} = useSelector(state => state.validation);
+  const {stepControlStatus} = useSelector(state => state.stepsSettings);
 
   useEffect(() => {
     dispatch(fetchUsers(id))
@@ -57,6 +58,7 @@ const MapUserStep = () => {
       forwardToNextStep={forwardToNextStep}
       backToPrevStep={backToPrevStep}
       getOptionLabel={getOptionLabel}
+      stepControlStatus={stepControlStatus}
       type="users"
     />
   )

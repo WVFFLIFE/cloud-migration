@@ -90,8 +90,6 @@ const Select = ({
       : null
   }
 
-  console.log(type);
-
   return (
     <Autocomplete
       classes={{

@@ -12,8 +12,16 @@ function stableSort(array, comparator) {
 }
 
 function descendingComparator(a, b, orderBy) {
-  const x = typeof a[orderBy] === 'string' ? a[orderBy].toLowerCase() : a[orderBy]?.status.toLowerCase();
-  const y = typeof b[orderBy] === 'string' ? b[orderBy].toLowerCase() : b[orderBy]?.status.toLowerCase();
+  let x = null, y = null;
+  if (orderBy === 'scheduledDate') {
+    x = a[orderBy] ? new Date(a[orderBy]).getTime() : null;
+    y = b[orderBy] ? new Date(b[orderBy]).getTime() : null;
+  } else {
+    x = typeof a[orderBy] === 'string' ? a[orderBy].toLowerCase() : 
+        typeof a[orderBy] === 'number' ? a[orderBy] : a[orderBy]?.status.toLowerCase();
+    y = typeof b[orderBy] === 'string' ? b[orderBy].toLowerCase() : 
+        typeof a[orderBy] === 'number' ? b[orderBy] : b[orderBy]?.status.toLowerCase();
+  }
 
   if (y < x) {
     return -1;

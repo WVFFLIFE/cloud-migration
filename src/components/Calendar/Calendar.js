@@ -204,6 +204,7 @@ const Calendar = ({
     const newDate = subMonths(cloneDate(currentMonth), 1);
     setCurrentMonth(newDate);
   }
+  
 
   const currentMonthView = format(currentMonth, 'MMMM yyyy');
   const shouldShowPrevButton = isAfter(currentMonth, new Date());
@@ -248,9 +249,9 @@ const Calendar = ({
         </div>
         <div className={classes.dateWrapper}>
           {
-            weeks.map(week => {
+            weeks.map((week, index) => {
               return (
-                <div className={classes.week}>
+                <div className={classes.week} key={index}>
                   {week.map(day => {
                     const currentDay = new Date(day);
                     const isCurrentMonth = getMonth(currentMonth) === getMonth(day);
@@ -261,6 +262,7 @@ const Calendar = ({
 
                     return (
                       <div
+                        key={day}
                         onClick={disabledDay ? () => {} : () => handleChangeDate(currentDay)}
                         className={clsx(classes.block, {
                           [classes.disabledBlock]: disabledDay,
@@ -284,4 +286,4 @@ const Calendar = ({
   )
 }
 
-export default Calendar;
+export default React.memo(Calendar);

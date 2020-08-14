@@ -43,7 +43,6 @@ const EnvironmentStepView = ({
   validate,
   data,
   validationData,
-  isActive,
   loading,
   forwardToNextStep,
   backToPrevStep,

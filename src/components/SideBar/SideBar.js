@@ -300,7 +300,7 @@ const SideBar = ({
       <div className={classes.skypeBlock}>
         <SkypeIcon className={classes.skypeIcon} />
         <span className={classes.skypeText}>Need help?</span>
-        <a href="skype:" className={classes.skypeLink}>helptomigrate</a>
+        <a href="skype:live:uds_ddt?chat" className={classes.skypeLink}>helptomigrate</a>
       </div>
     </>
   )

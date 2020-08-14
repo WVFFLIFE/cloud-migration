@@ -41,6 +41,7 @@ const useStyles = makeStyles(() => ({
     color: '#201F1E'
   },
   errorMessage: {
+    maxWidth: '60%',
     color: '#C4001A'
   },
   closeIcon: {
@@ -50,11 +51,14 @@ const useStyles = makeStyles(() => ({
   },
   textWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '68%',
+    marginRight: '2%'
   },
   skypeContactWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '30%'
   },
   skypeText: {
     margin: 0,
@@ -136,7 +140,7 @@ const StatusNotification = ({
         <div className={classes.skypeContactWrapper}>
           <p className={classes.skypeText}>Contact us via skype</p>
           <SkypeIcon color="#F26026" className={classes.skypeIcon}/>
-          <a href="skype:" className={classes.skypeLink}>helptomigrate_skype</a>
+          <a href="skype:live:uds_ddt?chat" className={classes.skypeLink}>helptomigrate_skype</a>
         </div>
       ) : null}
     </div>

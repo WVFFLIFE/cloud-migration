@@ -1,4 +1,4 @@
-import {batch} from 'react-redux';
+import { batch } from 'react-redux';
 import {
   SET_CURRENT_DATE,
   SET_CURRENT_TIME,
@@ -13,18 +13,33 @@ import {
   setStepControlStatus
 } from '../actions';
 import MigrationService from '../services/migration.services';
-import {getScheduledDate} from '../helpers';
-import {parseFromTimeZone} from 'date-fns-timezone';
+import { getScheduledDate } from '../helpers';
+import { parseFromTimeZone } from 'date-fns-timezone';
 
-export const setCurrentDate = (date) => ({
+const setCurrentTimeAction = (time) => ({
+  type: SET_CURRENT_TIME,
+  payload: time
+})
+
+export const setCurrentTime = (time) => {
+  return (dispatch) => {
+    dispatch(setCurrentTimeAction(time))
+  }
+}
+
+const setCurrentDateAction = (date) => ({
   type: SET_CURRENT_DATE,
   payload: date
 })
 
-export const setCurrentTime = (time) => ({
-  type: SET_CURRENT_TIME,
-  payload: time
-})
+export const setCurrentDate = (date) => {
+  return (dispatch) => {
+    batch(() => {
+      dispatch(setCurrentTime(null));
+      dispatch(setCurrentDateAction(date));
+    })
+  }
+}
 
 export const setTimeZone = (timezone) => ({
   type: SET_TIMEZONE,
@@ -54,42 +69,48 @@ export const fetchSummaryData = (id) => {
 
     MigrationService
       .get(`/migration-job/${id}/summary`)
-      .then(({scheduledDate, timeZone}) => {
-        const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, {timeZone})) : new Date();
-        const time = scheduledDate ? {h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes()} : {h: 9, m: 0}
+      .then(({ scheduledDate, timeZone }) => {
+        const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, { timeZone })) : new Date();
+        const time = scheduledDate ? { h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes() } : { h: 9, m: 0 }
         dispatch(
           fetchSummarySuccess({
-            date: scheduledDate ? parsedDate: new Date(),
+            date: scheduledDate ? parsedDate : new Date(),
             time,
             timezone: timeZone || 'Etc/GMT-0'
           })
         )
       })
   }
-} 
+}
 
 export const finishMigration = (id) => {
   return (dispatch, getState) => {
-    dispatch(finishMigrationStart());
-    const {date, time, timezone} = getState().summary;
+    const { date, time, timezone } = getState().summary;
+    const cloneDate = new Date(date.getTime());
+    cloneDate.setHours(time.h);
+    cloneDate.setMinutes(time.m);
 
-    dispatch(setStepControlStatus('loading'));
+    if (cloneDate.getTime() < new Date().getTime()) {
+      dispatch(setCurrentTime(null));
+    } else {
+      dispatch(finishMigrationStart());
 
-    const scheduledDate = getScheduledDate(date, time, timezone);
+      dispatch(setStepControlStatus('loading'));
 
-    console.log(scheduledDate);
+      const scheduledDate = getScheduledDate(date, time, timezone);
 
-    MigrationService
-      .postStep(`/migration-job/${id}/summary`, {scheduledDate, timeZone: timezone})
-      .then(() => {
-        batch(() => {
-          dispatch(setStepControlStatus('success'));
-          dispatch(finishMigrationSuccess());
-          dispatch(setValidationSuccess('summary'))
+      MigrationService
+        .postStep(`/migration-job/${id}/summary`, { scheduledDate, timeZone: timezone })
+        .then(() => {
+          batch(() => {
+            dispatch(setStepControlStatus('success'));
+            dispatch(finishMigrationSuccess());
+            dispatch(setValidationSuccess('summary'))
+          })
         })
-      })
-      .catch(() => {
-        dispatch(setStepControlStatus('error'));
-      })
+        .catch(() => {
+          dispatch(setStepControlStatus('error'));
+        })
+    }
   }
 }

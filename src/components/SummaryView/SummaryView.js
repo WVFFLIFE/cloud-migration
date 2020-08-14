@@ -1,13 +1,18 @@
 import React, { useCallback } from 'react';
 import { listTimeZones } from 'timezone-support';
 import format from 'date-fns/format';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import Calendar from '../Calendar';
 import TimePicker from '../TimePicker';
 import VirtualList from '../VirtualList';
 import Button from '../Button';
+import Loader from '../Loader';
 
 const useStyles = makeStyles(() => ({
+  rootLoading: {
+    textAlign: 'center'
+  },
   title: {
     margin: 0,
     marginBottom: 30,
@@ -48,7 +53,9 @@ const useStyles = makeStyles(() => ({
     padding: 30,
     borderTop: '1px solid #A1ADCE'
   }
-}))
+}));
+
+const timeZones = listTimeZones();
 
 const SummaryView = ({
   date,
@@ -64,54 +71,58 @@ const SummaryView = ({
 }) => {
   const classes = useStyles();
   const dateView = format(new Date(date), 'EEEE, MMMM dd');
-  const timeZones = listTimeZones();
-
   const getOptionLabel = useCallback(option => option, []);
 
-  console.log(currentStatus)
-
   return (
-    <>
-      <div className={classes.wrapper}>
-        <h3 className={classes.title}>Date & Time to start migration</h3>
-        <div className={classes.content}>
-          <Calendar
-            date={date}
-            handleChangeDate={handleChangeDate}
-          />
-          <div className={classes.timePickerWrapper}>
-            <p className={classes.dateViewText}>{dateView}</p>
-            <TimePicker
-              currentTime={time}
-              handleChangeTime={handleChangeTime}
+    <div className={clsx({
+      [classes.rootLoading]: loading.get
+    })}>
+      {loading.get ? <Loader /> : (
+        <>
+          <div className={classes.wrapper}>
+            <h3 className={classes.title}>Date & Time to start migration</h3>
+            <div className={classes.content}>
+              <Calendar
+                date={date}
+                handleChangeDate={handleChangeDate}
+              />
+              <div className={classes.timePickerWrapper}>
+                <p className={classes.dateViewText}>{dateView}</p>
+                <TimePicker
+                  date={date}
+                  currentTime={time}
+                  handleChangeTime={handleChangeTime}
+                />
+              </div>
+            </div>
+            <div>
+              <label className={classes.timeZoneLabel}>Your timezone</label>
+              <VirtualList
+                options={timeZones}
+                getOptionLabel={getOptionLabel}
+                value={currentTimezone}
+                handleChangeValue={handleChangeTimezone}
+              />
+            </div>
+          </div>
+          <div className={classes.buttonsWrapper}>
+            {currentStatus !== 'Scheduled' ? <Button
+              disabled={loading.get}
+              entity="back"
+              label="Back"
+              onClick={backToPrevStep}
+            /> : null}
+            <Button
+              disabled={loading.get || !date || !time || loading.post}
+              entity="finish"
+              label="Finish"
+              onClick={handleFinishMigration}
+              loading={loading.post}
             />
           </div>
-        </div>
-        <div>
-          <label className={classes.timeZoneLabel}>Your timezone</label>
-          <VirtualList
-            options={timeZones}
-            getOptionLabel={getOptionLabel}
-            value={currentTimezone}
-            handleChangeValue={handleChangeTimezone}
-          />
-        </div>
-      </div>
-      <div className={classes.buttonsWrapper}>
-        {currentStatus !== 'Scheduled' ? <Button
-          disabled={loading.get}
-          entity="back"
-          label="Back"
-          onClick={backToPrevStep}
-        /> : null}
-        <Button
-          disabled={loading.get}
-          entity="finish"
-          label="Finish"
-          onClick={handleFinishMigration}
-        />
-      </div>
-    </>
+        </>
+      )}
+    </div>
   )
 }
 

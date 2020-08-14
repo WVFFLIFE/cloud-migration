@@ -16,6 +16,7 @@ const MapTeamsStep = () => {
   const dispatch = useDispatch();
   const { data, loading } = useSelector(state => state.teams);
   const {mapteams: validationData} = useSelector(state => state.validation);
+  const {stepControlStatus} = useSelector(state => state.stepsSettings);
 
   useEffect(() => {
     dispatch(fetchTeams(id))
@@ -57,6 +58,7 @@ const MapTeamsStep = () => {
       forwardToNextStep={forwardToNextStep}
       backToPrevStep={backToPrevStep}
       getOptionLabel={getOptionLabel}
+      stepControlStatus={stepControlStatus}
       type="teams"
     />
   )

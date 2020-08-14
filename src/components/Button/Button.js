@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import clsx from 'clsx';
+import LoaderProgress from '../LoaderProgress';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,6 +39,10 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       background: 'rgba(242, 96, 38, .7)',
       borderColor: 'rgba(242, 96, 38, .7)'
+    },
+    '&.Mui-disabled': {
+      color: '#fff',
+      borderColor: 'transparent',
     }
   },
   back: {
@@ -76,6 +81,7 @@ const Button = ({
   type = 'button',
   entity = 'validation',
   disabled = false,
+  loading = false,
   ...rest
 }) => {
   const classes = useStyles();
@@ -98,8 +104,11 @@ const Button = ({
           [classes.chevronFinish]: entity === 'finish'
         })} />
       ) : null}
+      {loading ? (
+        <LoaderProgress status="loading"/>
+      ) : null}
     </MuiButton>
   )
 }
 
-export default Button;
+export default React.memo(Button);

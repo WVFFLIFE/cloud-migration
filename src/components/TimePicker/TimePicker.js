@@ -1,6 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
+import isToday from 'date-fns/isToday'
+
+function isTimeDisabled({h, m}) {
+  const currentH = new Date().getHours();
+  const currentM = new Date().getMinutes();
+
+  return currentH >= h && currentM > m
+}
 
 const useStylesTimeItem = makeStyles({
   root: {
@@ -28,6 +36,15 @@ const useStylesTimeItem = makeStyles({
     '&:hover': {
       backgroundColor: '#192B5D'
     },
+  },
+  disabled: {
+    background: 'transparent',
+    borderColor: 'transparent',
+    color: '#a1adce',
+    cursor: 'default',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
   }
 })
 
@@ -62,9 +79,10 @@ const TimeItem = ({
   return (
     <div
       className={clsx(classes.root, {
-        [classes.active]: active
+        [classes.active]: active,
+        [classes.disabled]: disabled
       })}
-      onClick={active ? () => {} : handleClick}
+      onClick={active || disabled ? () => {} : handleClick}
     >
       {`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`}
     </div>
@@ -86,6 +104,7 @@ const rightTimeColumn = [
 ]
 
 const TimePicker = ({
+  date,
   currentTime,
   handleChangeTime
 }) => {
@@ -95,21 +114,23 @@ const TimePicker = ({
     <div className={classes.wrapper}>
       <div className={classes.leftColumn}>
         {leftTimeColumn.map(time => {
-          const isActive = time.h === currentTime.h && time.m === currentTime.m;
-
+          const isActive = time.h === currentTime?.h && time.m === currentTime?.m;
+          const disabled = isToday(date) && isTimeDisabled(time);
           return (
             <TimeItem
               key={time.h}
               time={time}
               handleChangeTime={handleChangeTime}
               active={isActive}
+              disabled={disabled}
             />
           )
         })}
       </div>
       <div className={classes.rightColumn}>
         {rightTimeColumn.map(time => {
-          const isActive = time.h === currentTime.h && time.m === currentTime.m;
+          const isActive = time.h === currentTime?.h && time.m === currentTime?.m;
+          const disabled = isToday(date) && isTimeDisabled(time);
 
           return (
             <TimeItem
@@ -117,6 +138,7 @@ const TimePicker = ({
               time={time}
               handleChangeTime={handleChangeTime}
               active={isActive}
+              disabled={disabled}
             />
           )
         })}

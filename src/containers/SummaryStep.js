@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -10,7 +10,6 @@ import {
   backToMapTeamsStep
 } from '../actions'
 import SummaryView from '../components/SummaryView';
-
 import Dialog from '../components/Dialog';
 
 const SummaryStep = () => {
@@ -25,21 +24,27 @@ const SummaryStep = () => {
     /* eslint-disable-next-line */
   }, [])
 
-  const handleChangeDate = (date) => {
+  const handleChangeDate = useCallback((date) => {
     dispatch(setCurrentDate(date))
-  }
+
+    /* eslint-disable-next-line */
+  }, [])
 
   const handleChangeTime = (date) => {
     dispatch(setCurrentTime(date))
   }
 
-  const handleChangeTimezone = (timezone) => {
+  const handleChangeTimezone = useCallback((timezone) => {
     dispatch(setTimeZone(timezone));
-  }
 
-  const handleFinishMigration = () => {
+    /* eslint-disable-next-line */
+  }, []);
+
+  const handleFinishMigration = useCallback(() => {
     dispatch(finishMigration(id));
-  }
+
+    /* eslint-disable-next-line */
+  }, [])
 
   const backToPrevStep = () => {
     dispatch(backToMapTeamsStep())

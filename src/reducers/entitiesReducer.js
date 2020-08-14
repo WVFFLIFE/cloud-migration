@@ -61,7 +61,13 @@ const entitiesReducer = (state = INITIAL_STATE, action) => {
       return {
         data: [],
         reports: [],
-        selectedEntities: [],
+        selectedEntities: {
+          CoreRecords: [],
+          MarketingAndSales: [],
+          Service: [],
+          Miscellaneous: [],
+          CustomEntities: []
+        },
         loading: true,
         nextStatus: 'hidden'
       }

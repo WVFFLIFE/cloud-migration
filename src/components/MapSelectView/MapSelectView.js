@@ -160,7 +160,8 @@ const MapSelectView = ({
   forwardToNextStep,
   backToPrevStep,
   type = 'users',
-  getOptionLabel
+  getOptionLabel,
+  stepControlStatus
 }) => {
   const classes = useStylesRoot();
 
@@ -220,22 +221,23 @@ const MapSelectView = ({
               <Button
                 type="submit"
                 label="Automate"
-                disabled={status === 'loading' || loading}
+                disabled={status === 'loading' || loading || stepControlStatus === 'loading'}
                 onClick={automapEntities}
               />
             </div>
             <div>
               <Button
-                disabled={loading}
+                disabled={loading || status === 'loading' || stepControlStatus === 'loading'}
                 entity="back"
                 label="Back"
                 onClick={backToPrevStep}
               />
               <Button
-                disabled={status !== 'success' || loading}
+                disabled={status !== 'success' || loading || stepControlStatus === 'loading'}
                 entity="next"
                 label="Next"
                 onClick={forwardToNextStep}
+                loading={stepControlStatus === 'loading'}
               />
             </div>
           </div>

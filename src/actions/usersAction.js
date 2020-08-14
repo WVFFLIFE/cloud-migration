@@ -8,7 +8,7 @@ import {
   SET_INIT_USERS,
   AUTOMAP_USERS
 } from '../constants'
-import { setValidationSuccess, setValidationInit, setValidationError } from '../actions';
+import { setValidationSuccess, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import { v4 as uuid } from "uuid";

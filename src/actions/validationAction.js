@@ -24,7 +24,6 @@ export const setValidationStart = (step) => ({
 })
 
 export const setValidationSuccess = (step, message = '', other = {}) => {
-  console.log(other);
   return {
     type: SET_VALIDATION_SUCCESS,
     payload: {
