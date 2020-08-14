@@ -1,5 +1,4 @@
-import {formatToTimeZone, parseFromTimeZone} from 'date-fns-timezone';
-import format from 'date-fns/format';
+import {formatToTimeZone} from 'date-fns-timezone';
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);

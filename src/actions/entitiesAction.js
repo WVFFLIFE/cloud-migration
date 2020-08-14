@@ -4,7 +4,6 @@ import {
   SET_REPORTS,
   SET_SELECTED_ENTITIES,
   SET_INIT_SELECTED_ENTITIES,
-  SET_INIT_ENTITIES_DATA,
   SET_TAB,
   SET_IS_BACK
 } from '../constants';
@@ -123,7 +122,7 @@ export const validateEntities = (id, SelectedEntities) => {
         displayName: entity?.displayName || '',
         logicalName: reportItem.logicalName,
         description: entity?.description || '',
-        report: reportItem.report,
+        error: reportItem.errors.join('. '),
         category: reportItem.group,
         selected
       }

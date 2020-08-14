@@ -107,7 +107,7 @@ const SummaryView = ({
           </div>
           <div className={classes.buttonsWrapper}>
             {currentStatus !== 'Scheduled' ? <Button
-              disabled={loading.get}
+              disabled={loading.get || !date || !time || loading.post}
               entity="back"
               label="Back"
               onClick={backToPrevStep}

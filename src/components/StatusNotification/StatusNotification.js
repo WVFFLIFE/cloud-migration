@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
-import { makeStyles, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { WarningIcon, SkypeIcon } from '../Icons';
 import {
   CheckCircleOutlineOutlined as CheckIcon
@@ -52,13 +52,11 @@ const useStyles = makeStyles(() => ({
   textWrapper: {
     display: 'flex',
     alignItems: 'center',
-    width: '68%',
-    marginRight: '2%'
+    maxWidth: '40%',
   },
   skypeContactWrapper: {
     display: 'flex',
     alignItems: 'center',
-    width: '30%'
   },
   skypeText: {
     margin: 0,
