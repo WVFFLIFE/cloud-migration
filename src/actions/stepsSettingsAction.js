@@ -12,7 +12,6 @@ import {
   setIsBack
 } from '../actions'
 import MigrationService from '../services/migration.services'
-import { getNextStep } from '../helpers';
 
 const settingsInitStarted = () => ({
   type: SETTINGS_INIT_STARTED
@@ -21,11 +20,6 @@ const settingsInitStarted = () => ({
 const settingsInitSuccess = (settings) => ({
   type: SETTINGS_INIT_SUCCESS,
   payload: settings
-})
-
-const setNextStepAction = step => ({
-  type: SET_CURRENT_STEP,
-  payload: getNextStep(step)
 })
 
 const setEditAbility = flag => ({

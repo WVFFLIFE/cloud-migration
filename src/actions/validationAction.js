@@ -23,13 +23,13 @@ export const setValidationStart = (step) => ({
   payload: { step }
 })
 
-export const setValidationSuccess = (step, message = '', other = {}) => {
+export const setValidationSuccess = (step, message = '', data = {}) => {
   return {
     type: SET_VALIDATION_SUCCESS,
     payload: {
       step,
       message,
-      other
+      data
     }
   }
 }
@@ -55,10 +55,10 @@ export const validateStep = (id, step, data) => {
 
     MigrationService
       .validate(`/migration-job/${id}/${stepPoint}`, data)
-      .then(({ status, message, ...rest }) => {
+      .then(({ status, message, ...data }) => {
         if (status === 'success') {
           batch(() => {
-            dispatch(setValidationSuccess(step, message, rest));
+            dispatch(setValidationSuccess(step, message, data));
             if (step === 'targetenvironment') {
               dispatch(setValidationSuccess('environments'))
             }

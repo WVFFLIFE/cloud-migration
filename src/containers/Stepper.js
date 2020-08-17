@@ -124,40 +124,19 @@ const Stepper = () => {
     }
     /* eslint-disable-next-line */
   }, [id]);
-
-  const validStepConfig = {};
-
-  Object.keys(stepsConfig)
-    .forEach(key => {
-      validStepConfig[key] = {
-        ...stepsConfig[key],
-        isValid: stepsList[key].status === 'success',
-        isActive: currentStep === key,
-        data: {...stepsList[key]}
-      }
-    })
-
-  if (
-    [
-      'environments',
-      'sourceenvironment',
-      'targetenvironment'
-    ].includes(currentStep)
-  ) {
-    validStepConfig['environments'].isActive = true;
-    validStepConfig[currentStep].environmentName = stepsList[currentStep].environmentName
-  } else if (
-    [
-      'map',
-      'mapusers',
-      'mapbusinessunits',
-      'mapteams'
-    ].includes(currentStep)
-  ) {
-    validStepConfig['map'].isActive = true;
-  }
-
+  
   const title = getStepTitle(currentStep);
+
+  const validStepConfig = Object.keys(stepsConfig)
+    .reduce((acc, next) => {
+      acc[next] = {
+        ...stepsConfig[next],
+        isValid: stepsList[next].status === 'success',
+        isActive: 'substeps' in stepsConfig[next] ? stepsConfig[next].substeps.includes(currentStep) : next === currentStep,
+        data: 'data' in stepsList[next] ? stepsList[next].data : {} 
+      }
+      return acc;
+    }, {})
 
   return (
     <div className={clsx(classes.wrapper, {
@@ -168,7 +147,6 @@ const Stepper = () => {
           <div className="col-3">
             <div className={classes.leftSide}>
               <SideBar
-                currentStep={currentStep}
                 stepsConfig={validStepConfig}
               />
             </div>
