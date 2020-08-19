@@ -260,6 +260,7 @@ function buildSubsteps(substeps, config) {
 
 const SideBar = ({
   stepsConfig,
+  currentStep
 }) => {
   const classes = getSidebarClasses();
 

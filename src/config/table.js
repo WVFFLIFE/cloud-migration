@@ -127,10 +127,6 @@ const StatusBlockWrapper = styled('div')({
   justifyContent: 'center'
 })
 
-const ErrorStatusBlockWrapper = styled(StatusBlockWrapper)({
-  cursor: 'pointer'
-})
-
 const ErrorBlockText = styled('span')({
   fontSize: 14,
   color: '#BF5F67',
@@ -310,10 +306,10 @@ export const entitiesTableConfig = {
               placement="left-start"
               interactive
             >
-              <ErrorStatusBlockWrapper>
+              <StatusBlockWrapper>
                 <ErrorIcon />
                 <ErrorBlockText>Failed</ErrorBlockText>
-              </ErrorStatusBlockWrapper>
+              </StatusBlockWrapper>
             </Tooltip>
           </ValidateTableCell>
         )

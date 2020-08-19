@@ -36,7 +36,7 @@ export default function (state = INITIAL_STATE, action) {
         [action.payload.step]: {
           status: 'success',
           message: action.payload.message,
-          data: action.payload.data
+          ...action.payload.other
         }
       }
     case SET_VALIDATION_ERROR:
