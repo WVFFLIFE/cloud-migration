@@ -310,10 +310,10 @@ export const entitiesTableConfig = {
               placement="left-start"
               interactive
             >
-              <StatusBlockWrapper>
+              <ErrorStatusBlockWrapper>
                 <ErrorIcon />
                 <ErrorBlockText>Failed</ErrorBlockText>
-              </StatusBlockWrapper>
+              </ErrorStatusBlockWrapper>
             </Tooltip>
           </ValidateTableCell>
         )
