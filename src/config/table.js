@@ -127,6 +127,10 @@ const StatusBlockWrapper = styled('div')({
   justifyContent: 'center'
 })
 
+const ErrorStatusBlockWrapper = styled(StatusBlockWrapper)({
+  cursor: 'pointer'
+})
+
 const ErrorBlockText = styled('span')({
   fontSize: 14,
   color: '#BF5F67',
