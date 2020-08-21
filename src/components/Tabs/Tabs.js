@@ -35,18 +35,29 @@ const useStyles = makeStyles({
     cursor: 'default'
   },
   tabTitle: {
+    marginRight: 10,
     fontSize: 17,
     fontWeight: 600,
     color: '#A1ADCE'
   },
   tabTitleActive: {
     color: '#192B5D'
+  },
+  selectedEntitiesCount: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: '#A1ADCE'
+  },
+  selectedEntitiesCountActive: {
+    color: '#192B5D'
   }
 })
 
 const Tabs = ({
   currentTab,
-  handleChangeTab
+  handleChangeTab,
+  selectedEntities,
+  data
 }) => {
   const classes = useStyles();
 
@@ -54,6 +65,8 @@ const Tabs = ({
     <div className={classes.root}>
       {tabsList.map(tabItem => {
         const isActive = tabItem.id === currentTab;
+        const totalCount = data.filter(item => item.category === tabItem.id).length;
+
         return (
           <div
             onClick={() => handleChangeTab(tabItem.id)}
@@ -68,6 +81,9 @@ const Tabs = ({
             })}>
               {tabItem.title}
             </span>
+            <span className={clsx(classes.selectedEntitiesCount, {
+              [classes.selectedEntitiesCountActive]: isActive
+            })}>{`${selectedEntities[tabItem.id].length} / ${totalCount}`}</span>
           </div>
         )
       })}

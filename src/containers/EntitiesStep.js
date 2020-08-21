@@ -26,6 +26,8 @@ const EntitiesStep = () => {
   } = useSelector(state => state.entities);
   const { entities: validationData } = useSelector(state => state.validation);
 
+  console.log(selectedEntities, currentTab);
+
   useEffect(() => {
     if (!isBack) {
       dispatch(fetchEntities(id))
@@ -72,6 +74,8 @@ const EntitiesStep = () => {
   return (
     <>
       <Tabs
+        data={data}
+        selectedEntities={selectedEntities}
         currentTab={currentTab}
         handleChangeTab={handleChangeCurrentTab}
       />

@@ -100,22 +100,23 @@ class MigrationService {
 
   validate = async (path, body) => {
     const uri = `${this.BASE_URL}${path}`;
-
     const res = await request(uri, 'POST', body);
 
     if (!res.ok) {
-      try {
-        const { message } = await res.json();
-
-        return {
-          status: 'error',
-          message
-        };
-      } catch {
-        if (res.status === 401) {
-          authentication.signOut();
+      if (res.status === 401) {
+        authentication.signOut();
+      } else {
+        try {
+          const { message } = await res.json();
+  
+          return {
+            status: 'error',
+            message
+          };
+        } catch {
+          
+          throw new Error(`Couldn't fetch ${uri}`);
         }
-        throw new Error(`Couldn't fetch ${uri}`);
       }
     }
 
