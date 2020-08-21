@@ -1,14 +1,11 @@
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
-import 'date-fns';
 import './config/authentication';
 import './assets/fonts/fonts.css';
 import './index.css';
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
@@ -18,8 +15,8 @@ import rootReducer from './reducers';
 import authentication from './b2c';
 import Webfont from 'webfontloader';
 
-if (process.env.NODE_ENV === 'production'){
-  window.console.log = () => {}
+if (process.env.NODE_ENV === 'production') {
+  window.console.log = () => { }
 }
 
 Webfont.load({
@@ -43,11 +40,9 @@ const store = createStore(rootReducer, enhancer)
 authentication.run(() => {
   ReactDOM.render(
     <Provider store={store}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Router>
-          <App />
-        </Router>
-      </MuiPickersUtilsProvider>
+      <Router>
+        <App />
+      </Router>
     </Provider>,
     document.getElementById('root')
   );
