@@ -108,7 +108,7 @@ const StatusNotification = ({
   const handleClick = async () => {
     const fileName = `Reports ${format(new Date(), 'dd.MM.yyyy hh:mm:ss')}.xlsx`
     const blob = await MigrationService
-      .download(`/migration-job/${id}/download/report`);
+      .download(`/${id}/download/report`);
 
     FileSaver.saveAs(blob, fileName)
   }

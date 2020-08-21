@@ -49,7 +49,7 @@ export const setNextMapBusinessUnitsStep = (id) => {
     dispatch(setStepControlStatus('loading'));
 
     MigrationService
-      .postStep(`/migration-job/${id}/users`, { users })
+      .postStep(`/${id}/users`, { users })
       .then(() => {
         batch(() => {
           dispatch(setStepControlStatus('hidden'));
@@ -71,7 +71,7 @@ export const setNextMapTeamsStep = (id) => {
     dispatch(setStepControlStatus('loading'));
 
     MigrationService
-      .postStep(`/migration-job/${id}/business-units`, { mapedBusinessUnits })
+      .postStep(`/${id}/business-units`, { mapedBusinessUnits })
       .then(() => {
         batch(() => {
           dispatch(setStepControlStatus('hidden'));
@@ -93,7 +93,7 @@ export const setNextScheduleStep = (id) => {
     dispatch(setStepControlStatus('loading'));
 
     MigrationService
-      .postStep(`/migration-job/${id}/teams`, { mapedTeams })
+      .postStep(`/${id}/teams`, { mapedTeams })
       .then(() => {
         batch(() => {
           dispatch(setStepControlStatus('hidden'));
@@ -185,7 +185,7 @@ export const initStepSettings = (id, errCallback) => {
     dispatch(settingsInitStarted());
 
     MigrationService
-      .get(`/migration-job/${id}`)
+      .get(`/${id}`)
       .then(({ status }) => {
         batch(() => {
           if (status === 'Draft') {

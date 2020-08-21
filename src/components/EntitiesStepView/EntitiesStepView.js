@@ -13,6 +13,7 @@ import LoaderProgress from '../LoaderProgress';
 import Search from '../Search';
 import { entitiesTableConfig } from '../../config';
 import { stableSort, getComparator } from '../../helpers';
+import { useDebounce } from '../../hooks';
 
 const useStyles = makeStyles(() => ({
   contentWrapper: {
@@ -85,6 +86,8 @@ const EntityStepView = ({
   const [searchValue, setSearchValue] = useState('');
   const { cellsList } = entitiesTableConfig;
 
+  const debouncedSearchValue = useDebounce(searchValue, 500);
+
   const handleSelectAll = useCallback((event) => {
     if (event.target.checked) {
       handleChangeSelectedEntities(
@@ -121,7 +124,11 @@ const EntityStepView = ({
   const modifyList = (list) => {
     return list
       .map(item => ({ ...item, displayName: item.displayName || '' }))
-      .filter(item => searchValue ? item.displayName.toLowerCase().includes(searchValue.toLowerCase()) : true)
+      .filter(item => {
+        return debouncedSearchValue 
+          ? item.displayName.toLowerCase().includes(debouncedSearchValue.toLowerCase()) 
+          : true
+      })
   }
 
   const renderRows = (list) => {

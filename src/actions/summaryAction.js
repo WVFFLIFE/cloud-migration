@@ -68,7 +68,7 @@ export const fetchSummaryData = (id) => {
     dispatch(fetchSummaryStarted());
 
     MigrationService
-      .get(`/migration-job/${id}/summary`)
+      .get(`/${id}/summary`)
       .then(({ scheduledDate, timeZone }) => {
         const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, { timeZone })) : new Date();
         const time = scheduledDate ? { h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes() } : { h: 9, m: 0 }
@@ -100,7 +100,7 @@ export const finishMigration = (id) => {
       const scheduledDate = getScheduledDate(date, time, timezone);
 
       MigrationService
-        .postStep(`/migration-job/${id}/summary`, { scheduledDate, timeZone: timezone })
+        .postStep(`/${id}/summary`, { scheduledDate, timeZone: timezone })
         .then(() => {
           batch(() => {
             dispatch(setStepControlStatus('success'));

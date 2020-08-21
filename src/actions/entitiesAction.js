@@ -99,7 +99,7 @@ export const fetchEntities = (id) => {
     dispatch(fetchEntitiesStarted());
 
     MigrationService
-      .get(`/migration-job/${id}/entities`)
+      .get(`/${id}/entities`)
       .then(({ entities }) => {
         dispatch(fetchEntitiesSuccess(entities))
       })
@@ -113,7 +113,7 @@ export const validateEntities = (id, SelectedEntities) => {
 
     dispatch(setValidationStart('entities'));
 
-    const { reports, validationResult } = await MigrationService.post(`/migration-job/${id}/entities/validate-entities`, body);
+    const { reports, validationResult } = await MigrationService.post(`/${id}/entities/validate-entities`, body);
     const postValidationBody = reports.map(reportItem => {
       const entity = currentEntities.find(item => item.logicalName === reportItem.logicalName);
       const selected = SelectedEntities.includes(reportItem.logicalName);
@@ -122,12 +122,12 @@ export const validateEntities = (id, SelectedEntities) => {
         displayName: entity?.displayName || '',
         logicalName: reportItem.logicalName,
         description: entity?.description || '',
-        error: reportItem.errors.join('. '),
+        error: reportItem.errors.join(''),
         category: reportItem.group,
         selected
       }
     });
-    await MigrationService.postStep(`/migration-job/${id}/entities`, {entities: postValidationBody});
+    await MigrationService.postStep(`/${id}/entities`, {entities: postValidationBody});
 
     const newEntities = modifyEntities(currentEntities, reports);
 

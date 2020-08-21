@@ -16,10 +16,10 @@ async function request(uri, method = 'GET', body = null) {
 
 class MigrationService {
   BASE_URL = process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:44310/api' 
-    : `${window.location.origin}/api`;
+    ? 'http://localhost:44310/api/migration-jobs' 
+    : `${window.location.origin}/api/migration-jobs`;
 
-  get = async path => {
+  get = async (path = '') => {
     const uri = `${this.BASE_URL}${path}`;
 
     const res = await request(uri);
@@ -34,7 +34,7 @@ class MigrationService {
     return await res.json();
   };
 
-  put = async (path, body) => {
+  put = async (path = '', body) => {
     const uri = `${this.BASE_URL}${path}`;
 
     const res = await fetch(uri, {
@@ -53,7 +53,7 @@ class MigrationService {
     return await res.json();
   };
 
-  post = async (path, body) => {
+  post = async (path = '', body) => {
     const uri = `${this.BASE_URL}${path}`;
 
     const res = await request(uri, 'POST', body);
@@ -68,7 +68,7 @@ class MigrationService {
     return await res.json();
   };
 
-  postStep = async (path, body) => {
+  postStep = async (path = '', body) => {
     const uri = `${this.BASE_URL}${path}`;
 
     const res = await request(uri, 'POST', body);
@@ -83,7 +83,7 @@ class MigrationService {
     return true;
   };
 
-  delete = async path => {
+  delete = async (path = '') => {
     const uri = `${this.BASE_URL}${path}`;
 
     const res = await request(uri, 'DELETE');
@@ -98,7 +98,7 @@ class MigrationService {
     return true;
   };
 
-  validate = async (path, body) => {
+  validate = async (path = '', body) => {
     const uri = `${this.BASE_URL}${path}`;
     const res = await request(uri, 'POST', body);
 
@@ -129,7 +129,7 @@ class MigrationService {
     };
   };
 
-  download = async (path) => {
+  download = async (path = '') => {
     const uri = `${this.BASE_URL}${path}`;
     const token = await authentication.getAccessToken();
 

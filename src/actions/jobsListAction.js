@@ -39,7 +39,7 @@ export const addNewJob = (pushTo) => {
     dispatch(addJobStarted());
 
     MigrationService
-      .post('/migration-job')
+      .post()
       .then(({jobId}) => {
         dispatch(addJobSuccess());
         pushTo(`/migrationjob/${jobId}`);
@@ -52,7 +52,7 @@ export const deleteCurrentJob = (id) => {
     dispatch(deleteJobStarted());
 
     MigrationService
-      .delete(`/migration-job/${id}`)
+      .delete(`/${id}`)
       .then(() => {
         const newList = getState().jobsValue.data.filter(item => item.id !== id);
         dispatch(deleteJobSuccess(newList))
@@ -66,7 +66,7 @@ export const fetchJobsList = (loading) => {
       dispatch(fetchJobsStarted());
     }
 
-    MigrationService.get('/migration-job')
+    MigrationService.get()
       .then(data => {
         let modifiedData = data.map(item => {
           return {

@@ -54,7 +54,7 @@ export const validateStep = (id, step, data) => {
     const stepPoint = getStepPoint(step);
 
     MigrationService
-      .validate(`/migration-job/${id}/${stepPoint}`, data)
+      .validate(`/${id}/${stepPoint}`, data)
       .then(({ status, message, ...rest }) => {
         if (status === 'success') {
           batch(() => {

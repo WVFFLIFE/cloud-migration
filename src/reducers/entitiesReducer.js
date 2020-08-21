@@ -61,6 +61,7 @@ const entitiesReducer = (state = INITIAL_STATE, action) => {
       return {
         data: [],
         reports: [],
+        currentTab: 'CoreRecords',
         selectedEntities: {
           CoreRecords: [],
           MarketingAndSales: [],
@@ -69,7 +70,8 @@ const entitiesReducer = (state = INITIAL_STATE, action) => {
           CustomEntities: []
         },
         loading: true,
-        nextStatus: 'hidden'
+        nextStatus: 'hidden',
+        isBack: false
       }
     case SET_INIT_ENTITIES_DATA:
       return {

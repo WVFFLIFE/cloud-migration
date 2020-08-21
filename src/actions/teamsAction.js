@@ -114,7 +114,7 @@ export const fetchTeams = (id) => {
     dispatch(fetchUsersStarted())
 
     MigrationService
-      .get(`/migration-job/${id}/teams`)
+      .get(`/${id}/teams`)
       .then(({ mapedTeams, sourceTeams, targetTeams }) => {
         const data = {
           mapedTeams,
