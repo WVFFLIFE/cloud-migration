@@ -5,6 +5,7 @@ import {
   SETTINGS_INIT_SUCCESS,
   SET_EDIT_ABILITY,
   SET_STEP_CONTROL_STATUS,
+  INIT_STEP_SETTINGS
 } from '../constants'
 import {
   setValidationSuccess,
@@ -12,6 +13,10 @@ import {
   setIsBack
 } from '../actions'
 import MigrationService from '../services/migration.services'
+
+export const initializeStep = () => ({
+  type: INIT_STEP_SETTINGS
+})
 
 const settingsInitStarted = () => ({
   type: SETTINGS_INIT_STARTED

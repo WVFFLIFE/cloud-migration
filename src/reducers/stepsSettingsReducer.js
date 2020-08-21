@@ -4,6 +4,7 @@ import {
   SETTINGS_INIT_SUCCESS,
   SET_EDIT_ABILITY,
   SET_STEP_CONTROL_STATUS,
+  INIT_STEP_SETTINGS
 } from '../constants'
 
 const INITIAL_STATE = {
@@ -42,6 +43,12 @@ function stepsSettingsReducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         stepControlStatus: action.payload
+      }
+    case INIT_STEP_SETTINGS:
+      return {
+        ...state,
+        loading: true,
+        currentStep: 'sourceenvironment'
       }
     default:
       return state

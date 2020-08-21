@@ -4,7 +4,6 @@ import {
   addNewJob
 } from './jobsListAction';
 import {
-  initStepSettings,
   setCurrentStep,
   setStepControlStatus,
   backToSourceEnvrionmentStep,
@@ -15,7 +14,9 @@ import {
   backToEntitiesStep,
   backToMapUsersStep,
   backToMapBusinessUnitsStep,
-  backToMapTeamsStep
+  backToMapTeamsStep,
+  initStepSettings,
+  initializeStep
 } from './stepsSettingsAction';
 import {
   validateStep,
@@ -84,6 +85,8 @@ import {
 } from './initAction';
 
 export {
+  initializeStep,
+  initStepSettings,
   backToMapBusinessUnitsStep,
   backToMapTeamsStep,
   backToEntitiesStep,
@@ -128,7 +131,6 @@ export {
   fetchJobsList,
   fetchSourceEnvironmentData,
   setSourceEnvironmentData,
-  initStepSettings,
   fetchTargetEnvironmentData,
   setTargetEnvironmentData,
   setCurrentStep,

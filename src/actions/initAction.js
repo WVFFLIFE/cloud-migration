@@ -9,7 +9,7 @@ import {
   SET_ALL_VALIDATION_INIT,
 } from '../constants';
 import {batch} from 'react-redux';
-import {setValidationInit, setCurrentStep, setStepControlStatus} from '../actions';
+import {setValidationInit, setCurrentStep, setStepControlStatus, initializeStep} from '../actions';
 
 const setInitSourceenvironment = () => ({
   type: SET_INIT_SOURCEENVIRONMENT
@@ -116,7 +116,7 @@ export const setAllInit = () => {
       dispatch(setBusinessUnitsInit());
       dispatch(setTeamsInit());
       dispatch(allValidationInit());
-      dispatch(setCurrentStep('sourceenvironment'));
+      dispatch(initializeStep());
       dispatch(setStepControlStatus('hidden'));
     })
   }
