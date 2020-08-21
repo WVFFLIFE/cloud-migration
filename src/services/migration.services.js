@@ -59,6 +59,9 @@ class MigrationService {
     const res = await request(uri, 'POST', body);
 
     if (!res.ok) {
+      if (res.status === 401) {
+        authentication.signOut();
+      }
       throw new Error(`Couldn't fetch ${uri}`);
     }
 
@@ -71,6 +74,9 @@ class MigrationService {
     const res = await request(uri, 'POST', body);
 
     if (!res.ok) {
+      if (res.status === 401) {
+        authentication.signOut();
+      }
       throw new Error(`Couldn't fetch ${uri}`);
     }
 
@@ -83,7 +89,10 @@ class MigrationService {
     const res = await request(uri, 'DELETE');
 
     if (!res.ok) {
-      throw new Error(`Couldn't delete ${uri}`);
+      if (res.status === 401) {
+        authentication.signOut();
+      }
+      throw new Error(`Couldn't fetch ${uri}`);
     }
 
     return true;
@@ -103,6 +112,9 @@ class MigrationService {
           message
         };
       } catch {
+        if (res.status === 401) {
+          authentication.signOut();
+        }
         throw new Error(`Couldn't fetch ${uri}`);
       }
     }
@@ -126,6 +138,13 @@ class MigrationService {
         Authorization: `Bearer ${token.accessToken}`,
       }
     })
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        authentication.signOut();
+      }
+      throw new Error(`Couldn't fetch ${uri}`);
+    }
 
     return await res.blob();
   }
