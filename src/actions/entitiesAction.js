@@ -109,8 +109,8 @@ export const fetchEntities = (id) => {
             if (zipCheckedEntities?.[entity.logicalName]) {
               const checkedEntity = zipCheckedEntities[entity.logicalName];
 
-              validationSettings = checkedEntity.report 
-                ? { status: 'error', message: [checkedEntity.report] }
+              validationSettings = checkedEntity.error 
+                ? { status: 'error', message: [checkedEntity.error] }
                 : { status: 'success', message: 'Success!' }
             }
 

@@ -167,6 +167,8 @@ const MapSelectView = ({
 
   const { status } = validationData;
 
+  console.log(targetList, sourceList);
+
   return (
     <div className={clsx({ [classes.loadingCenter]: loading })}>
       {loading ? <Loader /> : (
@@ -188,7 +190,8 @@ const MapSelectView = ({
             </div>
             <div className={classes.content}>
               {
-                sourceList.map(sourceItem => {
+                sourceList
+                  .map(sourceItem => {
                   const withError = !!!sourceItem.target;
                   return (
                     <div className={classes.itemWrapper} key={sourceItem.source.guid}>
