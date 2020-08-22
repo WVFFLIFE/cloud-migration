@@ -114,6 +114,8 @@ const Stepper = () => {
   const stepsList = useSelector(state => state.validation)
   const classes = useStyles(stepLoading);
 
+  console.log(stepsList, stepsConfig);
+
   const errorCallback = () => history.push('/404');
 
   useEffect(() => {
@@ -125,37 +127,20 @@ const Stepper = () => {
     /* eslint-disable-next-line */
   }, [id]);
 
-  const validStepConfig = {};
+  const validStepConfig = Object.keys(stepsConfig)
+    .reduce((acc, next) => {
+      const item = stepsConfig[next];
+      const validationItem = stepsList[next];
 
-  Object.keys(stepsConfig)
-    .forEach(key => {
-      validStepConfig[key] = {
-        ...stepsConfig[key],
-        isValid: stepsList[key].status === 'success',
-        isActive: currentStep === key,
-        data: {...stepsList[key]}
+      acc[next] = {
+        ...item,
+        isActive: currentStep === next || item?.substeps?.includes(currentStep),
+        isValid: validationItem.status === 'success',
+        data: { ...validationItem }
       }
-    })
 
-  if (
-    [
-      'environments',
-      'sourceenvironment',
-      'targetenvironment'
-    ].includes(currentStep)
-  ) {
-    validStepConfig['environments'].isActive = true;
-    validStepConfig[currentStep].environmentName = stepsList[currentStep].environmentName
-  } else if (
-    [
-      'map',
-      'mapusers',
-      'mapbusinessunits',
-      'mapteams'
-    ].includes(currentStep)
-  ) {
-    validStepConfig['map'].isActive = true;
-  }
+      return acc;
+    }, {});
 
   const title = getStepTitle(currentStep);
 
