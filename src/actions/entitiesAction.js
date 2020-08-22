@@ -10,7 +10,6 @@ import {
   setValidationStart,
   setValidationSuccess,
   setValidationError,
-  setValidationInit
 } from '../actions'
 import { batch } from 'react-redux';
 import MigrationService from '../services/migration.services';
@@ -70,7 +69,6 @@ export const setCurrentTab = (newTab) => ({
 
 export const setSelectedEntities = (selected) => {
   return (dispatch, getState) => {
-    const { entities } = getState().validation;
     const { currentTab } = getState().entities;
     const selectedEntities = getState().entities.selectedEntities[currentTab];
 
@@ -80,13 +78,7 @@ export const setSelectedEntities = (selected) => {
         ? selectedEntities.filter(selectedEntity => selectedEntity !== selected)
         : [...selectedEntities, selected];
 
-    batch(() => {
-      if (entities.status === 'success') {
-        dispatch(setValidationInit('entities'));
-      }
-
-      dispatch(selectEntity(newSelectedEntities));
-    })
+    dispatch(selectEntity(newSelectedEntities));
   }
 }
 
