@@ -8,7 +8,6 @@ import {
   setValidationInit,
   setCurrentStep,
   backToSourceEnvrionmentStep,
-  setIsBack
 } from '../actions';
 import EnvironmentStepView from '../components/EnvironmentStepView';
 
@@ -47,7 +46,6 @@ const TargetEnvironmentStep = () => {
 
   const forwardToNextStep = () => {
     batch(() => {
-      dispatch(setIsBack(false));
       dispatch(setCurrentStep('entities'));
     })
   }

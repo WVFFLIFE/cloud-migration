@@ -22,16 +22,13 @@ const EntitiesStep = () => {
     data,
     selectedEntities,
     currentTab,
-    isBack
   } = useSelector(state => state.entities);
   const { entities: validationData } = useSelector(state => state.validation);
 
   console.log(selectedEntities, currentTab);
 
   useEffect(() => {
-    if (!isBack) {
-      dispatch(fetchEntities(id))
-    }
+    dispatch(fetchEntities(id))
     /* eslint-disable-next-line */
   }, [])
 

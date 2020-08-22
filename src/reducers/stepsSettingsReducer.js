@@ -32,7 +32,7 @@ function stepsSettingsReducer(state = INITIAL_STATE, action) {
     case SET_CURRENT_STEP:
       return {
         ...state,
-        currentStep: action.payload
+        currentStep: action.payload,
       }
     case SET_EDIT_ABILITY:
       return {

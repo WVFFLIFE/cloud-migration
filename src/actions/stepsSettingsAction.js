@@ -10,7 +10,6 @@ import {
 import {
   setValidationSuccess,
   setValidationInit,
-  setIsBack
 } from '../actions'
 import MigrationService from '../services/migration.services'
 
@@ -134,7 +133,6 @@ export const backToTargetEnvironmentStep = () => {
 export const backToEntitiesStep = () => {
   return dispatch => {
     batch(() => {
-      dispatch(setIsBack(true));
       dispatch(setValidationInit('mapusers'));
       dispatch(setValidationInit('entities'));
       dispatch(setCurrentStep('entities'));

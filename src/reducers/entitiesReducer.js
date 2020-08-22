@@ -7,7 +7,6 @@ import {
   SET_INIT_ENTITIES,
   SET_INIT_ENTITIES_DATA,
   SET_TAB,
-  SET_IS_BACK
 } from '../constants';
 
 const INITIAL_STATE = {
@@ -23,7 +22,6 @@ const INITIAL_STATE = {
   loading: true,
   currentTab: 'CoreRecords',
   nextStatus: 'hidden',
-  isBack: false
 }
 
 const entitiesReducer = (state = INITIAL_STATE, action) => {
@@ -31,13 +29,28 @@ const entitiesReducer = (state = INITIAL_STATE, action) => {
     case FETCH_ENTITIES_DATA_STARTED:
       return {
         ...state,
-        loading: true
+        data: [],
+        reports: [],
+        selectedEntities: {
+          CoreRecords: [],
+          MarketingAndSales: [],
+          Service: [],
+          Miscellaneous: [],
+          CustomEntities: []
+        },
+        loading: true,
+        currentTab: 'CoreRecords',
+        nextStatus: 'hidden',
       }
     case FETCH_ENTITIES_DATA_SUCCESS:
       return {
         ...state,
         loading: false,
-        data: action.payload
+        data: action.payload.data,
+        selectedEntities: {
+          ...state.selectedEntities,
+          ...action.payload.selectedEntities
+        }
       }
     case SET_REPORTS:
       return {
@@ -55,7 +68,13 @@ const entitiesReducer = (state = INITIAL_STATE, action) => {
     case SET_INIT_SELECTED_ENTITIES:
       return {
         ...state,
-        selectedEntities: []
+        selectedEntities: {
+          CoreRecords: [],
+          MarketingAndSales: [],
+          Service: [],
+          Miscellaneous: [],
+          CustomEntities: []
+        }
       }
     case SET_INIT_ENTITIES:
       return {
@@ -87,11 +106,6 @@ const entitiesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentTab: action.payload
-      }
-    case SET_IS_BACK:
-      return {
-        ...state,
-        isBack: action.payload
       }
     default:
       return state;

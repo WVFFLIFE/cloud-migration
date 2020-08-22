@@ -116,6 +116,12 @@ const useStyles = makeStyles({
       backgroundColor: '#F3F4F7'
     }
   },
+  weekBlock: {
+    cursor: 'default',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    }
+  },
   disabledBlock: {
     cursor: 'default',
     '&:hover': {
@@ -241,7 +247,7 @@ const Calendar = ({
         <div className={classes.weekTitlesWrapper}>
           {weekShort.map(item => {
             return (
-              <div className={classes.block} key={item}>
+              <div className={clsx(classes.block, classes.weekBlock)} key={item}>
                 <span className={classes.weekTitle}>{item}</span>
               </div>
             )

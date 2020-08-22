@@ -39,7 +39,6 @@ import {
   setSelectedEntities,
   setInitSelectedEntities,
   setCurrentTab,
-  setIsBack
 } from './entitiesAction';
 import {
   fetchUsers,
@@ -146,6 +145,5 @@ export {
   setNextScheduleStep,
   backToSourceEnvrionmentStep,
   backToTargetEnvironmentStep,
-  setIsBack,
   backToMapUsersStep
 }

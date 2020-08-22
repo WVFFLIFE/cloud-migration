@@ -5,7 +5,6 @@ import {
   SET_SELECTED_ENTITIES,
   SET_INIT_SELECTED_ENTITIES,
   SET_TAB,
-  SET_IS_BACK
 } from '../constants';
 import {
   setValidationStart,
@@ -15,10 +14,12 @@ import {
 } from '../actions'
 import { batch } from 'react-redux';
 import MigrationService from '../services/migration.services';
+import { zipListToObj } from '../helpers';
 
 function modifyEntities(prevList, validationList) {
+  const zipValidationList = zipListToObj(validationList, 'logicalName');
   return prevList.map(item => {
-    const validationData = validationList.find(validationItem => validationItem.logicalName === item.logicalName);
+    const validationData = zipValidationList?.[item.logicalName];
     let validationSettings = { status: 'hidden', message: '' };
 
     if (!validationData) {
@@ -67,11 +68,6 @@ export const setCurrentTab = (newTab) => ({
   payload: newTab
 })
 
-export const setIsBack = (flag) => ({
-  type: SET_IS_BACK,
-  payload: flag
-})
-
 export const setSelectedEntities = (selected) => {
   return (dispatch, getState) => {
     const { entities } = getState().validation;
@@ -95,20 +91,52 @@ export const setSelectedEntities = (selected) => {
 }
 
 export const fetchEntities = (id) => {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(fetchEntitiesStarted());
 
     MigrationService
       .get(`/${id}/entities`)
-      .then(({ entities }) => {
-        dispatch(fetchEntitiesSuccess(entities))
+      .then(data => {
+        let entities = data.entities;
+        let selectedEntities = {};
+
+        if (data?.checkedEntities.length) {
+          const zipCheckedEntities = zipListToObj(data.checkedEntities, 'logicalName');
+          selectedEntities = data.checkedEntities.reduce((acc, next) => {
+            if (next.selected && acc?.[next.category]) {
+              acc[next.category] = [...acc[next.category], next.logicalName];
+            } else if (next.selected && !acc?.[next.category]) {
+              acc[next.category] = [next.logicalName];
+            }
+
+            return acc;
+          }, {});
+
+          entities = data.entities.map(entity => {
+            let validationSettings = { status: 'hidden', message: '' };
+            if (zipCheckedEntities?.[entity.logicalName]) {
+              const checkedEntity = zipCheckedEntities[entity.logicalName];
+
+              validationSettings = checkedEntity.report 
+                ? { status: 'error', message: [checkedEntity.report] }
+                : { status: 'success', message: 'Success!' }
+            }
+
+            return {
+              ...entity,
+              validationSettings
+            }
+          })
+        }
+
+        dispatch(fetchEntitiesSuccess({data: entities, selectedEntities}))
       })
   }
 }
 
-export const validateEntities = (id, SelectedEntities) => {
+export const validateEntities = (id, selectedEntities) => {
   return async (dispatch, getState) => {
-    const body = { SelectedEntities }
+    const body = { selectedEntities }
     const { data: currentEntities } = getState().entities;
 
     dispatch(setValidationStart('entities'));
@@ -116,7 +144,7 @@ export const validateEntities = (id, SelectedEntities) => {
     const { reports, validationResult } = await MigrationService.post(`/${id}/entities/validate-entities`, body);
     const postValidationBody = reports.map(reportItem => {
       const entity = currentEntities.find(item => item.logicalName === reportItem.logicalName);
-      const selected = SelectedEntities.includes(reportItem.logicalName);
+      const selected = selectedEntities.includes(reportItem.logicalName);
 
       return {
         displayName: entity?.displayName || '',
@@ -137,7 +165,7 @@ export const validateEntities = (id, SelectedEntities) => {
       } else {
         dispatch(setValidationError('entities', 'Detected compatibility issues with target environment'));
       }
-      dispatch(fetchEntitiesSuccess(newEntities))
+      dispatch(fetchEntitiesSuccess({data: newEntities, selectedEntities: {}}))
       dispatch(setReports(reports));
     })
   }

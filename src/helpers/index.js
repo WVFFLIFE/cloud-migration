@@ -145,7 +145,15 @@ function checkResponseError(res) {
   return false;
 }
 
+function zipListToObj(list, key) {
+  return list.reduce((acc, next) => {
+    acc[next[key]] = {...next}
+    return acc;
+  }, {})
+}
+
 export {
+  zipListToObj,
   checkResponseError,
   getScheduledDate,
   isSourceMaped,
