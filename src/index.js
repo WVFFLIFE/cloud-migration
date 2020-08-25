@@ -10,13 +10,12 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import App from './App'
 import rootReducer from './reducers';
 import authentication from './b2c';
 import Webfont from 'webfontloader';
 
 if (process.env.NODE_ENV === 'production') {
-  window.console.log = () => { }
+  window.console.log = () => {}
 }
 
 Webfont.load({
@@ -38,12 +37,17 @@ const enhancer = composeEnhancers(
 const store = createStore(rootReducer, enhancer)
 
 authentication.run(() => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>,
-    document.getElementById('root')
-  );
+  import('./App')
+    .then(module => {
+      const App = module.default;
+
+      ReactDOM.render(
+        <Provider store={store}>
+          <Router>
+            <App />
+          </Router>
+        </Provider>,
+        document.getElementById('root')
+      );
+    })
 })

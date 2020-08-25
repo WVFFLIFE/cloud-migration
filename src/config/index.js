@@ -1,8 +1,8 @@
-import {stepsConfig} from './step';
-import {jobsTableBaseConfig, entitiesTableConfig} from './table';
+import { stepsConfig } from './step';
+import { jobsTableBaseConfig, entitiesTableConfig } from './table';
 
 export {
-    jobsTableBaseConfig,
-    stepsConfig,
-    entitiesTableConfig
+  jobsTableBaseConfig,
+  stepsConfig,
+  entitiesTableConfig
 }

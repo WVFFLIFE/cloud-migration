@@ -114,8 +114,6 @@ const Stepper = () => {
   const stepsList = useSelector(state => state.validation)
   const classes = useStyles(stepLoading);
 
-  console.log(stepsList, stepsConfig);
-
   const errorCallback = () => history.push('/404');
 
   useEffect(() => {

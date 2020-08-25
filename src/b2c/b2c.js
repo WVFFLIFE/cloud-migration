@@ -82,33 +82,7 @@ const authentication = {
     }
   },
   signOut: () => msalApp.logout(),
-  getAccessToken: () => state.accessToken,
-  refreshToken: async function (successCallback) {
-    // localStorage.clear();
-
-    const account = msalApp.getAccount()
-    if (!account) {
-      msalApp.loginRedirect(B2C_SCOPES.API_ACCESS)
-    } else {
-      msalApp.acquireTokenSilent(B2C_SCOPES.API_ACCESS).then(accessToken => {
-        if (msalAppConfig.cache.cacheLocation === LOCAL_STORAGE) {
-          window.localStorage.setItem(AUTHORIZATION_KEY, 'Bearer ' + accessToken)
-        } else {
-          window.sessionStorage.setItem(AUTHORIZATION_KEY, 'Bearer ' + accessToken)
-        }
-
-        state.accessToken = accessToken
-
-        if (successCallback) {
-          return successCallback()
-        }
-      }, error => {
-        if (error) {
-          msalApp.acquireTokenRedirect(B2C_SCOPES.API_ACCESS)
-        }
-      })
-    }
-  }
+  getAccessToken: () => state.accessToken
 }
 
 export default authentication
