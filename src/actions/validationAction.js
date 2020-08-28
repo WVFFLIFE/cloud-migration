@@ -54,18 +54,19 @@ export const validateStep = (id, step, data) => {
     const stepPoint = getStepPoint(step);
 
     MigrationService
-      .validate(`/${id}/${stepPoint}`, data)
-      .then(({ status, message, ...rest }) => {
-        if (status === 'success') {
+      .post(`/${id}/${stepPoint}`, data)
+      .then(res => {
+          const {message, ...rest} = res.data;
           batch(() => {
             dispatch(setValidationSuccess(step, message, rest));
             if (step === 'targetenvironment') {
               dispatch(setValidationSuccess('environments'))
             }
           })
-        } else if (status === 'error') {
-          dispatch(setValidationError(step, message))
-        }
+      })
+      .catch(err => {
+        const {data} = err.response;
+        dispatch(setValidationError(step, data.message))
       })
   }
 }

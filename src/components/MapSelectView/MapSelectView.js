@@ -167,7 +167,7 @@ const MapSelectView = ({
 
   const { status } = validationData;
 
-  console.log(targetList, sourceList);
+  const isClearButtonDisabled = sourceList.every(item => !item.target);
 
   return (
     <div className={clsx({ [classes.loadingCenter]: loading })}>
@@ -185,6 +185,7 @@ const MapSelectView = ({
                   label="Clear all"
                   entity="clear"
                   onClick={handleClearAll}
+                  disabled={isClearButtonDisabled}
                 />
               </div>
             </div>

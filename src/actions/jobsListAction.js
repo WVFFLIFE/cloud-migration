@@ -40,7 +40,8 @@ export const addNewJob = (pushTo) => {
 
     MigrationService
       .post()
-      .then(({ jobId }) => {
+      .then(res => {
+        const {jobId} = res.data;
         dispatch(addJobSuccess());
         pushTo(`/migrationjob/${jobId}`);
       })

@@ -4,14 +4,13 @@ import {
   SET_TARGET_USER,
   REMOVE_TARGET_FROM_SOURCE,
   SET_TO_TARGET,
-  USE_AUTOMAP,
   SET_INIT_USERS,
   AUTOMAP_USERS
 } from '../constants'
 import { setValidationSuccess, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
-import { v4 as uuid } from "uuid";
+import sortBy from 'lodash.sortby';
 
 const fetchUsersStarted = () => ({
   type: FETCH_USERS_STARTED
@@ -59,43 +58,11 @@ const removeTargeAction = id => ({
   payload: id
 })
 
-const runAutomapAction = (data) => ({
-  type: USE_AUTOMAP,
-  payload: data
-})
-
-const rnAuto = () => {
-  return (dispatch, getState) => {
-    const { sourceUsers, targetUsers, mapedUsers } = getState().users.data;
-
-    const newSourceUsers = sourceUsers.map(item => {
-      const itemInMap = mapedUsers.find(mapedUser => mapedUser.source === item.source.guid);
-
-      if (itemInMap) {
-        const target = targetUsers.find(targetUser => targetUser.guid === itemInMap.target);
-        return {
-          source: item.source,
-          target: {
-            ...target,
-            guid: uuid()
-          }
-        }
-      }
-
-      return item;
-    })
-
-    dispatch(runAutomapAction(newSourceUsers))
-  }
-}
-
 export const setToTarget = (...args) => checkAction(setToTargetAction)(...args);
 
 export const removeTarget = (...args) => checkAction(removeTargeAction)(...args);
 
 export const setToSource = (...args) => checkAction(setToSourceAction)(...args)
-
-export const runAutomap = (...args) => checkAction(rnAuto)(...args); 
 
 const automapUsersAction = () => ({
   type: AUTOMAP_USERS
@@ -115,14 +82,17 @@ export const fetchUsers = (id) => {
 
     MigrationService
       .get(`/${id}/users`)
-      .then(({ mapedUsers, sourceUsers, targetUsers }) => {
+      .then(({ data: { mapedUsers, sourceUsers, targetUsers } }) => {
         const data = {
           mapedUsers,
-          targetUsers,
-          sourceUsers: sourceUsers.map(item => ({
-            source: item,
-            target: null
-          }))
+          targetUsers: sortBy(targetUsers, ['fullName']),
+          sourceUsers: sortBy(
+            sourceUsers.map(item => ({
+              source: item,
+              target: null
+            })),
+            [o => o.source.fullName]
+          )
         }
         dispatch(fetchUsersSuccess(data))
       })

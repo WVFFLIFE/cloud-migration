@@ -45,7 +45,6 @@ import {
   setToSource,
   removeTarget,
   setToTarget,
-  runAutomap,
   clearAllUsers,
   automapUser
 } from './usersAction';
@@ -53,7 +52,6 @@ import {
   setToBusinessUnitsTarget,
   removeBusinessUnitsTarget,
   setToBusinessUnitsSource,
-  runBusinessUnitsAutomap,
   fetchBusinessUnits,
   automapBusinessUnits,
   clearAllBusiniessUnits
@@ -62,7 +60,6 @@ import {
   setToTeamsTarget,
   removeTeamsTarget,
   setToTeamsSource,
-  runTeamsAutomap,
   fetchTeams,
   clearAllTeams,
   automapTeams
@@ -108,16 +105,13 @@ export {
   setToTeamsTarget,
   removeTeamsTarget,
   setToTeamsSource,
-  runTeamsAutomap,
   fetchTeams,
   addNewJob,
   deleteCurrentJob,
   setToBusinessUnitsTarget,
   removeBusinessUnitsTarget,
   setToBusinessUnitsSource,
-  runBusinessUnitsAutomap,
   fetchBusinessUnits,
-  runAutomap,
   setToTarget,
   setToSource,
   fetchUsers,

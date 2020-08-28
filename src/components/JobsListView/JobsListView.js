@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   styled,
@@ -15,6 +15,7 @@ import {
 import { useOrder } from '../../hooks';
 import { jobsTableBaseConfig } from '../../config';
 import { stableSort, getComparator } from '../../helpers';
+import ConfirmationDialog from '../ConfirmationDialog';
 
 const Top = styled('div')({
   display: 'flex',
@@ -72,14 +73,32 @@ const JobsListView = ({
     order,
     orderBy,
     handleRequestSort
-  } = useOrder({ initOrder, initOrderBy })
+  } = useOrder({ initOrder, initOrderBy });
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [confirmationId, setConfirmationId] = useState(null);
 
   const handleJobClick = (event, id) => history.push(`/migrationjob/${id}`);
+
+  const handleConfirmationOpen = (e, id) => {
+    e.stopPropagation();
+    setConfirmationOpen(true);
+    setConfirmationId(id);
+  }
+
+  const handleConfirmationClose = () => {
+    setConfirmationOpen(false);
+    setConfirmationId(null);
+  }
+
+  const handleConfirmationSuccess = () => {
+    setConfirmationOpen(false);
+    handleJobDelete(confirmationId);
+  }
 
   const cellsList = jobsTableBaseConfig.cellsList.map(cellItem => ({
     ...cellItem,
     renderItem: cellItem.fieldName === 'action' ?
-      cellItem.renderItem(handleJobDelete) :
+      cellItem.renderItem(handleConfirmationOpen) :
       cellItem.renderItem
   }));
 
@@ -137,6 +156,11 @@ const JobsListView = ({
               />
             )}
         </Table>
+        <ConfirmationDialog 
+          open={confirmationOpen}
+          handleClose={handleConfirmationClose}
+          handleSuccess={handleConfirmationSuccess}
+        />
       </div>
     </Wrapper>
   )

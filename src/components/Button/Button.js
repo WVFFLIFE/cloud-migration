@@ -58,7 +58,11 @@ const useStyles = makeStyles(theme => ({
   clear: {
     background: '#fff',
     border: '1px solid #192B5D',
-    color: '#192B5D'
+    color: '#192B5D',
+    '&.Mui-disabled': {
+      color: '#fff',
+      border: '1px solid transparent',
+    }
   },
   label: {
     fontSize: 14,

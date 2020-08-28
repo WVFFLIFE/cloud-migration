@@ -78,10 +78,10 @@ const mapTeamsReducer = (state = INITIAL_STATE, action) => {
         data: {
           ...state.data,
           sourceTeams: state.data.sourceTeams.map(sourceTeam => {
-            let target = null;
+            let target = sourceTeam.target;
              const mapedSourceTeam = state.data.mapedTeams.find(mapedTeam => mapedTeam.source === sourceTeam.source.guid) || null;
 
-            if (mapedSourceTeam) {
+            if (mapedSourceTeam && !target) {
               target = state.data.targetTeams.find(targetTeam => targetTeam.guid === mapedSourceTeam.target) || null;
             }
 

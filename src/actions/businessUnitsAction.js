@@ -3,7 +3,6 @@ import {
   FETCH_BUSSINESS_UNITS_SUCCESS,
   SET_TARGET_BUSINESS_UNITS,
   REMOVE_BUSINESS_TARGET_FROM_SOURCE,
-  USE_BUSINESS_AUTOMAP,
   SET_TO_BUSINESS_TARGET,
   AUTOMAP_BUSINESSUNITS,
   SET_INIT_BUSINESSUNITS
@@ -11,7 +10,7 @@ import {
 import { setValidationSuccess, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
-import { v4 as uuid } from "uuid";
+import sortBy from 'lodash.sortby';
 
 const fetchUsersStarted = () => ({
   type: FETCH_BUSINESS_UNITS_STARTED
@@ -59,41 +58,11 @@ const removeTargeAction = id => ({
   payload: id
 })
 
-const runAutomapAction = (data) => ({
-  type: USE_BUSINESS_AUTOMAP,
-  payload: data
-})
-
 const automapBusinessUnitsAction = () => ({
   type: AUTOMAP_BUSINESSUNITS
 })
 
 export const automapBusinessUnits = (...args) => checkAction(automapBusinessUnitsAction)(...args)
-
-const runAutomap = () => {
-  return (dispatch, getState) => {
-    const { sourceBusinessUnits, targetBusinessUnits, mapedBusinessUnits } = getState().businessunits.data;
-
-    const newSourceBusinessUnits = sourceBusinessUnits.map(item => {
-      const itemInMap = mapedBusinessUnits.find(mapedUser => mapedUser.source === item.source.guid);
-
-      if (itemInMap) {
-        const target = targetBusinessUnits.find(targetUser => targetUser.guid === itemInMap.target);
-        return {
-          source: item.source,
-          target: {
-            ...target,
-            guid: uuid()
-          }
-        }
-      }
-
-      return item;
-    })
-
-    dispatch(runAutomapAction(newSourceBusinessUnits))
-  }
-}
 
 const clearBusinessUnitsAction = () => ({
   type: SET_INIT_BUSINESSUNITS
@@ -107,22 +76,23 @@ export const removeBusinessUnitsTarget = (...args) => checkAction(removeTargeAct
 
 export const setToBusinessUnitsSource = (...args) => checkAction(setToSourceAction)(...args);
 
-export const runBusinessUnitsAutomap = (...args) => checkAction(runAutomap)(...args); 
-
 export const fetchBusinessUnits = (id) => {
   return dispatch => {
     dispatch(fetchUsersStarted())
 
     MigrationService
       .get(`/${id}/business-units`)
-      .then(({ mapedBusinessUnits, sourceBusinessUnits, targetBusinessUnits }) => {
+      .then(({ data: { mapedBusinessUnits, sourceBusinessUnits, targetBusinessUnits }}) => {
         const data = {
           mapedBusinessUnits,
-          targetBusinessUnits,
-          sourceBusinessUnits: sourceBusinessUnits.map(item => ({
-            source: item,
-            target: null
-          }))
+          targetBusinessUnits: sortBy(targetBusinessUnits, ['name']),
+          sourceBusinessUnits: sortBy(
+            sourceBusinessUnits.map(item => ({
+              source: item,
+              target: null
+            })),
+            [o => o.source.name]
+          )
         }
         dispatch(fetchUsersSuccess(data))
       })

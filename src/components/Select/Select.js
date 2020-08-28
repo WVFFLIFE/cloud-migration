@@ -141,8 +141,6 @@ const Select = ({
 
   const open = Boolean(anchorEl);
 
-  console.log(value)
-
   return (
     <>
       <div className={classes.root} onClick={handleOpen} ref={ref}>

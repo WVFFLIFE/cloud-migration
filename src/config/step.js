@@ -4,7 +4,7 @@ export const stepsConfig = {
     isActive: false,
     isValid: false,
     substeps: ['sourceenvironment', 'targetenvironment'],
-    parent: true
+    parent: true,
   },
   'sourceenvironment': {
     label: 'Source environment',

@@ -25,7 +25,7 @@ export const fetchSourceEnvironmentData = (id) => {
 
     MigrationService
       .get(`/${id}/source-environment`)
-      .then(data => {
+      .then(({data}) => {
         dispatch(fetchSourceEnvironmentDataSuccess({
           Url: data.sourceEnvironmentUrl || '',
           User: data.sourceEnvironmentUser

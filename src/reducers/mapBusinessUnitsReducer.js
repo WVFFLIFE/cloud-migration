@@ -78,10 +78,10 @@ const mapBusinessUnitsReducer = (state = INITIAL_STATE, action) => {
         data: {
           ...state.data,
           sourceBusinessUnits: state.data.sourceBusinessUnits.map(sourceBusinessUnit => {
-            let target = null;
+            let target = sourceBusinessUnit.target;
              const mapedSourceBusinessUnit = state.data.mapedBusinessUnits.find(mapedBusinessUnit => mapedBusinessUnit.source === sourceBusinessUnit.source.guid) || null;
 
-            if (mapedSourceBusinessUnit) {
+            if (mapedSourceBusinessUnit && !target) {
               target = state.data.targetBusinessUnits.find(targetUser => targetUser.guid === mapedSourceBusinessUnit.target) || null;
             }
 

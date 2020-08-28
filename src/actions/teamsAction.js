@@ -4,14 +4,13 @@ import {
   SET_TARGET_TEAMS,
   REMOVE_TEAMS_TARGET_FROM_SOURCE,
   SET_TO_TEAMS_TARGET,
-  USE_TEAMS_AUTOMAP,
   CLEAR_TARGET_TEAMS,
   AUTOMAP_TEAMS
 } from '../constants'
 import { setValidationSuccess, setValidationError } from '../actions';
 import MigrationService from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
-import { v4 as uuid } from "uuid";
+import sortBy from 'lodash.sortby';
 
 const fetchUsersStarted = () => ({
   type: FETCH_TEAMS_STARTED
@@ -59,36 +58,6 @@ const removeTargeAction = id => ({
   payload: id
 })
 
-const runAutomapAction = (data) => ({
-  type: USE_TEAMS_AUTOMAP,
-  payload: data
-})
-
-const runAutomap = () => {
-  return (dispatch, getState) => {
-    const { sourceTeams, targetTeams, mapedTeams } = getState().teams.data;
-
-    const newSourceTeams = sourceTeams.map(item => {
-      const itemInMap = mapedTeams.find(mapedTeam => mapedTeam.source === item.source.guid);
-
-      if (itemInMap) {
-        const target = targetTeams.find(targetTeam => targetTeam.guid === itemInMap.target);
-        return {
-          source: item.source,
-          target: {
-            ...target,
-            guid: uuid()
-          }
-        }
-      }
-
-      return item;
-    })
-
-    dispatch(runAutomapAction(newSourceTeams));
-  }
-}
-
 const automapTeamsAction = () => ({
   type: AUTOMAP_TEAMS
 })
@@ -107,22 +76,23 @@ export const removeTeamsTarget = (...args) => checkValidity(removeTargeAction)(.
 
 export const setToTeamsSource = (...args) => checkValidity(setToSourceAction)(...args)
 
-export const runTeamsAutomap = (...args) => checkValidity(runAutomap)(...args); 
-
 export const fetchTeams = (id) => {
   return dispatch => {
     dispatch(fetchUsersStarted())
 
     MigrationService
       .get(`/${id}/teams`)
-      .then(({ mapedTeams, sourceTeams, targetTeams }) => {
+      .then(({ data: { mapedTeams, sourceTeams, targetTeams }}) => {
         const data = {
           mapedTeams,
-          targetTeams,
-          sourceTeams: sourceTeams.map(item => ({
-            source: item,
-            target: null
-          }))
+          targetTeams: sortBy(targetTeams, ['name']),
+          sourceTeams: sortBy(
+            sourceTeams.map(item => ({
+              source: item,
+              target: null
+            })),
+            [o => o.source.name]
+          )
         }
         dispatch(fetchUsersSuccess(data))
       })

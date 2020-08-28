@@ -88,7 +88,7 @@ export const fetchEntities = (id) => {
 
     MigrationService
       .get(`/${id}/entities`)
-      .then(data => {
+      .then(({data}) => {
         let entities = data.entities;
         let selectedEntities = {};
 
@@ -133,7 +133,7 @@ export const validateEntities = (id, selectedEntities) => {
 
     dispatch(setValidationStart('entities'));
 
-    const { reports, validationResult } = await MigrationService.post(`/${id}/entities/validate-entities`, body);
+    const { data: {reports, validationResult} } = await MigrationService.post(`/${id}/entities/validate-entities`, body);
     const postValidationBody = reports.map(reportItem => {
       const entity = currentEntities.find(item => item.logicalName === reportItem.logicalName);
       const selected = selectedEntities.includes(reportItem.logicalName);
@@ -147,7 +147,7 @@ export const validateEntities = (id, selectedEntities) => {
         selected
       }
     });
-    await MigrationService.postStep(`/${id}/entities`, {entities: postValidationBody});
+    await MigrationService.post(`/${id}/entities`, {entities: postValidationBody});
 
     const newEntities = modifyEntities(currentEntities, reports);
 

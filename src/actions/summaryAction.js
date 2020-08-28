@@ -100,7 +100,7 @@ export const finishMigration = (id) => {
       const scheduledDate = getScheduledDate(date, time, timezone);
 
       MigrationService
-        .postStep(`/${id}/summary`, { scheduledDate, timeZone: timezone })
+        .post(`/${id}/summary`, { scheduledDate, timeZone: timezone })
         .then(() => {
           batch(() => {
             dispatch(setStepControlStatus('success'));

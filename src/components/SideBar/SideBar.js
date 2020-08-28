@@ -259,8 +259,7 @@ function buildSubsteps(substeps, config) {
 }
 
 const SideBar = ({
-  stepsConfig,
-  currentStep
+  stepsConfig
 }) => {
   const classes = getSidebarClasses();
 

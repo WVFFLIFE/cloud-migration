@@ -14,8 +14,7 @@ const JobsList = () => {
     /* eslint-disable-next-line */
   }, []);
 
-  const handleJobDelete = (e, id) => {
-    e.stopPropagation();
+  const handleJobDelete = (id) => {
     dispatch(deleteCurrentJob(id))
   }
 

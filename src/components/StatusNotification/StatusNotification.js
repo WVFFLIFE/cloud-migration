@@ -105,12 +105,11 @@ const StatusNotification = ({
   const isSuccess = status === 'success';
   const isError = !isSuccess;
 
-  const handleClick = async () => {
+  const handleClick = () => {
     const fileName = `Reports ${format(new Date(), 'dd.MM.yyyy hh:mm:ss')}.xlsx`
-    const blob = await MigrationService
-      .download(`/${id}/download/report`);
-
-    FileSaver.saveAs(blob, fileName)
+    MigrationService
+      .get(`/${id}/download/report`, {responseType: 'blob'})
+      .then(res => FileSaver.saveAs(res.data, fileName))
   }
 
   const isErrorWrapper = ['sourcenvironment', 'targetenvironment'];
