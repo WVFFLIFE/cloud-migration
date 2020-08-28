@@ -15,39 +15,41 @@ import authentication from './b2c';
 import Webfont from 'webfontloader';
 
 if (process.env.NODE_ENV === 'production') {
-  window.console.log = () => {}
+  window.console.log = () => { }
 }
 
-Webfont.load({
-  custom: {
-    families: ['SegoeUI', 'Gilroy']
-  }
-})
+function initializeApp(App) {
+  Webfont.load({
+    custom: {
+      families: ['SegoeUI', 'Gilroy']
+    }
+  })
 
-const composeEnhancers =
-  typeof window === 'object' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    }) : compose;
+  const composeEnhancers =
+    typeof window === 'object' &&
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      }) : compose;
 
-const enhancer = composeEnhancers(
-  applyMiddleware(thunk)
-)
+  const enhancer = composeEnhancers(
+    applyMiddleware(thunk)
+  )
 
-const store = createStore(rootReducer, enhancer)
+  const store = createStore(rootReducer, enhancer);
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>,
+    document.getElementById('root')
+  );
+}
 
 authentication.run(() => {
   import('./App')
     .then(module => {
-      const App = module.default;
-
-      ReactDOM.render(
-        <Provider store={store}>
-          <Router>
-            <App />
-          </Router>
-        </Provider>,
-        document.getElementById('root')
-      );
+      initializeApp(module.default)
     })
 })
