@@ -176,6 +176,12 @@ const getSidebarClasses = makeStyles(() => ({
 }))
 
 const getSubstepClasses = makeStyles(() => ({
+  envName: {
+    display: 'block',
+    marginTop: 10,
+    fontSize: 14,
+    color: '#192B5D'
+  },
   li: {
     display: 'flex',
     marginBottom: 30
@@ -196,12 +202,6 @@ const getSubstepClasses = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column'
   },
-  envName: {
-    display: 'block',
-    marginTop: 10,
-    fontSize: 14,
-    color: '#192B5D'
-  }
 }))
 
 function Circle({
@@ -214,20 +214,21 @@ function Circle({
   const activeType = size === 'small' ? 'smallActive' : 'bigActive';
   const validType = size === 'small' ? 'smallValid' : 'bigValid';
   const checkIconSizeClass = size === 'small' ? classes.checkIconSmall : classes.checkIconBig;
+  const isValidIsNotActive = valid && !active;
 
   return (
     <span className={clsx(classes.wrapper, {
       [classes.wrapperSmall]: size === 'small',
+      [classes.wrapperSmallValid]: isValidIsNotActive,
       [classes.wrapperSmallActive]: active,
-      [classes.wrapperSmallValid]: valid
     })}>
       <span
         className={clsx(classes[size], {
           [classes[activeType]]: active,
-          [classes[validType]]: valid
+          [classes[validType]]: isValidIsNotActive
         })}
       >
-        {valid ? <CheckIcon className={clsx(classes.checkIcon, checkIconSizeClass)} /> : text}
+        {isValidIsNotActive ? <CheckIcon className={clsx(classes.checkIcon, checkIconSizeClass)} /> : text}
       </span>
     </span>
   )
@@ -238,6 +239,8 @@ function buildSubsteps(substeps, config) {
   return substeps.map(id => {
     const currentStep = config[id];
 
+    const isValidIsNotActive = currentStep.isValid && !currentStep.isActive;
+
     return (
       <li key={id} className={classes.li}>
         <Circle
@@ -247,10 +250,12 @@ function buildSubsteps(substeps, config) {
         />
         <div>
           <span className={clsx(classes.label, {
+            [classes.labelValid]: isValidIsNotActive,
             [classes.labelActive]: currentStep.isActive,
-            [classes.labelValid]: currentStep.isValid,
           })}>{currentStep.label}</span>
-          {currentStep?.data?.environmentName ? <span className={classes.envName}>{currentStep.data.environmentName}</span> : null}
+          {currentStep?.data?.environmentName ? <span className={clsx(classes.envName, {
+            [classes.labelActive]: currentStep.isActive
+          })}>{currentStep.data.environmentName}</span> : null}
         </div>
 
       </li>

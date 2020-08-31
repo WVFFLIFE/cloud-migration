@@ -15,7 +15,7 @@ import authentication from './b2c';
 import Webfont from 'webfontloader';
 
 if (process.env.NODE_ENV === 'production') {
-  window.console.log = () => { }
+  window.console.log = () => {}
 }
 
 function initializeApp(App) {
