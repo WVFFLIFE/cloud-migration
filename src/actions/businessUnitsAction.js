@@ -83,13 +83,20 @@ export const fetchBusinessUnits = (id) => {
     httpClient
       .get(`/${id}/business-units`)
       .then(({ data: { mapedBusinessUnits, sourceBusinessUnits, targetBusinessUnits }}) => {
+        let target = null;
+
+        if (mapedBusinessUnits.length === 1) {
+          const [mapedBusinessUnit] = mapedBusinessUnits;
+          target = targetBusinessUnits.find(targetBusinessUnit => targetBusinessUnit.guid === mapedBusinessUnit.target);
+        }
+
         const data = {
           mapedBusinessUnits,
           targetBusinessUnits: sortBy(targetBusinessUnits, ['name']),
           sourceBusinessUnits: sortBy(
             sourceBusinessUnits.map(item => ({
               source: item,
-              target: null
+              target
             })),
             [o => o.source.name]
           )

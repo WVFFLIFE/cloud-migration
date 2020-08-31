@@ -83,13 +83,20 @@ export const fetchTeams = (id) => {
     httpClient
       .get(`/${id}/teams`)
       .then(({ data: { mapedTeams, sourceTeams, targetTeams }}) => {
+        let target = null;
+
+        if (mapedTeams.length === 1) {
+          const [mapedTeam] = mapedTeams;
+          target = targetTeams.find(targetTeam => targetTeams.guid === mapedTeam.target);
+        }
+
         const data = {
           mapedTeams,
           targetTeams: sortBy(targetTeams, ['name']),
           sourceTeams: sortBy(
             sourceTeams.map(item => ({
               source: item,
-              target: null
+              target
             })),
             [o => o.source.name]
           )

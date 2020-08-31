@@ -83,13 +83,20 @@ export const fetchUsers = (id) => {
     httpClient
       .get(`/${id}/users`)
       .then(({ data: { mapedUsers, sourceUsers, targetUsers } }) => {
+        let target = null;
+
+        if (mapedUsers.length === 1) {
+          const [mapedUser] = mapedUsers;
+          target = targetUsers.find(targetUser => targetUser.guid === mapedUser.target);
+        }
+
         const data = {
           mapedUsers,
           targetUsers: sortBy(targetUsers, ['fullName']),
           sourceUsers: sortBy(
             sourceUsers.map(item => ({
               source: item,
-              target: null
+              target
             })),
             [o => o.source.fullName]
           )
