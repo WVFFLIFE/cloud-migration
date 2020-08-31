@@ -3,7 +3,7 @@ import {
   FETCH_TARGETENVIRONMENT_DATA_SUCCESS,
   SET_TARGETENVIRONMENT_DATA
 } from '../constants';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 
 const fetchTargetEnvironmentDataStarted = () => ({
   type: FETCH_TARGETENVIRONMENT_DATA_STARTED
@@ -23,7 +23,7 @@ export const fetchTargetEnvironmentData = (id) => {
   return dispatch => {
     dispatch(fetchTargetEnvironmentDataStarted())
 
-    MigrationService
+    httpClient
       .get(`/${id}/target-environment`)
       .then(({data}) => {
         dispatch(fetchTargetEnvironmentDataSuccess({

@@ -3,7 +3,7 @@ import {
   FETCH_SOURCEENVIRONMENT_DATA_SUCCESS,
   SET_SOURCEENVIRONMENT_DATA
 } from '../constants';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 
 const fetchSourceEnvironmentDataStarted = () => ({
   type: FETCH_SOURCEENVIRONMENT_DATA_STARTED
@@ -23,7 +23,7 @@ export const fetchSourceEnvironmentData = (id) => {
   return dispatch => {
     dispatch(fetchSourceEnvironmentDataStarted())
 
-    MigrationService
+    httpClient
       .get(`/${id}/source-environment`)
       .then(({data}) => {
         dispatch(fetchSourceEnvironmentDataSuccess({

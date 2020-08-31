@@ -4,7 +4,7 @@ import {
   SET_VALIDATION_SUCCESS,
   SET_VALIDATION_ERROR
 } from '../constants';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 import { batch } from 'react-redux';
 
 function getStepPoint(step) {
@@ -53,7 +53,7 @@ export const validateStep = (id, step, data) => {
 
     const stepPoint = getStepPoint(step);
 
-    MigrationService
+    httpClient
       .post(`/${id}/${stepPoint}`, data)
       .then(res => {
           const {message, ...rest} = res.data;
@@ -65,8 +65,10 @@ export const validateStep = (id, step, data) => {
           })
       })
       .catch(err => {
-        const {data} = err.response;
-        dispatch(setValidationError(step, data.message))
+        if (err.response.status !== 404) {
+          const {data} = err.response;
+          dispatch(setValidationError(step, data.message))
+        }
       })
   }
 }

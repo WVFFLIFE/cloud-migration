@@ -10,6 +10,7 @@ import clsx from 'clsx';
 const useStylesItem = makeStyles({
   root: {
     display: 'flex',
+    flexWrap: 'wrap',
     alignItems: 'center',
     maxWidth: 552,
     width: '47%',
@@ -21,13 +22,16 @@ const useStylesItem = makeStyles({
     borderColor: '#C4001A'
   },
   fullName: {
-    marginRight: '15%',
     fontSize: 14,
     lineHeight: '21px',
     color: '#192B5D'
   },
+  userFullName: {
+    width: '50%',
+  },
   login: {
     display: 'block',
+    width: '50%',
     fontSize: 14,
     lineHeight: '21px',
     color: '#A1ADCE',
@@ -130,7 +134,7 @@ const Item = ({
   const renderBody = () => {
     return type === 'users' ? (
       <>
-        <span className={classes.fullName}>{data.fullName}</span>
+        <span className={clsx(classes.fullName, classes.userFullName)}>{data.fullName}</span>
         <span className={classes.login} title={data.login}>{data.login}</span>
       </>
     ) : type === 'businessunits' ? (

@@ -8,7 +8,7 @@ import {
   AUTOMAP_TEAMS
 } from '../constants'
 import { setValidationSuccess, setValidationError } from '../actions';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import sortBy from 'lodash.sortby';
 
@@ -80,7 +80,7 @@ export const fetchTeams = (id) => {
   return dispatch => {
     dispatch(fetchUsersStarted())
 
-    MigrationService
+    httpClient
       .get(`/${id}/teams`)
       .then(({ data: { mapedTeams, sourceTeams, targetTeams }}) => {
         const data = {

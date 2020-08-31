@@ -6,7 +6,7 @@ import {
   CheckCircleOutlineOutlined as CheckIcon
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import MigrationService from '../../services/migration.services';
+import {httpClient} from '../../services/migration.services';
 import FileSaver from 'file-saver';
 import format from 'date-fns/format';
 import xlsxIcon from '../../assets/images/xlsx.png';
@@ -107,7 +107,7 @@ const StatusNotification = ({
 
   const handleClick = () => {
     const fileName = `Reports ${format(new Date(), 'dd.MM.yyyy hh:mm:ss')}.xlsx`
-    MigrationService
+    httpClient
       .get(`/${id}/download/report`, {responseType: 'blob'})
       .then(res => FileSaver.saveAs(res.data, fileName))
   }

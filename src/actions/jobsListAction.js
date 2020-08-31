@@ -6,7 +6,7 @@ import {
   ADD_JOB_STARTED,
   ADD_JOB_SUCCESS
 } from '../constants';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 
 const fetchJobsStarted = () => ({
   type: FETCH_JOBS_STARTED
@@ -38,7 +38,7 @@ export const addNewJob = (pushTo) => {
   return dispatch => {
     dispatch(addJobStarted());
 
-    MigrationService
+    httpClient
       .post()
       .then(res => {
         const {jobId} = res.data;
@@ -52,7 +52,7 @@ export const deleteCurrentJob = (id) => {
   return (dispatch, getState) => {
     dispatch(deleteJobStarted());
 
-    MigrationService
+    httpClient
       .delete(`/${id}`)
       .then(() => {
         const newList = getState().jobsValue.data.filter(item => item.id !== id);
@@ -67,7 +67,7 @@ export const fetchJobsList = (loading) => {
       dispatch(fetchJobsStarted());
     }
 
-    MigrationService
+    httpClient
       .get()
       .then(({ data }) => {
         let modifiedData = data.map(item => {

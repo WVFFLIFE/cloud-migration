@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  makeStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -8,10 +7,6 @@ import {
   DialogContentText,
   Button
 } from '@material-ui/core';
-
-const useStyles = makeStyles({
-
-})
 
 const ConfirmationDialog = ({
   open,

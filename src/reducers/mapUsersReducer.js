@@ -82,7 +82,7 @@ const mapUsersReducer = (state = INITIAL_STATE, action) => {
             let target = sourceUser.target;
             const mapedSourceUser = state.data.mapedUsers.find(mapedUser => mapedUser.source === sourceUser.source.guid) || null;
 
-            if (mapedSourceUser && !target) {
+            if (mapedSourceUser) {
               target = state.data.targetUsers.find(targetUser => targetUser.guid === mapedSourceUser.target) || null;
             }
 

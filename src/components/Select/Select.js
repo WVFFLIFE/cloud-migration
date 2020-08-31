@@ -19,20 +19,37 @@ const useStylesItem = makeStyles({
     border: '1px solid #A1ADCE',
     borderRadius: 6,
     cursor: 'pointer',
+    '&:hover': {
+      borderColor: '#192B5D'
+    }
   },
   errorRoot: {
     borderColor: '#C4001A'
   },
+  textWrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    flex: 1
+  },
   fullName: {
-    marginRight: '15%',
+    display: 'block',
     fontSize: 14,
     lineHeight: '21px',
     color: '#192B5D'
   },
+  userFullName: {
+    width: '50%'
+  },
   login: {
+    display: 'block',
+    width: '50%',
     fontSize: 14,
     lineHeight: '21px',
-    color: '#A1ADCE'
+    color: '#A1ADCE',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
   expandIconWrapper: {
     position: 'absolute',
@@ -125,18 +142,24 @@ const Select = ({
   }
 
   const renderBody = () => {
-    return type === 'users'
-      ? (
-        <>
-          <span className={classes.fullName}>{value?.fullName}</span>
-          <span className={classes.login}>{value?.login}</span>
-        </>
-      )
-      : type === 'businessunits'
-        ? <span className={classes.fullName}>{value?.name}</span>
-        : type === 'teams'
-          ? <span className={classes.fullName}>{value?.name}</span>
+    return (
+      <div className={classes.textWrapper}>
+        {
+          type === 'users'
+            ? (
+              <>
+                <span className={clsx(classes.fullName, classes.userFullName)}>{value?.fullName}</span>
+                <span className={classes.login} title={value?.login}>{value?.login}</span>
+              </>
+            )
+          : type === 'businessunits'
+            ? <span className={classes.fullName}>{value?.name}</span>
+          : type === 'teams'
+            ? <span className={classes.fullName}>{value?.name}</span>
           : null
+        }
+      </div>
+    )
   }
 
   const open = Boolean(anchorEl);
@@ -146,11 +169,11 @@ const Select = ({
       <div className={classes.root} onClick={handleOpen} ref={ref}>
         {renderBody()}
         {value ? (
-          <div 
-            className={classes.closeIconWrapper} 
+          <div
+            className={classes.closeIconWrapper}
             onClick={handleInitValue}
           >
-            <CloseIcon className={classes.closeIcon}/>
+            <CloseIcon className={classes.closeIcon} />
           </div>
         ) : null}
         <div className={clsx(classes.expandIconWrapper, {

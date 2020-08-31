@@ -12,7 +12,7 @@ import {
   setValidationError,
 } from '../actions'
 import { batch } from 'react-redux';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 import { zipListToObj } from '../helpers';
 
 function modifyEntities(prevList, validationList) {
@@ -86,7 +86,7 @@ export const fetchEntities = (id) => {
   return dispatch => {
     dispatch(fetchEntitiesStarted());
 
-    MigrationService
+    httpClient
       .get(`/${id}/entities`)
       .then(({data}) => {
         let entities = data.entities;
@@ -133,7 +133,7 @@ export const validateEntities = (id, selectedEntities) => {
 
     dispatch(setValidationStart('entities'));
 
-    const { data: {reports, validationResult} } = await MigrationService.post(`/${id}/entities/validate-entities`, body);
+    const { data: {reports, validationResult} } = await httpClient.post(`/${id}/entities/validate-entities`, body);
     const postValidationBody = reports.map(reportItem => {
       const entity = currentEntities.find(item => item.logicalName === reportItem.logicalName);
       const selected = selectedEntities.includes(reportItem.logicalName);
@@ -147,7 +147,7 @@ export const validateEntities = (id, selectedEntities) => {
         selected
       }
     });
-    await MigrationService.post(`/${id}/entities`, {entities: postValidationBody});
+    await httpClient.post(`/${id}/entities`, {entities: postValidationBody});
 
     const newEntities = modifyEntities(currentEntities, reports);
 

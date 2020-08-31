@@ -49,7 +49,5 @@ function initializeApp(App) {
 
 authentication.run(() => {
   import('./App')
-    .then(module => {
-      initializeApp(module.default)
-    })
+    .then(module => initializeApp(module.default))
 })

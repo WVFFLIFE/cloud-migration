@@ -1,10 +1,12 @@
-import React from 'react';
-import { Switch, Route, Redirect, NavLink } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import { Switch, Route, Redirect, NavLink, useHistory } from 'react-router-dom';
 import { styled, Button, makeStyles } from '@material-ui/core';
 import { JobsList, Stepper } from './containers';
 import Header from './components/Header';
+import ErrorPage from './components/ErrorPage';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import authentication from './b2c';
+import {initializeHttpClientSettings} from './services/migration.services';
 
 const TopBar = styled('div')({
   display: 'flex',
@@ -72,6 +74,13 @@ const useStyles = makeStyles({
 
 const App = () => {
   const classes = useStyles();
+  const history = useHistory();
+
+  useEffect(() => {
+    initializeHttpClientSettings(history);
+
+    /* eslint-disable-next-line */
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -101,6 +110,7 @@ const App = () => {
         </Route>
         <Route exact path="/migrationjob" component={JobsList} />
         <Route exact path="/migrationjob/:id" component={Stepper} />
+        <Route exact path="/404" component={ErrorPage} />
         <Redirect to="/migrationjob" />
       </Switch>
     </div>

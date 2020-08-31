@@ -74,25 +74,22 @@ const JobsListView = ({
     orderBy,
     handleRequestSort
   } = useOrder({ initOrder, initOrderBy });
-  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [confirmationId, setConfirmationId] = useState(null);
 
   const handleJobClick = (event, id) => history.push(`/migrationjob/${id}`);
 
   const handleConfirmationOpen = (e, id) => {
     e.stopPropagation();
-    setConfirmationOpen(true);
     setConfirmationId(id);
   }
 
   const handleConfirmationClose = () => {
-    setConfirmationOpen(false);
     setConfirmationId(null);
   }
 
   const handleConfirmationSuccess = () => {
-    setConfirmationOpen(false);
     handleJobDelete(confirmationId);
+    handleConfirmationClose();
   }
 
   const cellsList = jobsTableBaseConfig.cellsList.map(cellItem => ({
@@ -157,7 +154,7 @@ const JobsListView = ({
             )}
         </Table>
         <ConfirmationDialog 
-          open={confirmationOpen}
+          open={!!confirmationId}
           handleClose={handleConfirmationClose}
           handleSuccess={handleConfirmationSuccess}
         />

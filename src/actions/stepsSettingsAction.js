@@ -11,7 +11,7 @@ import {
   setValidationSuccess,
   setValidationInit,
 } from '../actions'
-import MigrationService from '../services/migration.services'
+import {httpClient} from '../services/migration.services'
 
 export const initializeStep = () => ({
   type: INIT_STEP_SETTINGS
@@ -52,7 +52,7 @@ export const setNextMapBusinessUnitsStep = (id) => {
 
     dispatch(setStepControlStatus('loading'));
 
-    MigrationService
+    httpClient
       .post(`/${id}/users`, { users })
       .then(() => {
         batch(() => {
@@ -74,7 +74,7 @@ export const setNextMapTeamsStep = (id) => {
 
     dispatch(setStepControlStatus('loading'));
 
-    MigrationService
+    httpClient
       .post(`/${id}/business-units`, { mapedBusinessUnits })
       .then(() => {
         batch(() => {
@@ -96,7 +96,7 @@ export const setNextScheduleStep = (id) => {
 
     dispatch(setStepControlStatus('loading'));
 
-    MigrationService
+    httpClient
       .post(`/${id}/teams`, { mapedTeams })
       .then(() => {
         batch(() => {
@@ -187,7 +187,7 @@ export const initStepSettings = (id, errCallback) => {
   return dispatch => {
     dispatch(settingsInitStarted());
 
-    MigrationService
+    httpClient
       .get(`/${id}`)
       .then(res => {
         const {status} = res.data;

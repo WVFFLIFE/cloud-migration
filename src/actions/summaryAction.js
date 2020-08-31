@@ -12,7 +12,7 @@ import {
   setValidationSuccess,
   setStepControlStatus
 } from '../actions';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 import { getScheduledDate } from '../helpers';
 import { parseFromTimeZone } from 'date-fns-timezone';
 
@@ -67,7 +67,7 @@ export const fetchSummaryData = (id) => {
   return dispatch => {
     dispatch(fetchSummaryStarted());
 
-    MigrationService
+    httpClient
       .get(`/${id}/summary`)
       .then(({ scheduledDate, timeZone }) => {
         const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, { timeZone })) : new Date();
@@ -99,7 +99,7 @@ export const finishMigration = (id) => {
 
       const scheduledDate = getScheduledDate(date, time, timezone);
 
-      MigrationService
+      httpClient
         .post(`/${id}/summary`, { scheduledDate, timeZone: timezone })
         .then(() => {
           batch(() => {

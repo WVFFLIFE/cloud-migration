@@ -4,5 +4,5 @@ import { jobsTableBaseConfig, entitiesTableConfig } from './table';
 export {
   jobsTableBaseConfig,
   stepsConfig,
-  entitiesTableConfig
+  entitiesTableConfig,
 }

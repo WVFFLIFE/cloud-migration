@@ -8,7 +8,7 @@ import {
   SET_INIT_BUSINESSUNITS
 } from '../constants'
 import { setValidationSuccess, setValidationError } from '../actions';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import sortBy from 'lodash.sortby';
 
@@ -80,7 +80,7 @@ export const fetchBusinessUnits = (id) => {
   return dispatch => {
     dispatch(fetchUsersStarted())
 
-    MigrationService
+    httpClient
       .get(`/${id}/business-units`)
       .then(({ data: { mapedBusinessUnits, sourceBusinessUnits, targetBusinessUnits }}) => {
         const data = {

@@ -8,7 +8,7 @@ import {
   AUTOMAP_USERS
 } from '../constants'
 import { setValidationSuccess, setValidationError } from '../actions';
-import MigrationService from '../services/migration.services';
+import {httpClient} from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import sortBy from 'lodash.sortby';
 
@@ -80,7 +80,7 @@ export const fetchUsers = (id) => {
   return dispatch => {
     dispatch(fetchUsersStarted())
 
-    MigrationService
+    httpClient
       .get(`/${id}/users`)
       .then(({ data: { mapedUsers, sourceUsers, targetUsers } }) => {
         const data = {

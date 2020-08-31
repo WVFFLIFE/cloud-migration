@@ -24,13 +24,17 @@ const useStyles = makeStyles(theme => ({
     color: '#fff'
   },
   next: {
-    background: '#fff',
+    background: '#F26026',
     border: '1px solid #F26026',
-    color: '#F26026',
+    color: '#fff',
     '&.Mui-disabled': {
       color: '#fff',
       border: '1px solid transparent',
-    }
+    },
+    '&:hover': {
+      background: 'rgba(242, 96, 38, .7)',
+      borderColor: 'rgba(242, 96, 38, .7)'
+    },
   },
   finish: {
     background: '#F26026',
