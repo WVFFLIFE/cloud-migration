@@ -14,7 +14,7 @@ export const httpClient = axios.create({
 });
 
 const resolve = res => res;
-const reject = (err, history) => {
+const reject = history => err => {
   const {status} = err.response;
   if (status === 401) {
     authentication.signOut();
@@ -28,5 +28,5 @@ const reject = (err, history) => {
 }
 
 export function initializeHttpClientSettings(history) {
-  httpClient.interceptors.response.use(resolve, err => reject(err, history))
+  httpClient.interceptors.response.use(resolve, reject(history))
 }
