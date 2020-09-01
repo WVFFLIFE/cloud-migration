@@ -63,8 +63,8 @@ const getCircleClasses = makeStyles(() => ({
       position: 'absolute',
       top: '50%',
       left: '50%',
-      width: 9,
-      height: 9,
+      width: 8,
+      height: 8,
       background: '#E05D2A',
       borderRadius: '50%',
       transform: 'translate(-50%, -50%)'
