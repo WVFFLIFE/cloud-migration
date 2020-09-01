@@ -23,8 +23,8 @@ const MapTeamsStep = () => {
     /* eslint-disable-next-line */
   }, []);
 
-  const handleSetToSource = useCallback((sourceIndex, target) => {
-    dispatch(setToTeamsSource(sourceIndex, target));
+  const handleSetToSource = useCallback((id, target) => {
+    dispatch(setToTeamsSource(id, target));
     /* eslint-disable-next-line */
   }, []);
 

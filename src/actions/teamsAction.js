@@ -7,16 +7,17 @@ import {
   CLEAR_TARGET_TEAMS,
   AUTOMAP_TEAMS
 } from '../constants'
+import { batch } from 'react-redux';
 import { setValidationSuccess, setValidationError } from '../actions';
 import {httpClient} from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import sortBy from 'lodash.sortby';
 
-const fetchUsersStarted = () => ({
+const fetchTeamsStarted = () => ({
   type: FETCH_TEAMS_STARTED
 })
 
-const fetchUsersSuccess = (data) => ({
+const fetchTeamsSuccess = (data) => ({
   type: FETCH_TEAMS_SUCCESS,
   payload: data
 })
@@ -78,7 +79,7 @@ export const setToTeamsSource = (...args) => checkValidity(setToSourceAction)(..
 
 export const fetchTeams = (id) => {
   return dispatch => {
-    dispatch(fetchUsersStarted())
+    dispatch(fetchTeamsStarted())
 
     httpClient
       .get(`/${id}/teams`)
@@ -87,7 +88,7 @@ export const fetchTeams = (id) => {
 
         if (mapedTeams.length === 1) {
           const [mapedTeam] = mapedTeams;
-          target = targetTeams.find(targetTeam => targetTeams.guid === mapedTeam.target);
+          target = targetTeams.find(targetTeam => targetTeam.guid === mapedTeam.target);
         }
 
         const data = {
@@ -101,7 +102,17 @@ export const fetchTeams = (id) => {
             [o => o.source.name]
           )
         }
-        dispatch(fetchUsersSuccess(data))
+
+        batch(() => {
+          if (isSourceMaped(data.sourceTeams)) {
+            dispatch(setValidationSuccess('mapteams'))
+          } else {
+            const incompatibilityLength = data.sourceTeams.reduce((acc, next) => next.target ? acc : acc + 1, 0);
+            dispatch(setValidationError('mapteams', `Detected ${incompatibilityLength} issues with mapping teams.`))
+          }
+
+          dispatch(fetchTeamsSuccess(data))
+        })
       })
   }
 }

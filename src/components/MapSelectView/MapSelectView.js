@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ReportIcon from '@material-ui/icons/ReportProblemOutlined';
 import Loader from '../Loader';
-import Select from '../Select';
 import Button from '../Button';
+import Autocomplete from '../Autocomplete';
 import clsx from 'clsx';
 
 const useStylesItem = makeStyles({
@@ -121,7 +121,7 @@ const useStylesRoot = makeStyles({
   },
   loadingCenter: {
     textAlign: 'center'
-  }
+  },
 })
 
 const Item = ({
@@ -168,7 +168,6 @@ const MapSelectView = ({
   stepControlStatus
 }) => {
   const classes = useStylesRoot();
-
   const { status } = validationData;
 
   const isClearButtonDisabled = sourceList.every(item => !item.target);
@@ -197,7 +196,7 @@ const MapSelectView = ({
               {
                 sourceList
                   .map(sourceItem => {
-                  const withError = !!!sourceItem.target;
+                  const withError = !Boolean(sourceItem.target);
                   return (
                     <div className={classes.itemWrapper} key={sourceItem.source.guid}>
                       <Item
@@ -209,13 +208,13 @@ const MapSelectView = ({
                         {withError ? <ReportIcon className={clsx(classes.icon, classes.iconError)} /> : <ArrowForwardIcon className={classes.icon} />}
                       </div>
                       <div className={classes.targetWrapper}>
-                        <Select
+                        <Autocomplete
+                          id={sourceItem.source.guid}
+                          field={type === 'users' ? 'fullName' : 'name'}
                           value={sourceItem.target}
                           options={targetList}
-                          id={sourceItem.source.guid}
                           handleChange={handleSetToSource}
-                          getOptionLabel={getOptionLabel}
-                          type={type}
+                          getOptionLabel={getOptionLabel} 
                         />
                       </div>
                     </div>

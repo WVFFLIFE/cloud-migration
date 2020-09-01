@@ -23,8 +23,8 @@ const MapBusinessUnitsStep = () => {
     /* eslint-disable-next-line */
   }, []);
 
-  const handleSetToSource = useCallback((sourceIndex, target) => {
-    dispatch(setToBusinessUnitsSource(sourceIndex, target));
+  const handleSetToSource = useCallback((id, target) => {
+    dispatch(setToBusinessUnitsSource(id, target));
     /* eslint-disable-next-line */
   }, []);
 

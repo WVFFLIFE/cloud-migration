@@ -10,13 +10,14 @@ import {
 import { setValidationSuccess, setValidationError } from '../actions';
 import {httpClient} from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
+import {batch} from 'react-redux';
 import sortBy from 'lodash.sortby';
 
-const fetchUsersStarted = () => ({
+const fetchBusinessUnitsStarted = () => ({
   type: FETCH_BUSINESS_UNITS_STARTED
 })
 
-const fetchUsersSuccess = (data) => ({
+const fetchBusinessUnitsSuccess = (data) => ({
   type: FETCH_BUSSINESS_UNITS_SUCCESS,
   payload: data
 })
@@ -78,7 +79,7 @@ export const setToBusinessUnitsSource = (...args) => checkAction(setToSourceActi
 
 export const fetchBusinessUnits = (id) => {
   return dispatch => {
-    dispatch(fetchUsersStarted())
+    dispatch(fetchBusinessUnitsStarted())
 
     httpClient
       .get(`/${id}/business-units`)
@@ -101,7 +102,17 @@ export const fetchBusinessUnits = (id) => {
             [o => o.source.name]
           )
         }
-        dispatch(fetchUsersSuccess(data))
+
+        batch(() => {
+          if (isSourceMaped(data.sourceBusinessUnits)) {
+            dispatch(setValidationSuccess('mapbusinessunits'))
+          } else {
+            const incompatibilityLength = data.sourceBusinessUnits.reduce((acc, next) => next.target ? acc : acc + 1, 0);
+            dispatch(setValidationError('mapbusinessunits', `Detected ${incompatibilityLength} issues with mapping business units.`))
+          }
+        })
+
+        dispatch(fetchBusinessUnitsSuccess(data))
       })
   }
 }

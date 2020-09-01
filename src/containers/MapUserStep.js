@@ -23,8 +23,8 @@ const MapUserStep = () => {
     /* eslint-disable-next-line */
   }, []);
 
-  const handleSetToSource = useCallback((sourceIndex, target) => {
-    dispatch(setToSource(sourceIndex, target))
+  const handleSetToSource = useCallback((id, target) => {
+    dispatch(setToSource(id, target))
     /* eslint-disable-next-line */
   }, [])
 

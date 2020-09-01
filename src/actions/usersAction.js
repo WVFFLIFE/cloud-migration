@@ -8,9 +8,10 @@ import {
   AUTOMAP_USERS
 } from '../constants'
 import { setValidationSuccess, setValidationError } from '../actions';
-import {httpClient} from '../services/migration.services';
+import { httpClient } from '../services/migration.services';
 import { isSourceMaped } from '../helpers';
 import sortBy from 'lodash.sortby';
+import { batch } from 'react-redux';
 
 const fetchUsersStarted = () => ({
   type: FETCH_USERS_STARTED
@@ -101,7 +102,17 @@ export const fetchUsers = (id) => {
             [o => o.source.fullName]
           )
         }
-        dispatch(fetchUsersSuccess(data))
+
+        batch(() => {
+          if (isSourceMaped(data.sourceUsers)) {
+            dispatch(setValidationSuccess('mapusers'));
+          } else {
+            const incompatibilityLength = data.sourceUsers.reduce((acc, next) => next.target ? acc : acc + 1, 0);
+            dispatch(setValidationError('mapusers', `Detected ${incompatibilityLength} issues with mapping users.`))
+          }
+
+          dispatch(fetchUsersSuccess(data));
+        })
       })
   }
 }
