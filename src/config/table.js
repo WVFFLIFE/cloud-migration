@@ -110,12 +110,6 @@ const EntityTableCell = styled(TableCell)({
   padding: 15
 });
 
-const JobsListTableCell = styled(TableCell)({
-  padding: '19px 24px',
-  fontSize: 0,
-  borderBottom: '1px solid #EAE9ED'
-})
-
 const ValidateTableCell = styled(TableCell)({
   width: 144,
   padding: '19px 24px'
@@ -163,9 +157,7 @@ export const jobsTableBaseConfig = {
       fieldName: 'name',
       label: 'Organization',
       renderItem: (data) => (
-        <JobsListTableCell>
-          <CustomText>{data}</CustomText>
-        </JobsListTableCell>
+        <CustomText>{data}</CustomText>
       ),
       activeSort: true
     },
@@ -173,9 +165,7 @@ export const jobsTableBaseConfig = {
       fieldName: 'datasize',
       label: 'Data size',
       renderItem: (data) => (
-        <JobsListTableCell>
-          <CustomText>{`${data} Mb`}</CustomText>
-        </JobsListTableCell>
+        <CustomText>{`${data} Mb`}</CustomText>
       ),
       activeSort: true
     },
@@ -183,9 +173,7 @@ export const jobsTableBaseConfig = {
       fieldName: 'estimatedDuration',
       label: 'Duration',
       renderItem: (data) => (
-        <JobsListTableCell>
-          <CustomText>{data}</CustomText>
-        </JobsListTableCell>
+        <CustomText>{data}</CustomText>
       ),
       activeSort: true
     },
@@ -193,11 +181,9 @@ export const jobsTableBaseConfig = {
       fieldName: 'scheduledDate',
       label: 'Scheduled Date',
       renderItem: (data) => (
-        <JobsListTableCell>
-          <CustomText>
-            {data ? format(new Date(data), 'dd/MM/yyyy') : null}
-          </CustomText>
-        </JobsListTableCell>
+        <CustomText>
+          {data ? format(new Date(data), 'dd/MM/yyyy') : null}
+        </CustomText>
 
       ),
       activeSort: true
@@ -207,14 +193,14 @@ export const jobsTableBaseConfig = {
       label: 'Status',
       renderItem: (data) => {
         return (
-          <JobsListTableCell>
+          <>
             {data === 'Draft' ? <DraftStatus>{data}</DraftStatus> :
               data === 'Scheduled' ? <ScheduledStatus>{data}</ScheduledStatus> :
                 data === 'Started' ? <StartedStatus>{data}</StartedStatus> :
                   data === 'Involvement needed' ? <InvolvementNedeedStatus>{data}</InvolvementNedeedStatus> :
                     data === 'Completed' ? <CompletedStatus>{data}</CompletedStatus> :
                       <CustomText>{data}</CustomText>}
-          </JobsListTableCell>
+          </>
         )
       },
       activeSort: true
@@ -224,9 +210,7 @@ export const jobsTableBaseConfig = {
       label: 'Notifications',
       renderItem: (data) => {
         return (
-          <JobsListTableCell>
-            <Paragraph>{data}</Paragraph>
-          </JobsListTableCell>
+          <Paragraph>{data}</Paragraph>
         )
       },
       activeSort: true
@@ -235,15 +219,13 @@ export const jobsTableBaseConfig = {
       fieldName: 'action',
       label: 'Action',
       renderItem: (handleAction) => (data = null) => (
-        <JobsListTableCell>
-          <Action
-            type="button"
-            onClick={(e) => handleAction(e, data)}
-          >
-            <StyledCloseIcon />
-            <ButtonText>Cancel</ButtonText>
-          </Action>
-        </JobsListTableCell>
+        <Action
+          type="button"
+          onClick={(e) => handleAction(e, data)}
+        >
+          <StyledCloseIcon />
+          <ButtonText>Cancel</ButtonText>
+        </Action>
 
       ),
       activeSort: false
@@ -326,7 +308,7 @@ export const entitiesTableConfig = {
               ? errorBlock :
               emptyCell;
       },
-      
+
     }
   ]
 }

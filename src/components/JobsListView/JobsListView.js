@@ -76,10 +76,9 @@ const JobsListView = ({
   } = useOrder({ initOrder, initOrderBy });
   const [confirmationId, setConfirmationId] = useState(null);
 
-  const handleJobClick = (event, id) => history.push(`/migrationjob/${id}`);
-
   const handleConfirmationOpen = (e, id) => {
     e.stopPropagation();
+    e.preventDefault();
     setConfirmationId(id);
   }
 
@@ -106,7 +105,6 @@ const JobsListView = ({
           key={item.id}
           data={item}
           cellsList={cellsList}
-          handleRowClick={handleJobClick}
         />
       )
     })
