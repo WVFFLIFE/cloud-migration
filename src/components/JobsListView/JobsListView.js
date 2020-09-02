@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   styled,
   Button,
@@ -67,7 +66,6 @@ const JobsListView = ({
   handleAddJob
 }) => {
   const classes = useStyles();
-  const history = useHistory();
   const { initOrder, initOrderBy } = jobsTableBaseConfig;
   const {
     order,

@@ -86,7 +86,7 @@ export const fetchUsers = (id) => {
       .then(({ data: { mapedUsers, sourceUsers, targetUsers } }) => {
         let target = null;
 
-        if (mapedUsers.length === 1) {
+        if (targetUsers.length === 1) {
           const [mapedUser] = mapedUsers;
           target = targetUsers.find(targetUser => targetUser.guid === mapedUser.target);
         }

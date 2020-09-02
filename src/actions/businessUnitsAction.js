@@ -86,7 +86,7 @@ export const fetchBusinessUnits = (id) => {
       .then(({ data: { mapedBusinessUnits, sourceBusinessUnits, targetBusinessUnits }}) => {
         let target = null;
 
-        if (mapedBusinessUnits.length === 1) {
+        if (targetBusinessUnits.length === 1) {
           const [mapedBusinessUnit] = mapedBusinessUnits;
           target = targetBusinessUnits.find(targetBusinessUnit => targetBusinessUnit.guid === mapedBusinessUnit.target);
         }

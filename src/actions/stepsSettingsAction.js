@@ -11,7 +11,7 @@ import {
   setValidationSuccess,
   setValidationInit,
 } from '../actions'
-import {httpClient} from '../services/migration.services'
+import {httpClient} from '../services/migration.services';
 
 export const initializeStep = () => ({
   type: INIT_STEP_SETTINGS

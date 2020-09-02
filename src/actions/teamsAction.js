@@ -86,7 +86,7 @@ export const fetchTeams = (id) => {
       .then(({ data: { mapedTeams, sourceTeams, targetTeams }}) => {
         let target = null;
 
-        if (mapedTeams.length === 1) {
+        if (targetTeams.length === 1) {
           const [mapedTeam] = mapedTeams;
           target = targetTeams.find(targetTeam => targetTeam.guid === mapedTeam.target);
         }

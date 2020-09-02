@@ -71,7 +71,7 @@ export const fetchSummaryData = (id) => {
       .get(`/${id}/summary`)
       .then(({ scheduledDate, timeZone }) => {
         const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, { timeZone })) : new Date();
-        const time = scheduledDate ? { h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes() } : { h: 9, m: 0 }
+        const time = scheduledDate ? { h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes() } : null
         dispatch(
           fetchSummarySuccess({
             date: scheduledDate ? parsedDate : new Date(),

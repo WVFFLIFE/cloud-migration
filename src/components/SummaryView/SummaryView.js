@@ -73,6 +73,8 @@ const SummaryView = ({
   const dateView = format(new Date(date), 'EEEE, MMMM dd');
   const getOptionLabel = useCallback(option => option, []);
 
+  console.log(date, time);
+
   return (
     <div className={clsx({
       [classes.rootLoading]: loading.get
