@@ -3,7 +3,7 @@ import {
   SET_CURRENT_TIME,
   SET_TIMEZONE,
   FINISH_MIGRATION_START,
-  FINISH_MIGRATION_SUCCESS,
+  FINISH_MIGRATION_OVER,
   FETCH_SUMMARY_STARTED,
   FETCH_SUMMARY_SUCCESS
 } from '../constants'
@@ -38,7 +38,7 @@ export default function (state = INITIAL_STATE, action) {
         ...state,
         postLoading: true
       }
-    case FINISH_MIGRATION_SUCCESS:
+    case FINISH_MIGRATION_OVER:
       return {
         ...state,
         postLoading: false

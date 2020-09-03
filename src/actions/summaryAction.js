@@ -4,13 +4,14 @@ import {
   SET_CURRENT_TIME,
   SET_TIMEZONE,
   FINISH_MIGRATION_START,
-  FINISH_MIGRATION_SUCCESS,
+  FINISH_MIGRATION_OVER,
   FETCH_SUMMARY_STARTED,
   FETCH_SUMMARY_SUCCESS
 } from '../constants';
 import {
   setValidationSuccess,
-  setStepControlStatus
+  setStepControlStatus,
+  setValidationError
 } from '../actions';
 import {httpClient} from '../services/migration.services';
 import { getScheduledDate } from '../helpers';
@@ -50,8 +51,8 @@ const finishMigrationStart = () => ({
   type: FINISH_MIGRATION_START
 })
 
-const finishMigrationSuccess = () => ({
-  type: FINISH_MIGRATION_SUCCESS
+const finishMigrationOver = () => ({
+  type: FINISH_MIGRATION_OVER
 })
 
 const fetchSummaryStarted = () => ({
@@ -69,7 +70,8 @@ export const fetchSummaryData = (id) => {
 
     httpClient
       .get(`/${id}/summary`)
-      .then(({ scheduledDate, timeZone }) => {
+      .then(({data: { scheduledDate, timeZone }}) => {
+
         const parsedDate = scheduledDate && timeZone ? new Date(parseFromTimeZone(scheduledDate, { timeZone })) : new Date();
         const time = scheduledDate ? { h: new Date(parsedDate).getHours(), m: new Date(parsedDate).getMinutes() } : null
         dispatch(
@@ -104,12 +106,17 @@ export const finishMigration = (id) => {
         .then(() => {
           batch(() => {
             dispatch(setStepControlStatus('success'));
-            dispatch(finishMigrationSuccess());
+            dispatch(finishMigrationOver());
             dispatch(setValidationSuccess('summary'))
           })
         })
-        .catch(() => {
-          dispatch(setStepControlStatus('error'));
+        .catch(err => {
+          if (err.response.status !== 404) {
+            batch(() => {
+              dispatch(setValidationError('summary', err.response.data.message))
+              dispatch(finishMigrationOver());
+            })
+          }
         })
     }
   }
