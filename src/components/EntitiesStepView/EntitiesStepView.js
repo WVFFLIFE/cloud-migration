@@ -78,7 +78,8 @@ const EntityStepView = ({
   handleChangeSelectedEntities,
   selectedEntities,
   forwardToNextStep,
-  backToPrevStep
+  backToPrevStep,
+  canValidate
 }) => {
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
@@ -208,7 +209,7 @@ const EntityStepView = ({
         <div>
           <Button
             type="submit"
-            disabled={loading || status === 'loading' || !selectedCount}
+            disabled={loading || status === 'loading' || !canValidate}
             onClick={() => handleValidate(selectedEntities)}
           >
             Validate

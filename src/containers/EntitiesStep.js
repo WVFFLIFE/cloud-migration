@@ -67,6 +67,8 @@ const EntitiesStep = () => {
   }
 
   const filteredData = data.filter(item => item.category === currentTab);
+  const isSelectedSmth = Object.keys(selectedEntities)
+    .some(key => selectedEntities[key].length > 0);
 
   return (
     <>
@@ -81,6 +83,7 @@ const EntitiesStep = () => {
         data={filteredData}
         currentTab={currentTab}
         selectedEntities={selectedEntities[currentTab]}
+        canValidate={isSelectedSmth}
         handleValidate={handleValidate}
         validationData={validationData}
         setInitialStepValidation={setInitialStepValidation}
