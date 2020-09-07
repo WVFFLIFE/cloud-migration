@@ -93,6 +93,10 @@ const getCircleClasses = makeStyles(() => ({
   bigValid: {
     borderColor: '#192B5D',
     background: '#192B5D'
+  },
+  fullActive: {
+    borderColor: '#F26026',
+    color: '#F26026',
   }
 }))
 
@@ -172,6 +176,9 @@ const getSidebarClasses = makeStyles(() => ({
     lineHeight: '24px',
     fontWeight: 600,
     color: '#F26026'
+  },
+  fullActive: {
+    color: '#F26026'
   }
 }))
 
@@ -208,7 +215,8 @@ function Circle({
   text = null,
   size = 'small',
   active = false,
-  valid = false
+  valid = false,
+  fullActive = false
 }) {
   const classes = getCircleClasses();
   const activeType = size === 'small' ? 'smallActive' : 'bigActive';
@@ -225,7 +233,8 @@ function Circle({
       <span
         className={clsx(classes[size], {
           [classes[activeType]]: active,
-          [classes[validType]]: isValidIsNotActive
+          [classes[validType]]: isValidIsNotActive,
+          [classes.fullActive]: fullActive
         })}
       >
         {isValidIsNotActive ? <CheckIcon className={clsx(classes.checkIcon, checkIconSizeClass)} /> : text}
@@ -264,7 +273,8 @@ function buildSubsteps(substeps, config) {
 }
 
 const SideBar = ({
-  stepsConfig
+  stepsConfig,
+  currentStep
 }) => {
   const classes = getSidebarClasses();
 
@@ -285,10 +295,12 @@ const SideBar = ({
                     text={idx + 1}
                     active={currentStepData.isActive}
                     valid={currentStepData.isValid}
+                    fullActive={currentStepData.isActive && currentStep === step}
                   />
                   <span className={clsx(classes.label, {
                     [classes.labelActive]: currentStepData.isActive,
-                    [classes.labelValid]: currentStepData.isValid
+                    [classes.labelValid]: currentStepData.isValid,
+                    [classes.fullActive]: currentStepData.isActive && currentStep === step
                   })}>{currentStepData.label}</span>
                 </div>
                 {'substeps' in currentStepData && currentStepData.substeps.length ? (

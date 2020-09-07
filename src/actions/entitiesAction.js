@@ -126,17 +126,23 @@ export const fetchEntities = (id) => {
   }
 }
 
-export const validateEntities = (id, selectedEntities) => {
+export const validateEntities = (id) => {
   return async (dispatch, getState) => {
-    const body = { selectedEntities }
-    const { data: currentEntities } = getState().entities;
+    const { data: currentEntities, selectedEntities } = getState().entities;
+
+    const listOfSelectedEntitites = Object.keys(selectedEntities)
+      .reduce((acc, next) => {
+        return [...acc, ...selectedEntities[next]]
+      }, []);
 
     dispatch(setValidationStart('entities'));
 
-    const { data: {reports, validationResult} } = await httpClient.post(`/${id}/entities/validate-entities`, body);
+    const { data: {reports, validationResult} } = await httpClient.post(`/${id}/entities/validate-entities`, {
+      selectedEntities: listOfSelectedEntitites
+    });
     const postValidationBody = reports.map(reportItem => {
       const entity = currentEntities.find(item => item.logicalName === reportItem.logicalName);
-      const selected = selectedEntities.includes(reportItem.logicalName);
+      const selected = listOfSelectedEntitites.includes(reportItem.logicalName);
 
       return {
         displayName: entity?.displayName || '',
