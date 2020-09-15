@@ -24,19 +24,16 @@ const useStyles = makeStyles({
     padding: '4px 5px',
     '&:last-child': {
       marginRight: 0,
-      padding: 0,
+      padding: '4px 5px',
       background: '#e05d2a',
       '& a': {
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         margin: '0 auto',
-        padding: '4px 10px',
-        paddingRight: 30.5,
-        fontSize: 13,
-        fontWeight: 700,
-        lineHeight: 1,
-        color: '#fff',
+        minHeight: 24,
+        padding: '4px 50px 4px 5px',
         '&::before': {
           display: 'none'
         }
@@ -44,10 +41,10 @@ const useStyles = makeStyles({
     }
   },
   link: {
+    display: "block",
     position: "relative",
     fontSize: 15,
     fontFamily: 'Gilroy',
-    fontWeight: 900,
     color: '#757588',
     textDecoration: 'none',
     textTransform: 'uppercase',
@@ -68,22 +65,36 @@ const useStyles = makeStyles({
     }
   },
   linkActive: {
+    marginTop: 3,
+    borderBottom: '3px solid #e05d2a',
     '&:hover::before': {
-      transform: 'scale(1,1)'
-    },
-    '&::before': {
-      transform: 'scale(1,1)'
+      display: 'none'
     }
   },
   row: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 24,
-    paddingBottom: 24
+    minHeight: 100
   },
   arrow: {
-    marginLeft: 5
+    position: 'absolute',
+    top: '50%',
+    right: 20,
+    transform: 'translateY(-50%)',
+    color: '#fff'
+  },
+  navbarBrand: {
+    display: 'block',
+    paddingTop: 32,
+    paddingBottom: 23
+  },
+  bookACall: {
+    fontFamily: 'Montserrat',
+    fontWeight: 700,
+    fontSize: 12,
+    lineHeight: 1,
+    color: '#fff',
   }
 })
 
@@ -99,10 +110,6 @@ const menu = [
   {
     title: 'Add-ons',
     to: 'https://uds.systems/add-ons'
-  },
-  {
-    title: 'Migration',
-    to: '/'
   },
   {
     title: 'Blog',
@@ -122,14 +129,16 @@ const Header = () => {
   const classes = useStyles();
 
   return (
-    <div className="container">
+    <div className="container max-width">
       <div className={classes.row}>
         <div>
-          <img
-            className={classes.logo}
-            src={logo}
-            alt="UDS"
-          />
+          <a href="https://uds.systems/" target="_blank" rel="noopener noreferrer" className={classes.navbarBrand}>
+            <img
+              className={classes.logo}
+              src={logo}
+              alt="UDS"
+            />
+          </a>
         </div>
         <div>
           <ul className={classes.list}>
@@ -143,7 +152,7 @@ const Header = () => {
                     className={classes.listItem}
                   >
                     {
-                      item.to === '/' ? <span className={clsx(classes.link, classes.linkActive)}>{item.title}</span> : (
+                      item.to === 'https://uds.systems/add-ons' ? <span className={clsx(classes.link, classes.linkActive)}>{item.title}</span> : (
                         <a
                           className={classes.link}
                           href={item.to}
@@ -151,10 +160,10 @@ const Header = () => {
                           {
                             isLast ? (
                               <>
-                              <span>
-                                {item.title}
-                              </span>
-                              <TrendingFlatIcon className={classes.arrow}/>
+                                <span className={classes.bookACall}>
+                                  {item.title}
+                                </span>
+                                <TrendingFlatIcon className={classes.arrow} />
                               </>
                             ) : item.title
                           }
