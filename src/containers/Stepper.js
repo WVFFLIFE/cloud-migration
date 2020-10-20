@@ -54,7 +54,7 @@ function getStepTitle(step) {
     case 'mapbusinessunits':
       return 'Map > Business units'
     case 'mapteams':
-      return 'Map Teams'
+      return 'Map > Teams'
     case 'summary':
       return 'Schedule'
     default:
