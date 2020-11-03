@@ -44,7 +44,7 @@ const JobsTableRow = ({
 
           return (
             <MuiTableCell key={fieldName} classes={{root: classes.tableCell}}>
-              <Link to={`/migrationjob/${data.id}`} className={classes.content}>
+              <Link to={`/${data.id}`} className={classes.content}>
                 {fieldName === 'action' ? renderItem(data.id) : renderItem(cellData)}
               </Link>
             </MuiTableCell>

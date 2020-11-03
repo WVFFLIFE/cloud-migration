@@ -90,7 +90,7 @@ const App = () => {
           <div className={classes.row}>
             <ul className={classes.list}>
               <li className={classes.listItem}>
-                <NavLink to="/migrationjob" className={classes.link} activeClassName={classes.linkActive} exact>Jobs List</NavLink>
+                <NavLink to="/" className={classes.link} activeClassName={classes.linkActive} exact>Jobs List</NavLink>
               </li>
             </ul>
             <Button
@@ -105,13 +105,13 @@ const App = () => {
         </div>
       </TopBar>
       <Switch>
-        <Route exact path="/">
-          <Redirect to="/migrationjob" />
-        </Route>
-        <Route exact path="/migrationjob" component={JobsList} />
-        <Route exact path="/migrationjob/:id" component={Stepper} />
+        {/*<Route exact path="/">*/}
+        {/*  <Redirect to="/" />*/}
+        {/*</Route>*/}
+        <Route exact path="/" component={JobsList} />
+        <Route exact path="/:id" component={Stepper} />
         <Route exact path="/404" component={ErrorPage} />
-        <Redirect to="/migrationjob" />
+        <Redirect to="/" />
       </Switch>
     </div>
   )

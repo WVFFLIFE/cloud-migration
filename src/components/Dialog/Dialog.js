@@ -30,7 +30,7 @@ const Dialog = ({
 
   const handleClose = () => {
     setOpen(false);
-    history.push('/migrationjob')
+    history.push('/')
   };
 
   return (

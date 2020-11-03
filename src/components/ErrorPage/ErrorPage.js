@@ -49,7 +49,7 @@ const ErrorPage = () => {
   const history = useHistory();
 
   const handleBack = () => {
-    history.push(`/migrationjob`)
+    history.push(`/`)
   }
 
   return (
